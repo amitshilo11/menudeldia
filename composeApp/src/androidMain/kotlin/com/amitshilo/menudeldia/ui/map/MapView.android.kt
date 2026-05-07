@@ -18,10 +18,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.amitshilo.menudeldia.domain.model.Restaurant
+import com.amitshilo.menudeldia.location.UserLocation
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
@@ -31,6 +34,9 @@ private val barcelonaCenter = LatLng(41.3851, 2.1734)
 actual @Composable fun MapView(
     restaurants: List<Restaurant>,
     selectedRestaurantId: String?,
+    userLocation: UserLocation?,
+    isLocationEnabled: Boolean,
+    recenterTrigger: Int,
     onRestaurantSelected: (String) -> Unit,
     modifier: Modifier,
 ) {
@@ -48,9 +54,22 @@ actual @Composable fun MapView(
         }
     }
 
+    LaunchedEffect(recenterTrigger) {
+        if (recenterTrigger > 0 && userLocation != null) {
+            cameraPositionState.animate(
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(userLocation.lat, userLocation.lng), 15f,
+                ),
+                durationMs = 400,
+            )
+        }
+    }
+
     GoogleMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
+        properties = MapProperties(isMyLocationEnabled = isLocationEnabled),
+        uiSettings = MapUiSettings(myLocationButtonEnabled = false),
     ) {
         restaurants.forEach { restaurant ->
             val isSelected = restaurant.id == selectedRestaurantId

@@ -249,9 +249,10 @@ Tasks grouped by week. Aggressive but doable solo if scope holds.
 - [x] **T3.1** `MapView` wired to repository — renders live pins from mock data
 - [ ] **T3.2** Pin clustering (Android: Maps Utils; iOS: `GMUClusterManager`; Web:
   `MarkerClusterer`)
-- [ ] **T3.3** User location: `expect`/`actual` `LocationProvider`
-- [ ] **T3.4** Location permission flow + fallback to Barcelona center (41.3851, 2.1734)
-- [ ] **T3.5** "Recenter on me" floating action button
+- [x] **T3.3** User location: `expect`/`actual` `rememberLocationState()` (Android:
+  FusedLocationProviderClient; iOS/web: stub)
+- [x] **T3.4** Location permission flow + fallback to Barcelona center (41.3851, 2.1734)
+- [x] **T3.5** "Recenter on me" FAB — shown when permission granted, animates camera to user
 - [x] **T3.6** Bottom sheet with list/detail states using `BottomSheetScaffold`
 - [x] **T3.7** Pin tap → bottom sheet expands to that restaurant
 

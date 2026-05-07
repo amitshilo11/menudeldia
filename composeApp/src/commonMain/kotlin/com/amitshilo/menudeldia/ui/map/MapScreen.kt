@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,15 +25,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.amitshilo.menudeldia.location.rememberLocationState
 import com.amitshilo.menudeldia.ui.detail.DetailUiState
 import com.amitshilo.menudeldia.ui.detail.DetailViewModel
 import com.amitshilo.menudeldia.ui.detail.RestaurantDetailContent
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.arrow_back
+import menudeldia.composeapp.generated.resources.my_location
 import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,6 +47,8 @@ fun MapScreen() {
     val viewModel: MapViewModel = viewModel { MapViewModel() }
     val uiState by viewModel.uiState.collectAsState()
     val scaffoldState = rememberBottomSheetScaffoldState()
+    val locationState = rememberLocationState()
+    var recenterTrigger by remember { mutableIntStateOf(0) }
 
     when (val state = uiState) {
         is MapUiState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -52,41 +60,60 @@ fun MapScreen() {
         }
 
         is MapUiState.Success -> BoxWithConstraints(Modifier.fillMaxSize()) {
-            val listPeekHeight = 120.dp
+            val listPeekHeight = 160.dp
             val detailPeekHeight = maxHeight * 0.6f
-
             val sheetPeekHeight =
                 if (state.selectedRestaurant != null) detailPeekHeight else listPeekHeight
 
-            // Animate to the correct peek position whenever selection changes
             LaunchedEffect(state.selectedRestaurant?.id) {
                 scaffoldState.bottomSheetState.partialExpand()
             }
 
-            BottomSheetScaffold(
-                scaffoldState = scaffoldState,
-                sheetPeekHeight = sheetPeekHeight,
-                sheetContent = {
-                    if (state.selectedRestaurant != null) {
-                        DetailSheet(
-                            restaurantId = state.selectedRestaurant.id,
-                            onBack = { viewModel.clearSelection() },
-                        )
-                    } else {
-                        RestaurantListSheet(
-                            restaurants = state.restaurants,
-                            selectedRestaurantId = state.selectedRestaurant?.id,
-                            onRestaurantTap = { viewModel.selectRestaurant(it) },
+            Box(Modifier.fillMaxSize()) {
+                BottomSheetScaffold(
+                    scaffoldState = scaffoldState,
+                    sheetPeekHeight = sheetPeekHeight,
+                    sheetContent = {
+                        if (state.selectedRestaurant != null) {
+                            DetailSheet(
+                                restaurantId = state.selectedRestaurant.id,
+                                onBack = { viewModel.clearSelection() },
+                            )
+                        } else {
+                            RestaurantListSheet(
+                                restaurants = state.restaurants,
+                                selectedRestaurantId = state.selectedRestaurant?.id,
+                                onRestaurantTap = { viewModel.selectRestaurant(it) },
+                            )
+                        }
+                    },
+                ) {
+                    MapView(
+                        restaurants = state.restaurants,
+                        selectedRestaurantId = state.selectedRestaurant?.id,
+                        userLocation = locationState.location,
+                        isLocationEnabled = locationState.hasPermission,
+                        recenterTrigger = recenterTrigger,
+                        onRestaurantSelected = { viewModel.selectRestaurant(it) },
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+
+                if (locationState.hasPermission) {
+                    FloatingActionButton(
+                        onClick = { recenterTrigger++ },
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(end = 16.dp, bottom = sheetPeekHeight + 16.dp),
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.my_location),
+                            contentDescription = "Recenter on me",
                         )
                     }
-                },
-            ) {
-                MapView(
-                    restaurants = state.restaurants,
-                    selectedRestaurantId = state.selectedRestaurant?.id,
-                    onRestaurantSelected = { viewModel.selectRestaurant(it) },
-                    modifier = Modifier.fillMaxSize(),
-                )
+                }
             }
         }
     }
