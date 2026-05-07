@@ -1,5 +1,8 @@
 package com.amitshilo.menudeldia
 
+import com.amitshilo.menudeldia.db.DatabaseFactory
+import com.amitshilo.menudeldia.db.Seeder
+import com.amitshilo.menudeldia.routes.configureRestaurantRoutes
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.serialization.kotlinx.json.json
@@ -16,30 +19,23 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import kotlinx.serialization.json.Json
 
+val appJson = Json {
+    prettyPrint = false
+    isLenient = true
+    ignoreUnknownKeys = true
+}
+
 fun main() {
+    DatabaseFactory.init()
+    Seeder.seedIfEmpty(appJson)
     embeddedServer(Netty, port = SERVER_PORT, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
 }
 
 fun Application.module() {
-    configureSerialization()
-    configureCors()
-    configureStatusPages()
-    configureCallLogging()
-    configureRouting()
-}
-
-fun Application.configureSerialization() {
     install(ContentNegotiation) {
-        json(Json {
-            prettyPrint = false
-            isLenient = true
-            ignoreUnknownKeys = true
-        })
+        json(appJson)
     }
-}
-
-fun Application.configureCors() {
     install(CORS) {
         allowMethod(HttpMethod.Options)
         allowMethod(HttpMethod.Get)
@@ -47,20 +43,13 @@ fun Application.configureCors() {
         allowHeader(HttpHeaders.Authorization)
         anyHost()
     }
-}
-
-fun Application.configureStatusPages() {
     install(StatusPages)
-}
-
-fun Application.configureCallLogging() {
     install(CallLogging)
-}
 
-fun Application.configureRouting() {
     routing {
         get("/api/v1/health") {
             call.respondText("OK")
         }
     }
+    configureRestaurantRoutes(appJson)
 }

@@ -238,9 +238,10 @@ Tasks grouped by week. Aggressive but doable solo if scope holds.
   real coords, plausible menus)
 - [x] **T2.3** `RestaurantRepository` with `MockRestaurantRepository` and `RemoteRepository` (Ktor
   Client skeleton)
-- [ ] **T2.4** Backend: Postgres + PostGIS schema, seed restaurants, `GET /api/v1/restaurants` with
-  radius query
-- [ ] **T2.5** Backend: `GET /api/v1/restaurants/{id}` endpoint
+- [x] **T2.4** Backend: Postgres schema, seed from mock data,
+  `GET /api/v1/restaurants?lat&lng&radius` (Haversine in Kotlin; PostGIS ST_DWithin upgrade path for
+  v2)
+- [x] **T2.5** Backend: `GET /api/v1/restaurants/{id}` and `GET /api/v1/restaurants/{id}/menu/today`
 - [x] **T2.6** Metro DI wired: `AppGraph`, `RestaurantRepository`, `HttpClient`
 - [x] **T2.7** Top-level navigation scaffold (Compose Multiplatform navigation)
 
