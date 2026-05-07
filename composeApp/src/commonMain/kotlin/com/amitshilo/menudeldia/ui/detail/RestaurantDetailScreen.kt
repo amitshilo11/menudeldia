@@ -81,20 +81,20 @@ fun RestaurantDetailScreen(restaurantId: String, navController: NavController) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun RestaurantDetailContent(
+internal fun RestaurantDetailContent(
     restaurant: Restaurant,
     menu: Menu?,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .verticalScroll(rememberScrollState()),
     ) {
         AsyncImage(
             model = restaurant.thumbnailUrl,
             contentDescription = restaurant.name,
-            modifier = Modifier.fillMaxWidth().height(220.dp),
+            modifier = Modifier.fillMaxWidth().height(200.dp),
             contentScale = ContentScale.Crop,
         )
 
@@ -109,24 +109,16 @@ private fun RestaurantDetailContent(
 
             if (menu != null) {
                 Spacer(Modifier.height(20.dp))
-                val price = menu.price
-                val cents = (price * 100).toLong()
+                val cents = (menu.price * 100).toLong()
                 val priceStr = "${cents / 100}.${(cents % 100).toString().padStart(2, '0')}"
                 Text(
                     "Menú del día — €$priceStr",
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )
-
-                if (menu.firsts.isNotEmpty()) {
-                    DishSection("Primeros", menu.firsts)
-                }
-                if (menu.seconds.isNotEmpty()) {
-                    DishSection("Segundos", menu.seconds)
-                }
-                if (menu.desserts.isNotEmpty()) {
-                    DishSection("Postres", menu.desserts)
-                }
+                if (menu.firsts.isNotEmpty()) DishSection("Primeros", menu.firsts)
+                if (menu.seconds.isNotEmpty()) DishSection("Segundos", menu.seconds)
+                if (menu.desserts.isNotEmpty()) DishSection("Postres", menu.desserts)
                 menu.notes?.let { notes ->
                     Spacer(Modifier.height(8.dp))
                     Text(notes, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -136,7 +128,7 @@ private fun RestaurantDetailContent(
                 Text(
                     "Sin menú del día hoy",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
@@ -148,8 +140,10 @@ private fun RestaurantDetailContent(
                 Spacer(Modifier.height(8.dp))
                 restaurant.openingHours.filter { !it.isClosed }.forEach { hours ->
                     Text(
-                        "${hours.dayOfWeek.name.take(3).lowercase().replaceFirstChar { it.uppercase() }}: " +
-                            "${hours.openTime} – ${hours.closeTime}",
+                        "${
+                            hours.dayOfWeek.name.take(3).lowercase()
+                                .replaceFirstChar { it.uppercase() }
+                        }: ${hours.openTime} – ${hours.closeTime}",
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
@@ -171,7 +165,7 @@ private fun RestaurantDetailContent(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun DishSection(title: String, dishes: List<Dish>) {
+internal fun DishSection(title: String, dishes: List<Dish>) {
     Spacer(Modifier.height(12.dp))
     Text(title, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.secondary)
     Spacer(Modifier.height(4.dp))
