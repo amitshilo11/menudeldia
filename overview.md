@@ -223,54 +223,112 @@ Tasks grouped by week. Aggressive but doable solo if scope holds.
 
 ### Week 1 — Foundations & risk spike
 
-- [ ] **T1.1** Set up Gradle project: KMP + Compose Multiplatform (iOS, Android, Wasm targets)
+- [x] **T1.1** Set up Gradle project: KMP + Compose Multiplatform (iOS, Android, Wasm targets)
 - [ ] **T1.2** **Spike Google Maps on Wasm** (highest risk — do first). Get a working map with one pin rendered on web. If blocked >3 days, switch web to separate Next.js.
-- [ ] **T1.3** Set up Google Maps SDK on Android with one pin
-- [ ] **T1.4** Set up Google Maps SDK on iOS with one pin (`UIKitView` wrapper)
-- [ ] **T1.5** Define `expect`/`actual` `MapView` composable in `commonMain`
-- [ ] **T1.6** Set up Spring Boot + Kotlin backend project, basic `/health` endpoint
+- [x] **T1.3** Set up Google Maps SDK on Android with custom price+emoji markers
+- [x] **T1.4** Set up Google Maps SDK on iOS with one pin (`UIKitView` wrapper)
+- [x] **T1.5** Define `expect`/`actual` `MapView` composable in `commonMain`
+- [x] **T1.6** Set up Spring Boot + Kotlin backend project, basic `/health` endpoint
 - [ ] **T1.7** Buy domain, set up Google Cloud project, get Maps API keys (Android, iOS, JS — three separate keys)
 
 ### Week 2 — Core data flow & UI shell
 
-- [ ] **T2.1** Define domain models in `commonMain`: `Restaurant`, `Menu`, `Dish`, `OpeningHours`
-- [ ] **T2.2** Create mock JSON file with 20–30 hand-curated Barcelona restaurants (real names, real coordinates, plausible menus)
-- [ ] **T2.3** Build `RestaurantRepository` with two impls: `LocalMockRepository` (reads JSON) and `RemoteRepository` (Ktor Client → backend)
-- [ ] **T2.4** Backend: Postgres + PostGIS schema, seed with the same 20–30 restaurants, `GET /api/v1/restaurants` endpoint with radius query
+- [x] **T2.1** Define domain models in `commonMain`: `Restaurant`, `Menu`, `Dish`, `OpeningHours`
+- [x] **T2.2** Mock data: hand-curated Barcelona restaurants (MockRestaurantData.kt — real names,
+  real coords, plausible menus)
+- [x] **T2.3** `RestaurantRepository` with `MockRestaurantRepository` and `RemoteRepository` (Ktor
+  Client skeleton)
+- [ ] **T2.4** Backend: Postgres + PostGIS schema, seed restaurants, `GET /api/v1/restaurants` with
+  radius query
 - [ ] **T2.5** Backend: `GET /api/v1/restaurants/{id}` endpoint
-- [ ] **T2.6** Set up Metro DI: define `AppGraph` with `@DependencyGraph`, wire `RestaurantRepository`, `LocationProvider`, and Ktor `HttpClient` as `@Provides` / `@Inject` dependencies
-- [ ] **T2.7** Build top-level navigation scaffold (Compose Multiplatform navigation)
+- [x] **T2.6** Metro DI wired: `AppGraph`, `RestaurantRepository`, `HttpClient`
+- [x] **T2.7** Top-level navigation scaffold (Compose Multiplatform navigation)
 
 ### Week 3 — Map experience
 
-- [ ] **T3.1** Wire `MapView` to repository — render pins from data
-- [ ] **T3.2** Implement pin clustering (Android: Maps Utils library; iOS: `GMUClusterManager`; Web: `MarkerClusterer`)
-- [ ] **T3.3** Implement user location: `expect`/`actual` `LocationProvider` (FusedLocationProvider on Android, `CLLocationManager` on iOS, `navigator.geolocation` on web)
-- [ ] **T3.4** Permission flow: request location, handle denied state (fallback to Barcelona center: 41.3851, 2.1734)
+- [x] **T3.1** `MapView` wired to repository — renders live pins from mock data
+- [ ] **T3.2** Pin clustering (Android: Maps Utils; iOS: `GMUClusterManager`; Web:
+  `MarkerClusterer`)
+- [ ] **T3.3** User location: `expect`/`actual` `LocationProvider`
+- [ ] **T3.4** Location permission flow + fallback to Barcelona center (41.3851, 2.1734)
 - [ ] **T3.5** "Recenter on me" floating action button
-- [ ] **T3.6** Bottom sheet shell with 3 states (peek, half, full) using Compose Material 3 `BottomSheetScaffold`
-- [ ] **T3.7** Pin tap → bottom sheet expands to that restaurant (basic card)
+- [x] **T3.6** Bottom sheet with list/detail states using `BottomSheetScaffold`
+- [x] **T3.7** Pin tap → bottom sheet expands to that restaurant
 
 ### Week 4 — Detail screen, polish, ship
 
-- [ ] **T4.1** Restaurant detail UI: photo header, name, today's menu (dishes + price), hours, address, phone
+- [x] **T4.1** Restaurant detail UI: photo header, name, today's menu (dishes + price), hours,
+  address, phone
 - [ ] **T4.2** "Open in Google Maps" / "Open in Apple Maps" CTA (`expect`/`actual` URL builder)
-- [ ] **T4.3** Distance from user calculation (Haversine, shared in `commonMain`)
-- [ ] **T4.4** i18n setup: Spanish + English string resources (Compose Multiplatform `stringResource`)
-- [ ] **T4.5** App icon, splash screen, basic branding (placeholder OK if needed)
-- [ ] **T4.6** Loading states, empty states, error states (no internet, no restaurants in radius)
-- [ ] **T4.7** Backend: deploy Spring Boot to a free/cheap host (Railway, Fly.io, or Hetzner — avoid AWS for solo MVP)
-- [ ] **T4.8** Configure HTTPS, env vars, API key rotation procedure
+- [ ] **T4.3** Distance from user calculation (Haversine, `commonMain`; `distanceMeters` field
+  exists but not populated)
+- [ ] **T4.4** i18n setup: Spanish + English string resources
+- [ ] **T4.5** App icon, splash screen, basic branding
+- [ ] **T4.6** Empty states (no restaurants in radius), error states (no internet)
+- [ ] **T4.7** Backend: deploy to Railway / Fly.io / Hetzner
+- [ ] **T4.8** HTTPS, env vars, API key rotation
 - [ ] **T4.9** TestFlight build + Play Store internal testing build
-- [ ] **T4.10** Web deploy (Vercel, Netlify, or Cloudflare Pages)
-- [ ] **T4.11** Manual QA on all 3 platforms with real Barcelona walking test
+- [ ] **T4.10** Web deploy
+- [ ] **T4.11** Manual QA on all 3 platforms
+
+### Extra completed (not in original plan)
+
+- [x] Custom Material 3 theme — saffron-orange / terracotta / olive palette, full light + dark mode
+- [x] Custom price+emoji map markers (selected state with primary color highlight)
+- [x] Animated camera pan to selected restaurant on pin tap
 
 ### Stretch / cut-first if behind
 
 - [ ] Pin ↔ card sync (swiping cards highlights pins)
 - [ ] Catalan translations
-- [ ] Custom map style (Mapbox-style aesthetic via Google Maps style JSON)
+- [ ] Custom map style (Google Maps style JSON)
 - [ ] Skeleton loading shimmer on bottom sheet
+
+---
+
+## 9b. UI/UX Improvement Checklist
+
+Focused pass to make the app feel polished and production-ready. Grouped by screen.
+
+### Map screen
+
+- [ ] **U1** Add "Recenter on me" FAB (bottom-right, above sheet peek) — currently missing entirely
+- [ ] **U2** Show user location dot on map (requires T3.3 location first)
+- [ ] **U3** "Open now" badge on pins — grey out pins for restaurants with no menu today
+- [ ] **U4** Add bottom sheet drag handle (visible pill) — default Material handle is too subtle
+- [ ] **U5** Bottom sheet peek height (120dp) shows only a sliver of the first card — bump to ~160dp
+  or show partial card properly
+
+### Restaurant card (bottom sheet list)
+
+- [ ] **U6** Add "Abierto / Cerrado" status badge — most important signal for a lunch app
+- [ ] **U7** Show distance from user (e.g. "350m") — `distanceMeters` field exists, needs Haversine
+  wiring (T4.3)
+- [ ] **U8** Cuisine type label next to price (e.g. "Mediterráneo · €12.50") for scannability
+- [ ] **U9** Improve "Menú del día" + price row — currently feels like plain small text, needs more
+  visual weight
+
+### Restaurant detail screen
+
+- [ ] **U10** TopAppBar title is blank — show restaurant name (already available in
+  `DetailUiState.Success`)
+- [ ] **U11** Highlight "open now" in the hours section — bold today's row + show open/closed inline
+- [ ] **U12** Make phone number tappable — `tel:` URI intent via `expect`/`actual` `UriLauncher`
+- [ ] **U13** Add restaurant description (`descriptionEs` / `descriptionEn` fields exist, not
+  displayed)
+- [ ] **U14** Replace dish `AssistChip` with plain text rows — chips are tappable but do nothing;
+  misleading
+- [ ] **U15** Add "Open in Maps" button — CTA is missing (T4.2), high user value
+- [ ] **U16** Graceful photo fallback — show a branded placeholder when `thumbnailUrl` is null
+
+### Theme & global polish
+
+- [ ] **U17** Add custom typography — at least a slightly warmer/rounder display font for headings (
+  Google Fonts, bundled as a resource)
+- [ ] **U18** App icon + adaptive icon (Android) — currently using default KMP icon
+- [ ] **U19** Dark mode map tiles — apply a Google Maps dark style JSON when `isSystemInDarkTheme()`
+- [ ] **U20** Empty state screen — "No hay menús cerca" illustration + recenter CTA when radius
+  returns 0 restaurants
 
 ---
 
