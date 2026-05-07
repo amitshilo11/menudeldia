@@ -39,6 +39,12 @@ kotlin {
     }
 
     sourceSets {
+        val iosMain by creating {
+            dependsOn(commonMain.get())
+        }
+        iosArm64Main.get().dependsOn(iosMain)
+        iosSimulatorArm64Main.get().dependsOn(iosMain)
+
         val webMain by creating {
             dependsOn(commonMain.get())
         }
@@ -58,6 +64,7 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
             implementation(libs.metro.runtime)
+            implementation(libs.kotlinx.datetime)
             implementation(projects.shared)
         }
 
@@ -83,6 +90,8 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        manifestPlaceholders["MAPS_API_KEY"] =
+            providers.gradleProperty("MAPS_API_KEY").getOrElse("")
     }
     packaging {
         resources {
