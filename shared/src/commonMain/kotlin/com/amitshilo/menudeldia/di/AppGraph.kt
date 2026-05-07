@@ -22,11 +22,6 @@ interface AppGraph {
     val getNearbyRestaurantsUseCase: GetNearbyRestaurantsUseCase
     val getRestaurantDetailUseCase: GetRestaurantDetailUseCase
 
-    @DependencyGraph.Factory
-    interface Factory {
-        fun create(baseUrl: String): AppGraph
-    }
-
     companion object {
         @Provides
         @SingleIn(AppScope::class)

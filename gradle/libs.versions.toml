@@ -22,8 +22,8 @@ ktor = "3.4.3"
 logback = "1.5.32"
 maps-compose = "6.2.0"
 material3 = "1.10.0-alpha05"
-metro = "0.5.0"
-navigation-compose = "2.9.0-alpha08"
+metro = "1.0.0"
+navigation-compose = "2.9.0-beta03"
 postgresql = "42.7.5"
 
 [libraries]
@@ -82,7 +82,7 @@ ktor-server-requestValidation = { module = "io.ktor:ktor-server-request-validati
 ktor-server-testHost = { module = "io.ktor:ktor-server-test-host-jvm", version.ref = "ktor" }
 
 # Metro DI
-metro-runtime = { module = "dev.zacsweers.metro:metro-runtime", version.ref = "metro" }
+metro-runtime = { module = "dev.zacsweers.metro:runtime", version.ref = "metro" }
 
 # Image loading — Coil 3
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
