@@ -4,11 +4,9 @@ import com.amitshilo.menudeldia.domain.model.Dish
 import com.amitshilo.menudeldia.domain.model.Menu
 import com.amitshilo.menudeldia.domain.model.OpeningHours
 import com.amitshilo.menudeldia.domain.model.Restaurant
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.todayIn
 
 private val weekdayHours = (1..5).map { day ->
     OpeningHours(
@@ -21,10 +19,12 @@ private val weekdayHours = (1..5).map { day ->
     OpeningHours(dayOfWeek = DayOfWeek(7), openTime = LocalTime(0, 0), closeTime = LocalTime(0, 0), isClosed = true),
 )
 
+private val mockDate = LocalDate(2026, 5, 7)
+
 private fun menu(restaurantId: String, firsts: List<String>, seconds: List<String>, desserts: List<String>, price: Double) = Menu(
     id = "menu-$restaurantId",
     restaurantId = restaurantId,
-    date = Clock.System.todayIn(TimeZone.currentSystemDefault()),
+    date = mockDate,
     price = price,
     currency = "EUR",
     firsts = firsts.map { Dish(it) },

@@ -3,6 +3,9 @@ package com.amitshilo.menudeldia.db
 import com.amitshilo.menudeldia.data.local.mockMenus
 import com.amitshilo.menudeldia.data.local.mockRestaurants
 import com.amitshilo.menudeldia.data.remote.dto.OpeningHoursDto
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
@@ -43,11 +46,12 @@ object Seeder {
                 }
             }
 
+            val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
             mockMenus.values.forEach { m ->
                 MenusTable.insert {
                     it[id] = m.id
                     it[restaurantId] = m.restaurantId
-                    it[date] = m.date
+                    it[date] = today
                     it[price] = m.price
                     it[currency] = m.currency
                     it[firstsJson] = json.encodeToString(m.firsts.map { d -> d.name })
