@@ -34,9 +34,9 @@ import coil3.compose.AsyncImage
 import com.amitshilo.menudeldia.domain.model.Dish
 import com.amitshilo.menudeldia.domain.model.Menu
 import com.amitshilo.menudeldia.domain.model.Restaurant
-import org.jetbrains.compose.resources.painterResource
 import menudeldia.composeapp.generated.resources.Res
-import menudeldia.composeapp.generated.resources.compose_multiplatform
+import menudeldia.composeapp.generated.resources.arrow_back
+import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,9 +51,8 @@ fun RestaurantDetailScreen(restaurantId: String, navController: NavController) {
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            painter = painterResource(Res.drawable.compose_multiplatform),
+                            painter = painterResource(Res.drawable.arrow_back),
                             contentDescription = "Back",
-                            modifier = Modifier.padding(4.dp),
                         )
                     }
                 },
