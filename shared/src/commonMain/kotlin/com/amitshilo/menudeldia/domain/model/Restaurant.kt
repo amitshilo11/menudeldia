@@ -15,5 +15,6 @@ data class Restaurant(
     val menuPrice: Double?,
     val currency: String,
     val todayHasMenu: Boolean,
+    val cuisineEmoji: String? = null,
     val distanceMeters: Double? = null,
 )

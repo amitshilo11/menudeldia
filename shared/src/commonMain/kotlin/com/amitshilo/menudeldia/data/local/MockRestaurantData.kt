@@ -111,6 +111,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         menuPrice = 12.50,
         currency = "EUR",
         todayHasMenu = true,
+        cuisineEmoji = "🥘",
     ),
     Restaurant(
         id = "r2",
@@ -127,6 +128,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         menuPrice = 13.00,
         currency = "EUR",
         todayHasMenu = true,
+        cuisineEmoji = "🦑",
     ),
     Restaurant(
         id = "r3",
@@ -143,6 +145,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         menuPrice = 14.00,
         currency = "EUR",
         todayHasMenu = true,
+        cuisineEmoji = "🥗",
     ),
     Restaurant(
         id = "r4",
@@ -159,6 +162,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         menuPrice = 11.50,
         currency = "EUR",
         todayHasMenu = true,
+        cuisineEmoji = "🦞",
     ),
     Restaurant(
         id = "r5",
@@ -175,6 +179,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         menuPrice = 13.50,
         currency = "EUR",
         todayHasMenu = true,
+        cuisineEmoji = "🐟",
     ),
     Restaurant(
         id = "r6",
@@ -191,6 +196,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         menuPrice = 12.00,
         currency = "EUR",
         todayHasMenu = true,
+        cuisineEmoji = "🍷",
     ),
     Restaurant(
         id = "r7",
@@ -207,6 +213,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         menuPrice = 14.50,
         currency = "EUR",
         todayHasMenu = true,
+        cuisineEmoji = "🥩",
     ),
     Restaurant(
         id = "r8",
@@ -223,6 +230,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         menuPrice = 13.00,
         currency = "EUR",
         todayHasMenu = true,
+        cuisineEmoji = "🥂",
     ),
     Restaurant(
         id = "r9",
@@ -239,6 +247,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         menuPrice = 10.50,
         currency = "EUR",
         todayHasMenu = true,
+        cuisineEmoji = "🍺",
     ),
     Restaurant(
         id = "r10",
@@ -255,5 +264,6 @@ val mockRestaurants: List<Restaurant> = listOf(
         menuPrice = 11.00,
         currency = "EUR",
         todayHasMenu = true,
+        cuisineEmoji = "☕",
     ),
 )
