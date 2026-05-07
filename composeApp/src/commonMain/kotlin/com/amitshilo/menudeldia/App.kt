@@ -1,6 +1,5 @@
 package com.amitshilo.menudeldia
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -10,10 +9,11 @@ import androidx.navigation.navArgument
 import com.amitshilo.menudeldia.navigation.Screen
 import com.amitshilo.menudeldia.ui.detail.RestaurantDetailScreen
 import com.amitshilo.menudeldia.ui.map.MapScreen
+import com.amitshilo.menudeldia.ui.theme.MenuTheme
 
 @Composable
 fun App() {
-    MaterialTheme {
+    MenuTheme {
         val navController = rememberNavController()
         NavHost(navController = navController, startDestination = Screen.Map.route) {
             composable(Screen.Map.route) {
