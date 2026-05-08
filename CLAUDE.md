@@ -11,6 +11,19 @@
 - Keep files under 500 lines
 - Validate input at system boundaries
 
+## Code Quality & Architecture
+
+- Separate concerns strictly: domain logic, data access, and UI must not bleed into each other
+- No business logic in UI components — UI only renders, never decides
+- One responsibility per class or function — if you need "and" to describe it, split it
+- Prefer explicit over clever — readable beats brief
+- Name things for what they are, not how they're implemented
+- Keep files under 300 lines — split when they grow larger
+- No magic numbers or strings — use named constants
+- Avoid deeply nested code — extract functions, use early returns
+- For new features: use SPARC methodology (Specification → Pseudocode → Architecture → Refinement →
+  Completion)
+
 ## Agent Comms (SendMessage-First Coordination)
 
 Named agents coordinate via `SendMessage`, not polling or shared state.
