@@ -3,6 +3,7 @@ package com.amitshilo.menudeldia.ui.map
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.amitshilo.menudeldia.domain.model.Restaurant
@@ -39,6 +41,7 @@ actual @Composable fun MapView(
     recenterTrigger: Int,
     onRestaurantSelected: (String) -> Unit,
     modifier: Modifier,
+    bottomPadding: Dp,
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(barcelonaCenter, 14f)
@@ -70,6 +73,7 @@ actual @Composable fun MapView(
         cameraPositionState = cameraPositionState,
         properties = MapProperties(isMyLocationEnabled = isLocationEnabled),
         uiSettings = MapUiSettings(myLocationButtonEnabled = false),
+        contentPadding = PaddingValues(bottom = bottomPadding),
     ) {
         restaurants.forEach { restaurant ->
             val isSelected = restaurant.id == selectedRestaurantId

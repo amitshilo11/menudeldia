@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.location.UserLocation
 
@@ -19,6 +20,7 @@ actual @Composable fun MapView(
     recenterTrigger: Int,
     onRestaurantSelected: (String) -> Unit,
     modifier: Modifier,
+    bottomPadding: Dp,
 ) {
     Box(
         modifier = modifier

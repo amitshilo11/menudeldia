@@ -96,6 +96,7 @@ fun MapScreen() {
                         recenterTrigger = recenterTrigger,
                         onRestaurantSelected = { viewModel.selectRestaurant(it) },
                         modifier = Modifier.fillMaxSize(),
+                        bottomPadding = sheetPeekHeight,
                     )
                 }
 
