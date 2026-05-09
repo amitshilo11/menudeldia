@@ -71,7 +71,8 @@ payments, web platform. These are v2+.
 - **Backend** — real restaurant + menu data served from own API (architecture TBD — see open
   questions)
 - **Data sourcing** — own backend is primary (menu data, curated info, photos); Google Places API
-  fills gaps (missing photos, supplemental hours) via `google_place_id`
+  fills gaps (missing photos, supplemental hours) server-side only — the app never calls Google
+  Places directly
 - **Spanish + English UI strings** (Catalan optional but cheap to add)
 - **Polished UI/UX** — full pass on map screen, cards, detail screen, theme (see section 9b)
 
@@ -126,29 +127,29 @@ User backs out → map state preserved
 
 ### Stack
 
-| Layer                | Choice                                       | Notes                                                     |
-|----------------------|----------------------------------------------|-----------------------------------------------------------|
-| **Mobile UI**        | Kotlin Multiplatform + Compose Multiplatform | Shared UI across iOS + Android                            |
-| **Backend**          | TBD — Spring Boot + Kotlin **or** Firebase   | See open questions; architecture decision before Week 5   |
-| **Database**         | PostgreSQL + PostGIS **or** Firestore        | Depends on backend choice                                 |
-| **Map (mobile)**     | Google Maps SDK                              | Native on iOS + Android via expect/actual                 |
-| **Places data**      | Google Places API                            | Fills gaps for missing photos/hours via `google_place_id` |
-| **Auth**             | TBD — Firebase Auth **or** custom JWT        | Depends on backend choice; covers Google + Apple Sign-In  |
-| **DI**               | Metro (Zac Sweers)                           | Compile-time DI, full KMP support, no KAPT/KSP needed     |
-| **Networking**       | Ktor Client                                  | KMP-native HTTP                                           |
-| **Serialization**    | kotlinx.serialization                        | KMP-native                                                |
-| **State management** | Compose state + ViewModel pattern            | Standard Compose Multiplatform                            |
-| **Build / CI**       | Gradle + GitHub Actions                      |                                                           |
+| Layer                | Choice                                       | Notes                                                                       |
+|----------------------|----------------------------------------------|-----------------------------------------------------------------------------|
+| **Mobile UI**        | Kotlin Multiplatform + Compose Multiplatform | Shared UI across iOS + Android                                              |
+| **Backend**          | TBD — Spring Boot + Kotlin **or** Firebase   | See open questions; architecture decision before Week 5                     |
+| **Database**         | PostgreSQL + PostGIS **or** Firestore        | Depends on backend choice                                                   |
+| **Map (mobile)**     | Google Maps SDK                              | Native on iOS + Android via expect/actual                                   |
+| **Places data**      | Google Places API                            | Backend only — enriches DB at seed/curation time; never called from the app |
+| **Auth**             | TBD — Firebase Auth **or** custom JWT        | Depends on backend choice; covers Google + Apple Sign-In                    |
+| **DI**               | Metro (Zac Sweers)                           | Compile-time DI, full KMP support, no KAPT/KSP needed                       |
+| **Networking**       | Ktor Client                                  | KMP-native HTTP                                                             |
+| **Serialization**    | kotlinx.serialization                        | KMP-native                                                                  |
+| **State management** | Compose state + ViewModel pattern            | Standard Compose Multiplatform                                              |
+| **Build / CI**       | Gradle + GitHub Actions                      |                                                                             |
 
 ### Data sourcing split
 
-| Data type                                                | Source                                                                           |
-|----------------------------------------------------------|----------------------------------------------------------------------------------|
-| Menu price, dishes (firsts/seconds/desserts), menu notes | **Own backend** — primary                                                        |
-| Restaurant name, address, lat/lng, phone, cuisine type   | **Own backend** — curated manually                                               |
-| Opening hours                                            | **Own backend** primary; Google Places API fills gaps                            |
-| Photos                                                   | **Own backend** if available; Google Places API fills gaps via `google_place_id` |
-| Walking directions                                       | Google Maps / Apple Maps deep-link (no in-app routing)                           |
+| Data type                                                | Source                                                                                                |
+|----------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| Menu price, dishes (firsts/seconds/desserts), menu notes | **Own backend** — primary                                                                             |
+| Restaurant name, address, lat/lng, phone, cuisine type   | **Own backend** — curated manually                                                                    |
+| Opening hours                                            | **Own backend** primary; backend fetches from Google Places API at seed/curation time if missing      |
+| Photos                                                   | **Own backend** if available; backend fetches from Google Places API at seed/curation time if missing |
+| Walking directions                                       | Google Maps / Apple Maps deep-link (no in-app routing)                                                |
 
 ### Project structure
 
@@ -314,8 +315,9 @@ users
 - [ ] **T5.4** Filter UI: filter panel (bottom sheet or modal), chips for open now / price range /
   distance / cuisine
 - [ ] **T5.5** Filter state in `MapViewModel` — filter params flow into repository calls
-- [ ] **T5.6** Add `google_place_id` field to restaurant schema; fetch missing photos/hours from
-  Google Places API as fallback
+- [ ] **T5.6** Add `google_place_id` field to restaurant schema; backend enrichment script fetches
+  missing photos/hours from Google Places API and stores them in DB (one-time per restaurant, not
+  per request)
 - [ ] **T5.7** "Open now" visual state on pins — grey out restaurants with no menu today
 - [ ] **T5.8** Add `cuisineType` field to domain model and display in restaurant card + detail
   screen
@@ -407,23 +409,23 @@ Grouped by screen.
 
 ## 10. Decisions Locked
 
-| Question                | Decision                                                                |
-|-------------------------|-------------------------------------------------------------------------|
-| Primary user (MVP)      | Locals first                                                            |
-| Differentiators         | Map UX + search/filters + menú del día-specific ratings (ratings v2)    |
-| Monetization (v1)       | Free for everyone                                                       |
-| Platforms (MVP)         | iOS + Android only — web deferred to v2                                 |
-| Architecture            | KMP + Compose Multiplatform (iOS, Android)                              |
-| Map provider            | Google Maps SDK                                                         |
-| Data sourcing           | Own backend primary; Google Places API fills gaps via `google_place_id` |
-| Navigation (directions) | Deep-link to Google Maps / Apple Maps in walking mode                   |
-| Search scope            | Restaurant name + dish/menu item + cuisine type                         |
-| Filters                 | Open now, price range, distance, cuisine type                           |
-| Authentication          | Sign in with Google + Sign in with Apple (no email/password in v1)      |
-| App store releases      | Mid-development (week 5), not just at end                               |
-| Timeline                | ~7 weeks                                                                |
-| Team                    | Solo                                                                    |
-| Geography               | Barcelona only                                                          |
+| Question                | Decision                                                                                                                                               |
+|-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Primary user (MVP)      | Locals first                                                                                                                                           |
+| Differentiators         | Map UX + search/filters + menú del día-specific ratings (ratings v2)                                                                                   |
+| Monetization (v1)       | Free for everyone                                                                                                                                      |
+| Platforms (MVP)         | iOS + Android only — web deferred to v2                                                                                                                |
+| Architecture            | KMP + Compose Multiplatform (iOS, Android)                                                                                                             |
+| Map provider            | Google Maps SDK                                                                                                                                        |
+| Data sourcing           | Own backend primary; Google Places API fills gaps server-side only — backend enriches DB at seed/curation time, app never calls Google Places directly |
+| Navigation (directions) | Deep-link to Google Maps / Apple Maps in walking mode                                                                                                  |
+| Search scope            | Restaurant name + dish/menu item + cuisine type                                                                                                        |
+| Filters                 | Open now, price range, distance, cuisine type                                                                                                          |
+| Authentication          | Sign in with Google + Sign in with Apple (no email/password in v1)                                                                                     |
+| App store releases      | Mid-development (week 5), not just at end                                                                                                              |
+| Timeline                | ~7 weeks                                                                                                                                               |
+| Team                    | Solo                                                                                                                                                   |
+| Geography               | Barcelona only                                                                                                                                         |
 
 ---
 
