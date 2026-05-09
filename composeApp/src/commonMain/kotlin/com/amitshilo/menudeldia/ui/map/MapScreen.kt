@@ -26,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,6 +50,7 @@ fun MapScreen() {
     val scaffoldState = rememberBottomSheetScaffoldState()
     val locationState = rememberLocationState()
     var recenterTrigger by remember { mutableIntStateOf(0) }
+    var filterPanelVisible by remember { mutableStateOf(false) }
 
     when (val state = uiState) {
         is MapUiState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -84,6 +86,8 @@ fun MapScreen() {
                                 restaurants = state.restaurants,
                                 selectedRestaurantId = state.selectedRestaurant?.id,
                                 onRestaurantTap = { viewModel.selectRestaurant(it) },
+                                filterState = state.filterState,
+                                totalCount = state.allRestaurants.size,
                             )
                         }
                     },
@@ -100,6 +104,18 @@ fun MapScreen() {
                     )
                 }
 
+                MapSearchBar(
+                    query = state.filterState.query,
+                    activeFilterCount = state.filterState.activeCount.let {
+                        if (state.filterState.query.isNotBlank()) it - 1 else it
+                    },
+                    onQueryChange = { viewModel.onSearchQueryChange(it) },
+                    onFilterClick = { filterPanelVisible = true },
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                )
+
                 if (locationState.hasPermission) {
                     FloatingActionButton(
                         onClick = { recenterTrigger++ },
@@ -115,6 +131,15 @@ fun MapScreen() {
                         )
                     }
                 }
+            }
+
+            if (filterPanelVisible) {
+                FilterPanel(
+                    filterState = state.filterState,
+                    allRestaurants = state.allRestaurants,
+                    onFilterChange = { viewModel.onFilterChange(it) },
+                    onDismiss = { filterPanelVisible = false },
+                )
             }
         }
     }
@@ -168,14 +193,22 @@ private fun RestaurantListSheet(
     restaurants: List<com.amitshilo.menudeldia.domain.model.Restaurant>,
     selectedRestaurantId: String?,
     onRestaurantTap: (String) -> Unit,
+    filterState: com.amitshilo.menudeldia.domain.model.SearchFilterState,
+    totalCount: Int,
 ) {
+    val headerText = if (filterState.isActive) {
+        "${restaurants.size} de $totalCount restaurantes"
+    } else {
+        "${restaurants.size} restaurantes cerca"
+    }
+
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         modifier = Modifier.fillMaxWidth(),
     ) {
         item {
             Text(
-                text = "${restaurants.size} restaurantes cerca",
+                text = headerText,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 8.dp),
             )

@@ -93,6 +93,8 @@ private fun ResultRow.toRestaurantDto(json: Json) = RestaurantDto(
     menuPrice = this[RestaurantsTable.menuPrice],
     currency = this[RestaurantsTable.currency],
     todayHasMenu = this[RestaurantsTable.todayHasMenu],
+    cuisineEmoji = this[RestaurantsTable.cuisineEmoji],
+    cuisineType = this[RestaurantsTable.cuisineType],
 )
 
 private fun ResultRow.toMenuDto(json: Json) = MenuDto(

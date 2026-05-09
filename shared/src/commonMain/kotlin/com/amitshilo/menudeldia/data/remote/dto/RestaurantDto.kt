@@ -22,6 +22,8 @@ data class RestaurantDto(
     val menuPrice: Double? = null,
     val currency: String = "EUR",
     val todayHasMenu: Boolean = false,
+    val cuisineEmoji: String? = null,
+    val cuisineType: String? = null,
     val openingHours: List<OpeningHoursDto> = emptyList(),
 )
 

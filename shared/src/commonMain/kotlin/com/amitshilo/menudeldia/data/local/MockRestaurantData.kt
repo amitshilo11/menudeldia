@@ -112,6 +112,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         currency = "EUR",
         todayHasMenu = true,
         cuisineEmoji = "🥘",
+        cuisineType = "Española",
     ),
     Restaurant(
         id = "r2",
@@ -129,6 +130,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         currency = "EUR",
         todayHasMenu = true,
         cuisineEmoji = "🦑",
+        cuisineType = "Catalana",
     ),
     Restaurant(
         id = "r3",
@@ -146,6 +148,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         currency = "EUR",
         todayHasMenu = true,
         cuisineEmoji = "🥗",
+        cuisineType = "Mediterránea",
     ),
     Restaurant(
         id = "r4",
@@ -163,6 +166,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         currency = "EUR",
         todayHasMenu = true,
         cuisineEmoji = "🦞",
+        cuisineType = "Catalana",
     ),
     Restaurant(
         id = "r5",
@@ -180,6 +184,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         currency = "EUR",
         todayHasMenu = true,
         cuisineEmoji = "🐟",
+        cuisineType = "Mediterránea",
     ),
     Restaurant(
         id = "r6",
@@ -197,6 +202,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         currency = "EUR",
         todayHasMenu = true,
         cuisineEmoji = "🍷",
+        cuisineType = "Española",
     ),
     Restaurant(
         id = "r7",
@@ -214,6 +220,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         currency = "EUR",
         todayHasMenu = true,
         cuisineEmoji = "🥩",
+        cuisineType = "Catalana",
     ),
     Restaurant(
         id = "r8",
@@ -231,6 +238,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         currency = "EUR",
         todayHasMenu = true,
         cuisineEmoji = "🥂",
+        cuisineType = "Tapas",
     ),
     Restaurant(
         id = "r9",
@@ -248,6 +256,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         currency = "EUR",
         todayHasMenu = true,
         cuisineEmoji = "🍺",
+        cuisineType = "Española",
     ),
     Restaurant(
         id = "r10",
@@ -265,5 +274,6 @@ val mockRestaurants: List<Restaurant> = listOf(
         currency = "EUR",
         todayHasMenu = true,
         cuisineEmoji = "☕",
+        cuisineType = "Catalana",
     ),
 )

@@ -90,6 +90,7 @@ actual @Composable fun MapView(
                     emoji = restaurant.cuisineEmoji ?: "🍽️",
                     price = restaurant.menuPrice,
                     isSelected = isSelected,
+                    hasMenu = restaurant.todayHasMenu,
                 )
             }
         }
@@ -101,10 +102,18 @@ private fun PriceMarker(
     emoji: String,
     price: Double?,
     isSelected: Boolean,
+    hasMenu: Boolean,
 ) {
-    val bgColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.White
-    val textColor =
-        if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+    val bgColor = when {
+        isSelected -> MaterialTheme.colorScheme.primary
+        !hasMenu -> MaterialTheme.colorScheme.surfaceVariant
+        else -> Color.White
+    }
+    val textColor = when {
+        isSelected -> MaterialTheme.colorScheme.onPrimary
+        !hasMenu -> MaterialTheme.colorScheme.onSurfaceVariant
+        else -> MaterialTheme.colorScheme.onSurface
+    }
 
     Box(
         modifier = Modifier

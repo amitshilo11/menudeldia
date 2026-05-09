@@ -26,6 +26,8 @@ fun RestaurantDto.toDomain(): Restaurant = Restaurant(
     menuPrice = menuPrice,
     currency = currency,
     todayHasMenu = todayHasMenu,
+    cuisineEmoji = cuisineEmoji,
+    cuisineType = cuisineType,
 )
 
 fun OpeningHoursDto.toDomain(): OpeningHours = OpeningHours(

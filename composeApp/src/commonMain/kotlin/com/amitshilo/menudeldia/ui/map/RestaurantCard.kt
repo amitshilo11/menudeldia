@@ -77,10 +77,17 @@ fun RestaurantCard(
                             color = MaterialTheme.colorScheme.primary,
                         )
                     }
-                    restaurant.menuPrice?.let { price ->
+                    val priceLabel = buildString {
+                        restaurant.cuisineType?.let { append(it) }
+                        restaurant.menuPrice?.let { price ->
+                            if (isNotEmpty()) append(" · ")
+                            append("€${priceString(price)}")
+                        }
+                    }
+                    if (priceLabel.isNotEmpty()) {
                         Spacer(Modifier.width(6.dp))
                         Text(
-                            text = "€${priceString(price)}",
+                            text = priceLabel,
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                         )

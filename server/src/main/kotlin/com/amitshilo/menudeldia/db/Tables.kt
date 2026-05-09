@@ -19,6 +19,7 @@ object RestaurantsTable : Table("restaurants") {
     val currency = varchar("currency", 3).default("EUR")
     val todayHasMenu = bool("today_has_menu").default(false)
     val cuisineEmoji = text("cuisine_emoji").nullable()
+    val cuisineType = text("cuisine_type").nullable()
     override val primaryKey = PrimaryKey(id)
 }
 

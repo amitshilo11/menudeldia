@@ -1,0 +1,182 @@
+package com.amitshilo.menudeldia.ui.map
+
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.amitshilo.menudeldia.domain.model.Restaurant
+import com.amitshilo.menudeldia.domain.model.SearchFilterState
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FilterPanel(
+    filterState: SearchFilterState,
+    allRestaurants: List<Restaurant>,
+    onFilterChange: (SearchFilterState) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val sheetState = rememberModalBottomSheetState()
+    val cuisineTypes = allRestaurants.mapNotNull { it.cuisineType }.distinct().sorted()
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text("Filtros", style = MaterialTheme.typography.titleLarge)
+                if (filterState.isActive) {
+                    TextButton(onClick = { onFilterChange(SearchFilterState()) }) {
+                        Text("Borrar todo")
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            FilterSectionLabel("Disponibilidad")
+            ChipRow {
+                FilterChip(
+                    selected = filterState.openNowOnly,
+                    onClick = { onFilterChange(filterState.copy(openNowOnly = !filterState.openNowOnly)) },
+                    label = { Text("Abierto ahora") },
+                )
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            FilterSectionLabel("Precio")
+            ChipRow {
+                PriceOption(null, null, "Cualquier precio", filterState, onFilterChange)
+                PriceOption(null, 10.0, "< €10", filterState, onFilterChange)
+                PriceOption(10.0, 15.0, "€10 – €15", filterState, onFilterChange)
+                PriceOption(15.0, null, "> €15", filterState, onFilterChange)
+            }
+
+            if (cuisineTypes.isNotEmpty()) {
+                Spacer(Modifier.height(16.dp))
+                FilterSectionLabel("Cocina")
+                ChipRow {
+                    FilterChip(
+                        selected = filterState.cuisineType == null,
+                        onClick = { onFilterChange(filterState.copy(cuisineType = null)) },
+                        label = { Text("Todas") },
+                    )
+                    cuisineTypes.forEach { type ->
+                        FilterChip(
+                            selected = filterState.cuisineType == type,
+                            onClick = {
+                                onFilterChange(
+                                    filterState.copy(
+                                        cuisineType = if (filterState.cuisineType == type) null else type,
+                                    ),
+                                )
+                            },
+                            label = { Text(type) },
+                        )
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            FilterSectionLabel("Distancia máxima")
+            ChipRow {
+                DistanceOption(null, "Cualquier distancia", filterState, onFilterChange)
+                DistanceOption(500.0, "500m", filterState, onFilterChange)
+                DistanceOption(1000.0, "1 km", filterState, onFilterChange)
+                DistanceOption(2000.0, "2 km", filterState, onFilterChange)
+                DistanceOption(5000.0, "5 km", filterState, onFilterChange)
+            }
+
+            Spacer(Modifier.height(32.dp))
+        }
+    }
+}
+
+@Composable
+private fun FilterSectionLabel(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(bottom = 8.dp),
+    )
+}
+
+@Composable
+private fun ChipRow(content: @Composable () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        content()
+    }
+}
+
+@Composable
+private fun PriceOption(
+    min: Double?,
+    max: Double?,
+    label: String,
+    state: SearchFilterState,
+    onChange: (SearchFilterState) -> Unit,
+) {
+    val isSelected = state.minPrice == min && state.maxPrice == max
+    FilterChip(
+        selected = isSelected,
+        onClick = {
+            onChange(
+                if (isSelected) state.copy(minPrice = null, maxPrice = null)
+                else state.copy(minPrice = min, maxPrice = max)
+            )
+        },
+        label = { Text(label) },
+    )
+}
+
+@Composable
+private fun DistanceOption(
+    maxMeters: Double?,
+    label: String,
+    state: SearchFilterState,
+    onChange: (SearchFilterState) -> Unit,
+) {
+    val isSelected = state.maxDistanceMeters == maxMeters
+    FilterChip(
+        selected = isSelected,
+        onClick = {
+            onChange(
+                if (isSelected) state.copy(maxDistanceMeters = null)
+                else state.copy(maxDistanceMeters = maxMeters)
+            )
+        },
+        label = { Text(label) },
+    )
+}

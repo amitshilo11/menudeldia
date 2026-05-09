@@ -43,6 +43,7 @@ object Seeder {
                     it[currency] = r.currency
                     it[todayHasMenu] = r.todayHasMenu
                     it[cuisineEmoji] = r.cuisineEmoji
+                    it[cuisineType] = r.cuisineType
                 }
             }
 
