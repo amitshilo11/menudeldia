@@ -1,9 +1,10 @@
 package com.menudeldia.restaurant.dto
 
-/** One row per weekday in the detail screen. */
+/** One row per weekday in the detail screen. Matches shared module's OpeningHoursDto wire shape. */
 data class OpeningHoursDto(
-    /** 0 = Monday … 6 = Sunday (ISO 8601). */
+    /** 1 = Monday … 7 = Sunday (ISO 8601). */
     val dayOfWeek: Int,
-    val openLocal: String,   // "HH:MM"
-    val closeLocal: String,  // "HH:MM"
+    val openTime: String,
+    val closeTime: String,
+    val isClosed: Boolean = false,
 )

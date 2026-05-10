@@ -12,10 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
-/**
- * Public read API.
- * TODO B1.4.6: full implementation; return 404 via NoSuchElementException -> handled by GlobalExceptionHandler.
- */
 @RestController
 @RequestMapping("${ApiPaths.V1}/restaurants")
 class RestaurantController(
@@ -23,14 +19,10 @@ class RestaurantController(
 ) {
 
     @GetMapping
-    fun list(@Valid @ModelAttribute query: RestaurantQuery): RestaurantListResponse {
-        // TODO: service.findNearby(query) -> wrap in response.
-        TODO("Phase 1 — task B1.4.6")
-    }
+    fun list(@Valid @ModelAttribute query: RestaurantQuery): RestaurantListResponse =
+        RestaurantListResponse(service.findNearby(query))
 
     @GetMapping("/{id}")
-    fun byId(@PathVariable id: UUID): RestaurantDto {
-        // TODO: service.byId(id).
-        TODO("Phase 1 — task B1.4.6")
-    }
+    fun byId(@PathVariable id: UUID): RestaurantDto =
+        service.byId(id)
 }

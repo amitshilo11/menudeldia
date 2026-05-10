@@ -4,14 +4,9 @@ import com.menudeldia.places.PlacesEnrichmentService
 import com.menudeldia.restaurant.dto.RestaurantDto
 import com.menudeldia.restaurant.dto.RestaurantQuery
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 import java.util.UUID
 
-/**
- * Orchestrates repo reads, optional Places enrichment, and DTO mapping.
- *
- * TODO B1.4.4: implement findNearby — call repo, then enrich stale rows, then map.
- * TODO B2.2.3: wire enrichment.
- */
 @Service
 class RestaurantService(
     private val repo: RestaurantRepository,
@@ -20,12 +15,38 @@ class RestaurantService(
 ) {
 
     fun findNearby(query: RestaurantQuery): List<RestaurantDto> {
-        // TODO: repo.findNearby(...) -> filter by q/openNow/cuisine/price -> enrichment.refreshIfStale -> map.
-        TODO("Phase 1 — task B1.4.4")
+        var rows = repo.findNearby(query.lat, query.lng, query.radius)
+
+        if (!query.q.isNullOrBlank()) {
+            val q = query.q.lowercase()
+            rows = rows.filter {
+                it.name.lowercase().contains(q) ||
+                        it.cuisineType?.lowercase()?.contains(q) == true
+            }
+        }
+        if (query.cuisine.isNotEmpty()) {
+            rows = rows.filter { it.cuisineType in query.cuisine }
+        }
+        if (query.minPrice != null) {
+            val min = BigDecimal.valueOf(query.minPrice)
+            rows = rows.filter { r -> r.menuPrice == null || r.menuPrice!! >= min }
+        }
+        if (query.maxPrice != null) {
+            val max = BigDecimal.valueOf(query.maxPrice)
+            rows = rows.filter { r -> r.menuPrice == null || r.menuPrice!! <= max }
+        }
+
+        enrichment.refreshIfStale(rows)
+
+        val dtos = rows.map { mapper.toDto(it, query.lat, query.lng) }
+
+        return if (query.openNow) dtos.filter { it.isOpenNow } else dtos
     }
 
     fun byId(id: UUID): RestaurantDto {
-        // TODO: repo.findById -> enrichment.refreshIfStale(listOf(it)) -> mapper.toDto.
-        TODO("Phase 1 — task B1.4.4")
+        val entity =
+            repo.findById(id).orElseThrow { NoSuchElementException("Restaurant not found: $id") }
+        enrichment.refreshIfStale(listOf(entity))
+        return mapper.toDto(entity)
     }
 }

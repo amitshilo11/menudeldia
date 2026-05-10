@@ -22,58 +22,58 @@ Reference: `PLAN.md` (strategy) and `ARCHITECTURE.md` (technical).
 
 ### 1.1 — Spring Boot scaffold
 
-- [ ] **B1.1.1** Create `/backend/` Gradle module — `build.gradle.kts` with Spring Boot 3.x, Kotlin
+- [x] **B1.1.1** Create `/backend/` Gradle module — `build.gradle.kts` with Spring Boot 3.x, Kotlin
   2.x, JPA, Web, Validation, Security, Flyway, Postgres driver, kotlinx-serialization
-- [ ] **B1.1.2** `MenuDelDiaApplication.kt` main class
-- [ ] **B1.1.3** `application.yml` + `application-dev.yml` + `application-prod.yml` per ARCHITECTURE
+- [x] **B1.1.2** `MenuDelDiaApplication.kt` main class
+- [x] **B1.1.3** `application.yml` + `application-dev.yml` + `application-prod.yml` per ARCHITECTURE
   §9
-- [ ] **B1.1.4** `.env.example` documenting every env var (no values)
-- [ ] **B1.1.5** Health controller — `GET /api/v1/health` → `OK`
-- [ ] **B1.1.6** `GlobalExceptionHandler` — maps validation errors → 400, not-found → 404,
+- [x] **B1.1.4** `.env.example` documenting every env var (no values)
+- [x] **B1.1.5** Health controller — `GET /api/v1/health` → `OK`
+- [x] **B1.1.6** `GlobalExceptionHandler` — maps validation errors → 400, not-found → 404,
   rate-limit → 429, unexpected → 500
-- [ ] **B1.1.7** Logback JSON encoder config for structured logs
+- [x] **B1.1.7** Logback JSON encoder config for structured logs
 
 ### 1.2 — Local Postgres + PostGIS
 
-- [ ] **B1.2.1** `docker-compose.yml` with `postgis/postgis:16-3.4` image, named volume,
+- [x] **B1.2.1** `docker-compose.yml` with `postgis/postgis:16-3.4` image, named volume,
   `POSTGRES_DB=menudeldia`
 - [ ] **B1.2.2** Verify `CREATE EXTENSION postgis` works on first boot
 - [ ] **B1.2.3** Verify connection from `bootRun` with default `application-dev.yml`
 
 ### 1.3 — Schema (Flyway)
 
-- [ ] **B1.3.1** `V1__init.sql` — `restaurants` table per ARCHITECTURE §3 (with
+- [x] **B1.3.1** `V1__init.sql` — `restaurants` table per ARCHITECTURE §3 (with
   `geom GEOGRAPHY(Point, 4326)` generated column, GiST index, JSONB columns)
-- [ ] **B1.3.2** `V1__init.sql` — `users` table per §3
-- [ ] **B1.3.3** Triggers/`@PreUpdate` for `updated_at`
+- [x] **B1.3.2** `V1__init.sql` — `users` table per §3
+- [x] **B1.3.3** Triggers/`@PreUpdate` for `updated_at`
 - [ ] **B1.3.4** Verify `./gradlew :backend:bootRun` runs migrations cleanly on empty DB
 
 ### 1.4 — Restaurant entity + repo + service + controller
 
-- [ ] **B1.4.1** `Restaurant` JPA entity — all columns, JSONB via `@JdbcTypeCode(SqlTypes.JSON)`,
+- [x] **B1.4.1** `Restaurant` JPA entity — all columns, JSONB via `@JdbcTypeCode(SqlTypes.JSON)`,
   `geom` mapped read-only
-- [ ] **B1.4.2** `Cuisine` enum (`SPANISH`, `MEDITERRANEAN`, `ASIAN`, `JAPANESE`, `ITALIAN`,
+- [x] **B1.4.2** `Cuisine` enum (`SPANISH`, `MEDITERRANEAN`, `ASIAN`, `JAPANESE`, `ITALIAN`,
   `MEXICAN`, `MIDDLE_EASTERN`, `OTHER`) + emoji map
-- [ ] **B1.4.3** `RestaurantRepository extends JpaRepository<Restaurant, UUID>` + native PostGIS
+- [x] **B1.4.3** `RestaurantRepository extends JpaRepository<Restaurant, UUID>` + native PostGIS
   query for `findNearby(lat, lng, radius, filters)`
-- [ ] **B1.4.4** `RestaurantService.findNearby(...)` — orchestrates repo + (later) enrichment
-- [ ] **B1.4.5** `RestaurantDto` mirroring shared module's wire shape; `RestaurantMapper` (entity →
+- [x] **B1.4.4** `RestaurantService.findNearby(...)` — orchestrates repo + (later) enrichment
+- [x] **B1.4.5** `RestaurantDto` mirroring shared module's wire shape; `RestaurantMapper` (entity →
   DTO, computes `distanceMeters` and `isOpenNow`)
-- [ ] **B1.4.6** `RestaurantController` — `GET /api/v1/restaurants` with all query params (`lat`,
+- [x] **B1.4.6** `RestaurantController` — `GET /api/v1/restaurants` with all query params (`lat`,
   `lng`, `radius`, `q`, `openNow`, `cuisine[]`, `minPrice`, `maxPrice`);
   `GET /api/v1/restaurants/{id}`
-- [ ] **B1.4.7** Bean Validation on query DTO (`@DecimalMin/Max` for lat/lng, `@Max(10000)` for
+- [x] **B1.4.7** Bean Validation on query DTO (`@DecimalMin/Max` for lat/lng, `@Max(10000)` for
   radius)
 
 ### 1.5 — Translation script + seed
 
-- [ ] **B1.5.1** `scripts/translate-seed.main.kts` — reads xlsx via Apache POI, calls Anthropic API
+- [x] **B1.5.1** `scripts/translate-seed.main.kts` — reads xlsx via Apache POI, calls Anthropic API
   for ES + EN translations of (cuisine_type, menu_details, hours), writes `seed.json`
-- [ ] **B1.5.2** Hebrew → `Cuisine` enum mapping table inside the script (manual + curated)
-- [ ] **B1.5.3** Parse `Hours / Offer Window` Hebrew → structured `weekday_hours` JSON (
+- [x] **B1.5.2** Hebrew → `Cuisine` enum mapping table inside the script (manual + curated)
+- [x] **B1.5.3** Parse `Hours / Offer Window` Hebrew → structured `weekday_hours` JSON (
   `{mon: "12:30-16:00", ...}`); fall back to "Mon–Fri lunch" defaults if unparseable
 - [ ] **B1.5.4** Run script once, manually review `seed.json`, commit
-- [ ] **B1.5.5** `SeederService` — on `ApplicationReadyEvent`, if `restaurants` table is empty, load
+- [x] **B1.5.5** `SeederService` — on `ApplicationReadyEvent`, if `restaurants` table is empty, load
   `seed.json` and persist
 - [ ] **B1.5.6** Smoke: `curl /api/v1/restaurants?lat=41.3851&lng=2.1734&radius=5000` returns ≥100
   rows with ES + EN fields populated

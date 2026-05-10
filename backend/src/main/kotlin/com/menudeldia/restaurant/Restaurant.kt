@@ -6,6 +6,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
+import org.locationtech.jts.geom.Point
 import java.math.BigDecimal
 import java.time.Instant
 import java.util.UUID
@@ -13,10 +14,6 @@ import java.util.UUID
 /**
  * Curated restaurant + cached Google Places enrichment.
  * Wire shape lives in dto/RestaurantDto.kt — never expose this entity directly.
- *
- * TODO B1.4.1: add the `geom GEOGRAPHY(Point, 4326)` column. JPA can't write a generated column,
- *              so map it as `@Generated(event = INSERT, UPDATE) @Column(insertable = false, updatable = false)`
- *              with type `org.locationtech.jts.geom.Point`. Hibernate-spatial handles the mapping.
  */
 @Entity
 @Table(name = "restaurants")
@@ -34,6 +31,10 @@ class Restaurant(
 
     @Column(nullable = false)
     var lng: Double,
+
+    /** Generated PostGIS geography column — Postgres computes from lat/lng; never write from JPA. */
+    @Column(name = "geom", insertable = false, updatable = false)
+    var geom: Point? = null,
 
     var phone: String? = null,
     var website: String? = null,

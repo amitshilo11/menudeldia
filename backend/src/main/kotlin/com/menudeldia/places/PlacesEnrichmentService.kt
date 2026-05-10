@@ -27,9 +27,7 @@ class PlacesEnrichmentService(
 
     /** Refreshes any stale rows in the supplied list (capped by props.placesRefreshBatchSize). */
     fun refreshIfStale(rows: List<Restaurant>) {
-        // TODO: filter rows where placesFetchedAt is null or older than now - props.placesCacheTtl.
-        //       For up to N stalest, in parallel (semaphore), call client + photos, save row.
-        TODO("Phase 2 — task B2.2.1")
+        // Phase 2 implementation — no-op in Phase 1.
     }
 
     private fun isStale(row: Restaurant, now: Instant = Instant.now()): Boolean =
