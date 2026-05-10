@@ -2,32 +2,53 @@ package com.menudeldia.photo
 
 import com.menudeldia.config.AppProperties
 import com.menudeldia.places.GooglePlacesClient
+import com.menudeldia.places.PlacesException
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.nio.file.Files
 import java.nio.file.Path
 import java.util.UUID
 
-/**
- * Downloads Google Places photos to disk and serves them back via a local path lookup.
- *
- * Layout: {storageRoot}/{restaurantId}/{n}.jpg  where n is 0..photoCount-1.
- *
- * TODO B2.3.1: implement download + idempotency (skip if file exists for current places_fetched_at).
- * TODO B2.3.4: log WARN when total disk usage exceeds 4GB.
- */
+private const val DISK_WARN_BYTES = 4L * 1024 * 1024 * 1024
+
 @Service
 class PhotoStorageService(
     private val props: AppProperties,
     private val places: GooglePlacesClient,
 ) {
+    private val log = LoggerFactory.getLogger(javaClass)
 
-    /** Downloads up to N photos for a restaurant. Returns count actually persisted. */
     fun downloadPhotos(restaurantId: UUID, photoNames: List<String>): Int {
-        // TODO: ensure dir, fetch bytes via places.photoBytes, write to {root}/{id}/{n}.jpg.
-        TODO("Phase 2 — task B2.3.1")
+        if (photoNames.isEmpty()) return 0
+        val dir = Path.of(props.photos.storageRoot, restaurantId.toString())
+        Files.createDirectories(dir)
+        var count = 0
+        photoNames.forEachIndexed { n, photoName ->
+            val file = dir.resolve("$n.jpg")
+            if (!Files.exists(file)) {
+                try {
+                    val bytes = places.photoBytes(photoName, 800)
+                    Files.write(file, bytes)
+                } catch (ex: PlacesException) {
+                    log.warn("Failed to download photo {} for {}: {}", n, restaurantId, ex.message)
+                    return@forEachIndexed
+                }
+            }
+            count++
+        }
+        checkDiskUsage()
+        return count
     }
 
-    /** Resolves the on-disk path for photo `n` of a restaurant. */
-    fun pathFor(restaurantId: UUID, n: Int): Path {
-        return Path.of(props.photos.storageRoot, restaurantId.toString(), "$n.jpg")
+    fun pathFor(restaurantId: UUID, n: Int): Path =
+        Path.of(props.photos.storageRoot, restaurantId.toString(), "$n.jpg")
+
+    private fun checkDiskUsage() {
+        val root = Path.of(props.photos.storageRoot)
+        if (!Files.exists(root)) return
+        val totalBytes = Files.walk(root).filter(Files::isRegularFile).mapToLong(Files::size).sum()
+        if (totalBytes > DISK_WARN_BYTES) {
+            log.warn("Photos directory {} exceeds 4 GB ({} bytes total)", root, totalBytes)
+        }
     }
 }

@@ -2,37 +2,69 @@ package com.menudeldia.places
 
 import com.menudeldia.config.AppProperties
 import com.menudeldia.places.dto.PlaceDetailsResponse
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.HttpServerErrorException
 import org.springframework.web.client.RestClient
 
-/**
- * Thin wrapper around Google Places API (New).
- * Endpoints:
- *   - GET https://places.googleapis.com/v1/places/{placeId}        (Place Details)
- *   - GET https://places.googleapis.com/v1/{photoName}/media       (Place Photos)
- *
- * Headers: X-Goog-Api-Key, X-Goog-FieldMask.
- *
- * TODO B2.1.1 / B2.1.2: implement placeDetails + photo download with field mask.
- * TODO B2.1.3: wrap with @CircuitBreaker via Resilience4j; map 4xx/5xx to typed exceptions.
- */
 @Component
-class GooglePlacesClient(
-    private val props: AppProperties,
-) {
+class GooglePlacesClient(private val props: AppProperties) {
+
+    private val log = LoggerFactory.getLogger(javaClass)
+
     private val http: RestClient = RestClient.builder()
         .baseUrl("https://places.googleapis.com/v1")
         .build()
 
-    fun placeDetails(placeId: String): PlaceDetailsResponse {
-        // TODO: GET /places/{placeId} with field mask
-        //   "id,location,photos,regularOpeningHours,formattedAddress,internationalPhoneNumber,websiteUri,displayName"
-        TODO("Phase 2 — task B2.1.1")
+    companion object {
+        private const val FIELD_MASK =
+            "id,location,photos,regularOpeningHours,formattedAddress,internationalPhoneNumber,websiteUri,displayName"
     }
 
-    /** Returns raw bytes of the photo media. Caller is responsible for persistence. */
-    fun photoBytes(photoName: String, maxHeightPx: Int = 800): ByteArray {
-        // TODO: GET /{photoName}/media?maxHeightPx={...}
-        TODO("Phase 2 — task B2.1.1")
+    @CircuitBreaker(name = "googlePlaces", fallbackMethod = "placeDetailsFallback")
+    fun placeDetails(placeId: String): PlaceDetailsResponse {
+        return try {
+            http.get()
+                .uri("/places/{id}", placeId)
+                .header("X-Goog-Api-Key", props.google.placesApiKey)
+                .header("X-Goog-FieldMask", FIELD_MASK)
+                .retrieve()
+                .body(PlaceDetailsResponse::class.java)
+                ?: throw PlacesException.ApiError("Empty response for place $placeId")
+        } catch (ex: HttpClientErrorException) {
+            log.warn("Google Places 4xx for place {}: {}", placeId, ex.statusCode)
+            throw PlacesException.ApiError("Client error ${ex.statusCode} for place $placeId", ex)
+        } catch (ex: HttpServerErrorException) {
+            log.warn("Google Places 5xx for place {}: {}", placeId, ex.statusCode)
+            throw PlacesException.ApiError("Server error ${ex.statusCode} for place $placeId", ex)
+        }
     }
+
+    @CircuitBreaker(name = "googlePlaces", fallbackMethod = "photoBytesFallback")
+    fun photoBytes(photoName: String, maxHeightPx: Int): ByteArray {
+        return try {
+            http.get()
+                .uri("/{name}/media?maxHeightPx={px}&skipHttpRedirect=true", photoName, maxHeightPx)
+                .header("X-Goog-Api-Key", props.google.placesApiKey)
+                .retrieve()
+                .body(ByteArray::class.java)
+                ?: throw PlacesException.ApiError("Empty photo response for $photoName")
+        } catch (ex: HttpClientErrorException) {
+            log.warn("Google Places 4xx for photo {}: {}", photoName, ex.statusCode)
+            throw PlacesException.ApiError("Client error ${ex.statusCode} for photo $photoName", ex)
+        } catch (ex: HttpServerErrorException) {
+            log.warn("Google Places 5xx for photo {}: {}", photoName, ex.statusCode)
+            throw PlacesException.ApiError("Server error ${ex.statusCode} for photo $photoName", ex)
+        }
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun placeDetailsFallback(placeId: String, ex: Throwable): PlaceDetailsResponse =
+        throw PlacesException.Unavailable("Google Places unavailable for place $placeId", ex)
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun photoBytesFallback(photoName: String, maxHeightPx: Int, ex: Throwable): ByteArray =
+        throw PlacesException.Unavailable("Google Places unavailable for photo $photoName", ex)
 }

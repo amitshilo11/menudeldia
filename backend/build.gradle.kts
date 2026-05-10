@@ -55,6 +55,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
     // --- Caching / resilience ---
+    implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
     implementation("io.github.resilience4j:resilience4j-spring-boot3:2.2.0")
 

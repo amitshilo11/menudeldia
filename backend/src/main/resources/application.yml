@@ -47,6 +47,16 @@ menudeldia:
     read-rpm: 60
     auth-rpm: 10
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      googlePlaces:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 60s
+        permitted-number-of-calls-in-half-open-state: 3
+        register-health-indicator: false
+
 logging:
   level:
     root: INFO

@@ -84,31 +84,31 @@ Reference: `PLAN.md` (strategy) and `ARCHITECTURE.md` (technical).
 
 ### 2.1 — Places client
 
-- [ ] **B2.1.1** `places/GooglePlacesClient` using Spring `RestClient` — wraps Place Details (new
+- [x] **B2.1.1** `places/GooglePlacesClient` using Spring `RestClient` — wraps Place Details (new
   API v1) and Place Photos endpoints
-- [ ] **B2.1.2** Field mask config — request only fields we use (
+- [x] **B2.1.2** Field mask config — request only fields we use (
   `location, photos, regularOpeningHours, formattedAddress, internationalPhoneNumber, websiteUri`)
-- [ ] **B2.1.3** Error handling — wrap 4xx/5xx into typed exceptions; circuit-breaker on repeated
+- [x] **B2.1.3** Error handling — wrap 4xx/5xx into typed exceptions; circuit-breaker on repeated
   failures (Resilience4j)
 
 ### 2.2 — Enrichment service
 
-- [ ] **B2.2.1** `PlacesEnrichmentService.refreshIfStale(rows)` — picks up to 5 stalest rows where
+- [x] **B2.2.1** `PlacesEnrichmentService.refreshIfStale(rows)` — picks up to 5 stalest rows where
   `places_fetched_at` is null or older than 1h, refreshes in parallel with semaphore
-- [ ] **B2.2.2** Per-row dedupe map (Caffeine, 60s TTL) — prevents two concurrent requests from
+- [x] **B2.2.2** Per-row dedupe map (Caffeine, 60s TTL) — prevents two concurrent requests from
   refreshing the same row
-- [ ] **B2.2.3** Wire enrichment into `RestaurantService.findNearby()` — call before mapping to DTO
+- [x] **B2.2.3** Wire enrichment into `RestaurantService.findNearby()` — call before mapping to DTO
 
 ### 2.3 — Photo storage + serving
 
-- [ ] **B2.3.1** `PhotoStorageService.downloadPhotos(placeId, photoNames)` — downloads to
+- [x] **B2.3.1** `PhotoStorageService.downloadPhotos(placeId, photoNames)` — downloads to
   `/data/photos/{restaurantId}/{n}.jpg`, idempotent (skip if file exists for current
   `places_fetched_at`)
-- [ ] **B2.3.2** `PhotoController` — `GET /api/v1/restaurants/{id}/photos/{n}` streams file with
+- [x] **B2.3.2** `PhotoController` — `GET /api/v1/restaurants/{id}/photos/{n}` streams file with
   `Cache-Control: public, max-age=86400, immutable` and ETag
-- [ ] **B2.3.3** Mapper updates `thumbnailUrl` and `photos[]` to point at our endpoint URLs (never
+- [x] **B2.3.3** Mapper updates `thumbnailUrl` and `photos[]` to point at our endpoint URLs (never
   Google)
-- [ ] **B2.3.4** Disk usage cap — alert (log at WARN) if `/data/photos` exceeds 4GB
+- [x] **B2.3.4** Disk usage cap — alert (log at WARN) if `/data/photos` exceeds 4GB
 
 ### 2.4 — Verification
 
