@@ -1,0 +1,58 @@
+# Production stack on a single VPS: Caddy (TLS) -> Spring Boot -> Postgres+PostGIS.
+# TODO: pin app image tag (e.g. ghcr.io/.../menudeldia-backend:0.1.0); replace `:latest`.
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-menudeldia}
+      POSTGRES_USER: ${POSTGRES_USER:-menudeldia}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-menudeldia}" ]
+      interval: 10s
+      retries: 5
+
+  app:
+    image: ghcr.io/menudeldia/backend:latest
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-menudeldia}
+      DB_USER: ${POSTGRES_USER:-menudeldia}
+      DB_PASSWORD: ${DB_PASSWORD}
+      GOOGLE_PLACES_API_KEY: ${GOOGLE_PLACES_API_KEY}
+      GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID}
+      APPLE_BUNDLE_ID: ${APPLE_BUNDLE_ID}
+      JWT_SIGNING_KEY: ${JWT_SIGNING_KEY}
+      PHOTOS_DIR: /data/photos
+    volumes:
+      - photos:/data/photos
+    expose:
+      - "8080"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  pgdata:
+  photos:
+  caddy_data:
+  caddy_config:

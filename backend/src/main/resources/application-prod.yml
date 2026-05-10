@@ -1,0 +1,15 @@
+# Production profile. All secrets MUST come from env; no defaults here.
+spring:
+  jpa:
+    show-sql: false
+  flyway:
+    clean-disabled: true
+
+server:
+  error:
+    include-message: never
+    include-stacktrace: never
+
+logging:
+  level:
+    root: INFO
