@@ -13,6 +13,7 @@ expect @Composable fun MapView(
     isLocationEnabled: Boolean,
     recenterTrigger: Int,
     onRestaurantSelected: (String) -> Unit,
+    onMapTap: () -> Unit,
     modifier: Modifier = Modifier,
     bottomPadding: Dp,
 )

@@ -25,6 +25,7 @@ data class RestaurantDto(
     val cuisineEmoji: String? = null,
     val cuisineType: String? = null,
     val openingHours: List<OpeningHoursDto> = emptyList(),
+    val rating: Double? = null,
 )
 
 @Serializable

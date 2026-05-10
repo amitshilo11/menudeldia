@@ -1,10 +1,11 @@
 package com.amitshilo.menudeldia.ui.map
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +20,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
@@ -35,18 +35,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.amitshilo.menudeldia.location.rememberLocationState
-import com.amitshilo.menudeldia.ui.detail.DetailUiState
-import com.amitshilo.menudeldia.ui.detail.DetailViewModel
-import com.amitshilo.menudeldia.ui.detail.RestaurantDetailContent
+import com.amitshilo.menudeldia.navigation.Screen
 import menudeldia.composeapp.generated.resources.Res
-import menudeldia.composeapp.generated.resources.arrow_back
 import menudeldia.composeapp.generated.resources.my_location
 import org.jetbrains.compose.resources.painterResource
 
+private val detailCardHeight = 300.dp
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapScreen() {
+fun MapScreen(navController: NavController) {
     val viewModel: MapViewModel = viewModel { MapViewModel() }
     val uiState by viewModel.uiState.collectAsState()
     val scaffoldState = rememberBottomSheetScaffoldState()
@@ -63,27 +63,21 @@ fun MapScreen() {
             Text(state.message, color = MaterialTheme.colorScheme.error)
         }
 
-        is MapUiState.Success -> BoxWithConstraints(Modifier.fillMaxSize()) {
-            val listPeekHeight = 160.dp
-            val detailPeekHeight = maxHeight * 0.6f
-            val sheetPeekHeight =
-                if (state.selectedRestaurant != null) detailPeekHeight else listPeekHeight
+        is MapUiState.Success -> {
+            val isCardMode = state.selectedRestaurant != null
+            val sheetPeekHeight = if (isCardMode) 0.dp else 160.dp
+            val mapBottomPadding = if (isCardMode) detailCardHeight else sheetPeekHeight
 
-            LaunchedEffect(state.selectedRestaurant?.id) {
+            LaunchedEffect(isCardMode) {
                 scaffoldState.bottomSheetState.partialExpand()
             }
 
-            Box(Modifier.fillMaxSize()) {
-                BottomSheetScaffold(
-                    scaffoldState = scaffoldState,
-                    sheetPeekHeight = sheetPeekHeight,
-                    sheetContent = {
-                        if (state.selectedRestaurant != null) {
-                            DetailSheet(
-                                restaurantId = state.selectedRestaurant.id,
-                                onBack = { viewModel.clearSelection() },
-                            )
-                        } else {
+            BoxWithConstraints(Modifier.fillMaxSize()) {
+                Box(Modifier.fillMaxSize()) {
+                    BottomSheetScaffold(
+                        scaffoldState = scaffoldState,
+                        sheetPeekHeight = sheetPeekHeight,
+                        sheetContent = {
                             RestaurantListSheet(
                                 restaurants = state.restaurants,
                                 selectedRestaurantId = state.selectedRestaurant?.id,
@@ -91,103 +85,85 @@ fun MapScreen() {
                                 filterState = state.filterState,
                                 totalCount = state.allRestaurants.size,
                             )
-                        }
-                    },
-                ) {
-                    MapView(
-                        restaurants = state.restaurants,
-                        selectedRestaurantId = state.selectedRestaurant?.id,
-                        userLocation = locationState.location,
-                        isLocationEnabled = locationState.hasPermission,
-                        recenterTrigger = recenterTrigger,
-                        onRestaurantSelected = { viewModel.selectRestaurant(it) },
-                        modifier = Modifier.fillMaxSize(),
-                        bottomPadding = sheetPeekHeight,
-                    )
-                }
-
-                MapSearchBar(
-                    query = state.filterState.query,
-                    activeFilterCount = state.filterState.activeCount.let {
-                        if (state.filterState.query.isNotBlank()) it - 1 else it
-                    },
-                    onQueryChange = { viewModel.onSearchQueryChange(it) },
-                    onFilterClick = { filterPanelVisible = true },
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .statusBarsPadding()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                )
-
-                if (locationState.hasPermission) {
-                    FloatingActionButton(
-                        onClick = { recenterTrigger++ },
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .navigationBarsPadding()
-                            .padding(end = 16.dp, bottom = sheetPeekHeight + 16.dp),
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        contentColor = MaterialTheme.colorScheme.primary,
+                        },
                     ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.my_location),
-                            contentDescription = "Recenter on me",
+                        MapView(
+                            restaurants = state.restaurants,
+                            selectedRestaurantId = state.selectedRestaurant?.id,
+                            userLocation = locationState.location,
+                            isLocationEnabled = locationState.hasPermission,
+                            recenterTrigger = recenterTrigger,
+                            onRestaurantSelected = { viewModel.selectRestaurant(it) },
+                            onMapTap = { viewModel.clearSelection() },
+                            modifier = Modifier.fillMaxSize(),
+                            bottomPadding = mapBottomPadding,
                         )
                     }
+
+                    AnimatedVisibility(
+                        visible = !isCardMode,
+                        enter = slideInVertically { -it },
+                        exit = slideOutVertically { -it },
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .statusBarsPadding()
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                    ) {
+                        MapSearchBar(
+                            query = state.filterState.query,
+                            activeFilterCount = state.filterState.activeCount.let {
+                                if (state.filterState.query.isNotBlank()) it - 1 else it
+                            },
+                            onQueryChange = { viewModel.onSearchQueryChange(it) },
+                            onFilterClick = { filterPanelVisible = true },
+                        )
+                    }
+
+                    if (locationState.hasPermission) {
+                        FloatingActionButton(
+                            onClick = { recenterTrigger++ },
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .navigationBarsPadding()
+                                .padding(end = 16.dp, bottom = mapBottomPadding + 16.dp),
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            contentColor = MaterialTheme.colorScheme.primary,
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.my_location),
+                                contentDescription = "Recenter on me",
+                            )
+                        }
+                    }
+
+                    AnimatedVisibility(
+                        visible = isCardMode,
+                        enter = slideInVertically { it },
+                        exit = slideOutVertically { it },
+                        modifier = Modifier.align(Alignment.BottomCenter),
+                    ) {
+                        state.selectedRestaurant?.let { restaurant ->
+                            RestaurantDetailCard(
+                                restaurant = restaurant,
+                                onDismiss = { viewModel.clearSelection() },
+                                onNavigateToDetail = {
+                                    navController.navigate(Screen.RestaurantDetail.createRoute(it))
+                                },
+                                modifier = Modifier.navigationBarsPadding(),
+                            )
+                        }
+                    }
+                }
+
+                if (filterPanelVisible) {
+                    FilterPanel(
+                        filterState = state.filterState,
+                        allRestaurants = state.allRestaurants,
+                        onFilterChange = { viewModel.onFilterChange(it) },
+                        onDismiss = { filterPanelVisible = false },
+                    )
                 }
             }
-
-            if (filterPanelVisible) {
-                FilterPanel(
-                    filterState = state.filterState,
-                    allRestaurants = state.allRestaurants,
-                    onFilterChange = { viewModel.onFilterChange(it) },
-                    onDismiss = { filterPanelVisible = false },
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun DetailSheet(restaurantId: String, onBack: () -> Unit) {
-    val detailViewModel = viewModel(key = restaurantId) { DetailViewModel(restaurantId) }
-    val detailState by detailViewModel.uiState.collectAsState()
-
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            IconButton(onClick = onBack) {
-                Icon(
-                    painter = painterResource(Res.drawable.arrow_back),
-                    contentDescription = "Back",
-                )
-            }
-            Text(
-                text = (detailState as? DetailUiState.Success)?.restaurant?.name ?: "",
-                style = MaterialTheme.typography.titleMedium,
-            )
-        }
-
-        when (val s = detailState) {
-            is DetailUiState.Loading -> Box(
-                modifier = Modifier.fillMaxWidth().height(200.dp),
-                contentAlignment = Alignment.Center,
-            ) { CircularProgressIndicator() }
-
-            is DetailUiState.Error -> Box(
-                modifier = Modifier.fillMaxWidth().height(200.dp),
-                contentAlignment = Alignment.Center,
-            ) { Text(s.message, color = MaterialTheme.colorScheme.error) }
-
-            is DetailUiState.Success -> RestaurantDetailContent(
-                restaurant = s.restaurant,
-                menu = s.menu,
-            )
         }
     }
 }

@@ -40,6 +40,7 @@ actual @Composable fun MapView(
     isLocationEnabled: Boolean,
     recenterTrigger: Int,
     onRestaurantSelected: (String) -> Unit,
+    onMapTap: () -> Unit,
     modifier: Modifier,
     bottomPadding: Dp,
 ) {
@@ -74,6 +75,7 @@ actual @Composable fun MapView(
         properties = MapProperties(isMyLocationEnabled = isLocationEnabled),
         uiSettings = MapUiSettings(myLocationButtonEnabled = false),
         contentPadding = PaddingValues(bottom = bottomPadding),
+        onMapClick = { onMapTap() },
     ) {
         restaurants.forEach { restaurant ->
             val isSelected = restaurant.id == selectedRestaurantId

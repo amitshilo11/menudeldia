@@ -17,7 +17,7 @@ fun App() {
         val navController = rememberNavController()
         NavHost(navController = navController, startDestination = Screen.Map.route) {
             composable(Screen.Map.route) {
-                MapScreen()
+                MapScreen(navController = navController)
             }
             composable(
                 route = Screen.RestaurantDetail.route,

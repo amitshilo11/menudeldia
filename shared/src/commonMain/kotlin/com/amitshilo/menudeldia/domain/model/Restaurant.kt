@@ -18,4 +18,5 @@ data class Restaurant(
     val cuisineEmoji: String? = null,
     val cuisineType: String? = null,
     val distanceMeters: Double? = null,
+    val rating: Double? = null,
 )
