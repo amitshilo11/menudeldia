@@ -33,6 +33,7 @@ import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.ui.preview.previewRestaurant
 import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
+import com.amitshilo.menudeldia.util.format
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.close
 import org.jetbrains.compose.resources.painterResource
@@ -112,7 +113,7 @@ private fun RatingBadge(rating: Double, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
         ) {
             Text(
-                text = "%.1f".format(rating),
+                text = rating.format(1),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
@@ -177,7 +178,7 @@ private fun InfoSection(restaurant: Restaurant, onDismiss: () -> Unit) {
         ) {
             restaurant.distanceMeters?.let { meters ->
                 Text(
-                    text = "%.1f km".format(meters / 1000.0),
+                    text = "${(meters / 1000.0).format(1)} km",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -188,8 +189,7 @@ private fun InfoSection(restaurant: Restaurant, onDismiss: () -> Unit) {
 
             val menuPrice = restaurant.menuPrice
             if (restaurant.todayHasMenu && menuPrice != null) {
-                val cents = (menuPrice * 100).toLong()
-                val priceStr = "${cents / 100}.${(cents % 100).toString().padStart(2, '0')}"
+                val priceStr = menuPrice.format(2)
                 Text(
                     text = "Menú del día  €$priceStr",
                     style = MaterialTheme.typography.titleMedium,
