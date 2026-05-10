@@ -37,8 +37,7 @@ import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.close
 import org.jetbrains.compose.resources.painterResource
 
-private val cardShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-private val badgeShape = RoundedCornerShape(20.dp)
+private val cardShape = RoundedCornerShape(20.dp)
 
 @Composable
 fun RestaurantDetailCard(
@@ -52,6 +51,7 @@ fun RestaurantDetailCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         modifier = modifier
             .fillMaxWidth()
+            .padding(16.dp)
             .clickable { onNavigateToDetail(restaurant.id) },
     ) {
         Column {
@@ -67,7 +67,9 @@ private fun PhotoSection(restaurant: Restaurant) {
         AsyncImage(
             model = restaurant.thumbnailUrl,
             contentDescription = restaurant.name,
-            modifier = Modifier.fillMaxWidth().height(220.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(220.dp),
             contentScale = ContentScale.Crop,
         )
 
@@ -100,7 +102,7 @@ private fun PhotoSection(restaurant: Restaurant) {
 @Composable
 private fun RatingBadge(rating: Double, modifier: Modifier = Modifier) {
     Surface(
-        shape = badgeShape,
+        shape = cardShape,
         color = Color.White,
         modifier = modifier,
     ) {
@@ -124,7 +126,7 @@ private fun RatingBadge(rating: Double, modifier: Modifier = Modifier) {
 private fun OpenStatusBadge(isOpen: Boolean, modifier: Modifier = Modifier) {
     val bgColor = if (isOpen) Color(0xFF2E7D32) else Color(0xFF757575)
     Surface(
-        shape = badgeShape,
+        shape = cardShape,
         color = bgColor,
         modifier = modifier,
     ) {
