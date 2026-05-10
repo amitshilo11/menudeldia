@@ -1,6 +1,7 @@
 package com.amitshilo.menudeldia.ui.map
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -73,7 +74,11 @@ actual @Composable fun MapView(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
         properties = MapProperties(isMyLocationEnabled = isLocationEnabled),
-        uiSettings = MapUiSettings(myLocationButtonEnabled = false),
+        uiSettings = MapUiSettings(
+            myLocationButtonEnabled = false,
+            zoomControlsEnabled = false,
+            mapToolbarEnabled = false,
+        ),
         contentPadding = PaddingValues(bottom = bottomPadding),
         onMapClick = { onMapTap() },
     ) {
@@ -85,7 +90,7 @@ actual @Composable fun MapView(
                 title = restaurant.name,
                 onClick = {
                     onRestaurantSelected(restaurant.id)
-                    false
+                    true
                 },
             ) {
                 PriceMarker(
@@ -106,21 +111,28 @@ private fun PriceMarker(
     isSelected: Boolean,
     hasMenu: Boolean,
 ) {
-    val bgColor = when {
-        isSelected -> MaterialTheme.colorScheme.primary
-        !hasMenu -> MaterialTheme.colorScheme.surfaceVariant
-        else -> Color.White
-    }
+    val bgColor = if (!hasMenu) MaterialTheme.colorScheme.surfaceVariant else Color.White
     val textColor = when {
-        isSelected -> MaterialTheme.colorScheme.onPrimary
+        isSelected -> MaterialTheme.colorScheme.primary
         !hasMenu -> MaterialTheme.colorScheme.onSurfaceVariant
         else -> MaterialTheme.colorScheme.onSurface
     }
 
     Box(
         modifier = Modifier
-            .shadow(elevation = if (isSelected) 6.dp else 3.dp, shape = RoundedCornerShape(20.dp))
+            .shadow(elevation = if (isSelected) 8.dp else 3.dp, shape = RoundedCornerShape(20.dp))
             .background(color = bgColor, shape = RoundedCornerShape(20.dp))
+            .then(
+                if (isSelected) {
+                    Modifier.border(
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(20.dp),
+                    )
+                } else {
+                    Modifier
+                },
+            )
             .padding(horizontal = 10.dp, vertical = 6.dp),
     ) {
         Row(
