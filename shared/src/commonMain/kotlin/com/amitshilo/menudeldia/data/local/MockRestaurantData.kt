@@ -113,6 +113,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         todayHasMenu = true,
         cuisineEmoji = "🥘",
         cuisineType = "Española",
+        rating = 4.5,
     ),
     Restaurant(
         id = "r2",
@@ -131,6 +132,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         todayHasMenu = true,
         cuisineEmoji = "🦑",
         cuisineType = "Catalana",
+        rating = 4.7,
     ),
     Restaurant(
         id = "r3",
@@ -149,6 +151,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         todayHasMenu = true,
         cuisineEmoji = "🥗",
         cuisineType = "Mediterránea",
+        rating = 4.6,
     ),
     Restaurant(
         id = "r4",
@@ -167,6 +170,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         todayHasMenu = true,
         cuisineEmoji = "🦞",
         cuisineType = "Catalana",
+        rating = 4.2,
     ),
     Restaurant(
         id = "r5",
@@ -185,6 +189,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         todayHasMenu = true,
         cuisineEmoji = "🐟",
         cuisineType = "Mediterránea",
+        rating = 4.4,
     ),
     Restaurant(
         id = "r6",
@@ -203,6 +208,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         todayHasMenu = true,
         cuisineEmoji = "🍷",
         cuisineType = "Española",
+        rating = 4.3,
     ),
     Restaurant(
         id = "r7",
@@ -221,6 +227,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         todayHasMenu = true,
         cuisineEmoji = "🥩",
         cuisineType = "Catalana",
+        rating = 4.8,
     ),
     Restaurant(
         id = "r8",
@@ -239,6 +246,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         todayHasMenu = true,
         cuisineEmoji = "🥂",
         cuisineType = "Tapas",
+        rating = 4.5,
     ),
     Restaurant(
         id = "r9",
@@ -257,6 +265,7 @@ val mockRestaurants: List<Restaurant> = listOf(
         todayHasMenu = true,
         cuisineEmoji = "🍺",
         cuisineType = "Española",
+        rating = 4.1,
     ),
     Restaurant(
         id = "r10",
@@ -275,5 +284,6 @@ val mockRestaurants: List<Restaurant> = listOf(
         todayHasMenu = true,
         cuisineEmoji = "☕",
         cuisineType = "Catalana",
+        rating = 4.6,
     ),
 )

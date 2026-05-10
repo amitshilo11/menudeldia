@@ -16,13 +16,21 @@ internal val previewRestaurant = Restaurant(
     lat = 41.3917,
     lng = 2.1649,
     phone = "+34 931 23 45 67",
-    thumbnailUrl = null,
-    photos = emptyList(),
+    thumbnailUrl = "https://picsum.photos/seed/r1/400/300",
+    photos = listOf(
+        "https://picsum.photos/seed/r6a/800/600",
+        "https://picsum.photos/seed/r6a/800/600"
+    ),
     descriptionEs = "Restaurante moderno con cocina catalana de mercado.",
-    descriptionEn = null,
+    descriptionEn = "Modern restaurant with Catalan market cuisine.",
     openingHours = listOf(
         OpeningHours(DayOfWeek.MONDAY, LocalTime(13, 0), LocalTime(16, 0), isClosed = false),
         OpeningHours(DayOfWeek.TUESDAY, LocalTime(13, 0), LocalTime(16, 0), isClosed = false),
+        OpeningHours(DayOfWeek.WEDNESDAY, LocalTime(13, 0), LocalTime(16, 0), isClosed = false),
+        OpeningHours(DayOfWeek.THURSDAY, LocalTime(13, 0), LocalTime(16, 0), isClosed = false),
+        OpeningHours(DayOfWeek.FRIDAY, LocalTime(13, 0), LocalTime(16, 0), isClosed = false),
+        OpeningHours(DayOfWeek.SATURDAY, LocalTime(13, 0), LocalTime(16, 0), isClosed = false),
+        OpeningHours(DayOfWeek.SUNDAY, LocalTime(13, 0), LocalTime(16, 0), isClosed = true),
     ),
     menuPrice = 12.50,
     currency = "EUR",
@@ -37,9 +45,10 @@ internal val previewRestaurantNoMenu = previewRestaurant.copy(
     id = "2",
     name = "Bar El Tío",
     address = "Carrer de Provença 12, Barcelona",
+    thumbnailUrl = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80",
     todayHasMenu = false,
     menuPrice = null,
-    rating = null,
+    rating = 3.8,
     distanceMeters = 1400.0,
 )
 
