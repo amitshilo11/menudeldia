@@ -8,40 +8,40 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 // ── Palette ──────────────────────────────────────────────────────────────────
-// Primary  — warm saffron-orange (appetising, high-energy)
-private val Orange10 = Color(0xFF3A0C00)
-private val Orange20 = Color(0xFF611800)
-private val Orange30 = Color(0xFF8C2700)
-private val Orange40 = Color(0xFFB93800)   // primary light
-private val Orange80 = Color(0xFFFFB59B)
-private val Orange90 = Color(0xFFFFDBCB)
-private val Orange95 = Color(0xFFFFEDE5)
+// Primary  — Vibrant Saffron Orange (Appetising, high-energy)
+private val Orange10 = Color(0xFF3E0E00)
+private val Orange20 = Color(0xFF601A00)
+private val Orange30 = Color(0xFF872900)
+private val Orange40 = Color(0xFFE65100)   // Primary Light (Vibrant)
+private val Orange80 = Color(0xFFFFB74D)   // Primary Dark (Soft Glow)
+private val Orange90 = Color(0xFFFFDCC0)
+private val Orange95 = Color(0xFFFFEDDE)
 
-// Secondary — warm terracotta-brown (earth, bread)
-private val Brown10 = Color(0xFF2C1200)
-private val Brown20 = Color(0xFF48210A)
-private val Brown30 = Color(0xFF65341A)
-private val Brown40 = Color(0xFF84482C)   // secondary light
-private val Brown80 = Color(0xFFFFB78E)
-private val Brown90 = Color(0xFFFFDCBF)
+// Secondary — Mocha Brown (Indulgent, warm)
+private val Brown10 = Color(0xFF2D1600)
+private val Brown20 = Color(0xFF4D2700)
+private val Brown30 = Color(0xFF6F3B00)
+private val Brown40 = Color(0xFF6D4C41)   // Secondary Light
+private val Brown80 = Color(0xFFD7CCC8)
+private val Brown90 = Color(0xFFEFEBE9)
 
-// Tertiary — herb olive-green (freshness, salad)
-private val Olive10 = Color(0xFF1A1D00)
-private val Olive40 = Color(0xFF535B00)
-private val Olive80 = Color(0xFFCAD16E)
-private val Olive90 = Color(0xFFE7EE88)
+// Tertiary — Fresh Basil Green (Freshness, healthy)
+private val Green10 = Color(0xFF002107)
+private val Green40 = Color(0xFF388E3C)   // Tertiary Light
+private val Green80 = Color(0xFFA5D6A7)
+private val Green90 = Color(0xFFE8F5E9)
 
-// Neutrals — warm greige (not cold grey)
-private val Neutral10 = Color(0xFF1F1A17)
-private val Neutral20 = Color(0xFF352F2B)
-private val Neutral90 = Color(0xFFEDE0D9)
-private val Neutral95 = Color(0xFFFBF3EF)
+// Neutrals — Warm Cream & Greige
+private val Neutral10 = Color(0xFF1F1B16)
+private val Neutral20 = Color(0xFF35302A)
+private val Neutral90 = Color(0xFFEAE1D9)
+private val Neutral95 = Color(0xFFF8F0E8)
 private val Neutral99 = Color(0xFFFFFBFF)
 
-private val NeutralVar30 = Color(0xFF52433D)
-private val NeutralVar50 = Color(0xFF87736C)
-private val NeutralVar80 = Color(0xFFD8C2BB)
-private val NeutralVar90 = Color(0xFFF5DDD6)
+private val NeutralVar30 = Color(0xFF51443B)
+private val NeutralVar50 = Color(0xFF84746A)
+private val NeutralVar80 = Color(0xFFD6C3B7)
+private val NeutralVar90 = Color(0xFFF3DFD2)
 
 private val ErrorRed = Color(0xFFBA1A1A)
 private val ErrorRedContainer = Color(0xFFFFDAD6)
@@ -58,10 +58,10 @@ private val LightColors = lightColorScheme(
     secondaryContainer = Brown90,
     onSecondaryContainer = Brown10,
 
-    tertiary = Olive40,
+    tertiary = Green40,
     onTertiary = Color.White,
-    tertiaryContainer = Olive90,
-    onTertiaryContainer = Olive10,
+    tertiaryContainer = Green90,
+    onTertiaryContainer = Green10,
 
     error = ErrorRed,
     onError = Color.White,
@@ -94,10 +94,10 @@ private val DarkColors = darkColorScheme(
     secondaryContainer = Brown30,
     onSecondaryContainer = Brown90,
 
-    tertiary = Olive80,
-    onTertiary = Olive10,
-    tertiaryContainer = Olive40,
-    onTertiaryContainer = Olive90,
+    tertiary = Green80,
+    onTertiary = Green10,
+    tertiaryContainer = Green40,
+    onTertiaryContainer = Green90,
 
     error = Color(0xFFFFB4AB),
     onError = Color(0xFF690005),
