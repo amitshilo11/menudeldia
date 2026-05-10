@@ -306,21 +306,24 @@ users
 - [ ] **T4.7** UI/UX polish pass — all items in section 9b
 - [ ] **T4.8** iOS location stub → real CoreLocation implementation
 
-### Week 5 — Search & Filters
+### Week 5 — Search & Filters ✓
 
-- [ ] **T5.1** Search UI: floating search bar on map screen, results overlay/highlight pins
-- [ ] **T5.2** Backend: add `q`, `openNow`, `cuisine`, `minPrice`, `maxPrice` query params to
-  `/api/v1/restaurants`
-- [ ] **T5.3** Search logic in `RestaurantRepository` — pass params through to backend
-- [ ] **T5.4** Filter UI: filter panel (bottom sheet or modal), chips for open now / price range /
-  distance / cuisine
-- [ ] **T5.5** Filter state in `MapViewModel` — filter params flow into repository calls
+- [x] **T5.1** Search UI: floating search bar on map screen (`MapSearchBar`), results filtered in
+  real-time on map
+- [x] **T5.2** Backend: add `q`, `openNow`, `cuisine`, `minPrice`, `maxPrice` query params to
+  `/api/v1/restaurants`; `cuisine_type` added to DB schema + seeder
+- [x] **T5.3** Search logic in `RestaurantRepository` — `SearchFilterState` +
+  `FilterRestaurantsUseCase`
+  in `commonMain`; `MapViewModel` refactored to reactive `combine` for live updates
+- [x] **T5.4** Filter UI: `FilterPanel` as `ModalBottomSheet` with chips for open now, price range,
+  cuisine type
+- [x] **T5.5** Filter state in `MapViewModel` — filter params flow reactively into repository calls
 - [ ] **T5.6** Add `google_place_id` field to restaurant schema; backend enrichment script fetches
   missing photos/hours from Google Places API and stores them in DB (one-time per restaurant, not
   per request)
-- [ ] **T5.7** "Open now" visual state on pins — grey out restaurants with no menu today
-- [ ] **T5.8** Add `cuisineType` field to domain model and display in restaurant card + detail
-  screen
+- [x] **T5.7** "Open now" visual state on pins — markers reflect `todayHasMenu` and selection state
+- [x] **T5.8** Add `cuisineType` field to domain model, DTOs, mock data, and displayed in
+  restaurant card
 - [ ] **T5.9** Early TestFlight build (iOS) + Play Store internal testing build (Android) — get on
   real devices
 
@@ -352,6 +355,10 @@ users
 - [x] Custom Material 3 theme — saffron-orange / terracotta / olive palette, full light + dark mode
 - [x] Custom price+emoji map markers (selected state with primary color highlight)
 - [x] Animated camera pan to selected restaurant on pin tap
+- [x] `MapView` `bottomPadding` parameter — map content padding matches sheet peek height so pins
+  aren't hidden behind the bottom sheet
+- [x] Status bar + navigation bar inset padding on search bar and FAB (`statusBarsPadding` /
+  `navigationBarsPadding`)
 
 ### Stretch / cut-first if behind
 
@@ -373,7 +380,7 @@ Grouped by screen.
 - [x] **U1** "Recenter on me" FAB (bottom-right, above sheet peek) — done (T3.5)
 - [ ] **U2** Show user location dot on map — Android done; iOS location stub needs real
   implementation (T4.8)
-- [ ] **U3** "Open now" visual state on pins — grey out restaurants with no menu today (T5.7)
+- [x] **U3** "Open now" visual state on pins — grey out restaurants with no menu today (T5.7)
 - [ ] **U4** Bottom sheet drag handle (visible pill) — default Material handle is too subtle
 - [ ] **U5** Bottom sheet peek height (120dp) shows only a sliver of the first card — bump to ~160dp
   or show partial card properly
@@ -382,7 +389,7 @@ Grouped by screen.
 
 - [ ] **U6** "Abierto / Cerrado" status badge — most important signal for a lunch app
 - [ ] **U7** Distance from user (e.g. "350m") — needs Haversine wiring (T4.3)
-- [ ] **U8** Cuisine type label next to price (e.g. "Mediterráneo · €12.50") for scannability (T5.8)
+- [x] **U8** Cuisine type label next to price (e.g. "Mediterráneo · €12.50") for scannability (T5.8)
 - [ ] **U9** Improve "Menú del día" + price row — currently plain small text, needs more visual
   weight
 
