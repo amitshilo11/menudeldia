@@ -26,9 +26,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.amitshilo.menudeldia.domain.model.Restaurant
+import com.amitshilo.menudeldia.ui.preview.previewRestaurant
+import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
+import com.amitshilo.menudeldia.ui.theme.MenuTheme
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.close
 import org.jetbrains.compose.resources.painterResource
@@ -198,5 +202,29 @@ private fun InfoSection(restaurant: Restaurant, onDismiss: () -> Unit) {
                 )
             }
         }
+    }
+}
+
+// ── Previews ────────────────────────────────────────────────────────────────
+
+@PreviewLightDark
+@Composable
+private fun PreviewDetailCardOpen() {
+    MenuTheme {
+        RestaurantDetailCard(
+            restaurant = previewRestaurant,
+            onDismiss = {},
+            onNavigateToDetail = {})
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewDetailCardClosed() {
+    MenuTheme {
+        RestaurantDetailCard(
+            restaurant = previewRestaurantNoMenu,
+            onDismiss = {},
+            onNavigateToDetail = {})
     }
 }

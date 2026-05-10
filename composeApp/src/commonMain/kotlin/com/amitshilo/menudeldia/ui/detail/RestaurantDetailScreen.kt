@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -34,6 +35,10 @@ import coil3.compose.AsyncImage
 import com.amitshilo.menudeldia.domain.model.Dish
 import com.amitshilo.menudeldia.domain.model.Menu
 import com.amitshilo.menudeldia.domain.model.Restaurant
+import com.amitshilo.menudeldia.ui.preview.previewMenu
+import com.amitshilo.menudeldia.ui.preview.previewRestaurant
+import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
+import com.amitshilo.menudeldia.ui.theme.MenuTheme
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.arrow_back
 import org.jetbrains.compose.resources.painterResource
@@ -178,4 +183,18 @@ internal fun DishSection(title: String, dishes: List<Dish>) {
             )
         }
     }
+}
+
+// ── Previews ────────────────────────────────────────────────────────────────
+
+@PreviewLightDark
+@Composable
+private fun PreviewDetailContentWithMenu() {
+    MenuTheme { RestaurantDetailContent(restaurant = previewRestaurant, menu = previewMenu) }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewDetailContentNoMenu() {
+    MenuTheme { RestaurantDetailContent(restaurant = previewRestaurantNoMenu, menu = null) }
 }

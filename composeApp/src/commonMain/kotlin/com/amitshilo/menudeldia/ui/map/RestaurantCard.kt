@@ -20,9 +20,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.amitshilo.menudeldia.domain.model.Restaurant
+import com.amitshilo.menudeldia.ui.preview.previewRestaurant
+import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
+import com.amitshilo.menudeldia.ui.theme.MenuTheme
 
 @Composable
 fun RestaurantCard(
@@ -109,4 +113,26 @@ fun RestaurantCard(
 private fun priceString(price: Double): String {
     val cents = (price * 100).toLong()
     return "${cents / 100}.${(cents % 100).toString().padStart(2, '0')}"
+}
+
+// ── Previews ────────────────────────────────────────────────────────────────
+
+@PreviewLightDark
+@Composable
+private fun PreviewRestaurantCardSelected() {
+    MenuTheme { RestaurantCard(restaurant = previewRestaurant, isSelected = true, onClick = {}) }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewRestaurantCardDefault() {
+    MenuTheme { RestaurantCard(restaurant = previewRestaurant, isSelected = false, onClick = {}) }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewRestaurantCardNoMenu() {
+    MenuTheme {
+        RestaurantCard(restaurant = previewRestaurantNoMenu, isSelected = false, onClick = {})
+    }
 }
