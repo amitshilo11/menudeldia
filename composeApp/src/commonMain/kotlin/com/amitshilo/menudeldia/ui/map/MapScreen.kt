@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BottomSheetScaffold
@@ -113,6 +115,7 @@ fun MapScreen() {
                     onFilterClick = { filterPanelVisible = true },
                     modifier = Modifier
                         .align(Alignment.TopCenter)
+                        .statusBarsPadding()
                         .padding(horizontal = 16.dp, vertical = 12.dp),
                 )
 
@@ -121,6 +124,7 @@ fun MapScreen() {
                         onClick = { recenterTrigger++ },
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
+                            .navigationBarsPadding()
                             .padding(end = 16.dp, bottom = sheetPeekHeight + 16.dp),
                         containerColor = MaterialTheme.colorScheme.surface,
                         contentColor = MaterialTheme.colorScheme.primary,
@@ -221,6 +225,6 @@ private fun RestaurantListSheet(
                 modifier = Modifier.padding(bottom = 8.dp),
             )
         }
-        item { Spacer(Modifier.height(16.dp)) }
+        item { Spacer(Modifier.navigationBarsPadding().height(16.dp)) }
     }
 }
