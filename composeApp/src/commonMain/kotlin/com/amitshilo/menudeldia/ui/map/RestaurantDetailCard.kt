@@ -88,7 +88,7 @@ private fun PhotoSection(restaurant: Restaurant) {
                 .align(Alignment.BottomCenter)
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.45f)),
+                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.5f)),
                     ),
                 ),
         )
@@ -111,7 +111,7 @@ private fun PhotoSection(restaurant: Restaurant) {
 private fun RatingBadge(rating: Double, modifier: Modifier = Modifier) {
     Surface(
         shape = cardShape,
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surface,
         modifier = modifier,
     ) {
         Row(
@@ -123,16 +123,19 @@ private fun RatingBadge(rating: Double, modifier: Modifier = Modifier) {
                 text = rating.format(1),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
             )
-            Text(text = "★", color = Color(0xFFFFB300))
+            Text(text = "★", color = MaterialTheme.colorScheme.primary)
         }
     }
 }
 
 @Composable
 private fun OpenStatusBadge(isOpen: Boolean, modifier: Modifier = Modifier) {
-    val bgColor = if (isOpen) Color(0xFF2E7D32) else Color(0xFF757575)
+    val bgColor =
+        if (isOpen) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.surfaceVariant
+    val textColor =
+        if (isOpen) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onSurfaceVariant
     Surface(
         shape = cardShape,
         color = bgColor,
@@ -141,7 +144,7 @@ private fun OpenStatusBadge(isOpen: Boolean, modifier: Modifier = Modifier) {
         Text(
             text = if (isOpen) "Abierto" else "Sin menú hoy",
             style = MaterialTheme.typography.labelMedium,
-            color = Color.White,
+            color = textColor,
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
         )
     }

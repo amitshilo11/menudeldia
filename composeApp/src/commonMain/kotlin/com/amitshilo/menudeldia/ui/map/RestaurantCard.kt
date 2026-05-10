@@ -27,6 +27,7 @@ import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.ui.preview.previewRestaurant
 import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
+import com.amitshilo.menudeldia.util.format
 
 @Composable
 fun RestaurantCard(
@@ -85,7 +86,7 @@ fun RestaurantCard(
                         restaurant.cuisineType?.let { append(it) }
                         restaurant.menuPrice?.let { price ->
                             if (isNotEmpty()) append(" · ")
-                            append("€${priceString(price)}")
+                            append("€${price.format(2)}")
                         }
                     }
                     if (priceLabel.isNotEmpty()) {
@@ -98,8 +99,10 @@ fun RestaurantCard(
                     }
                     restaurant.distanceMeters?.let { dist ->
                         Spacer(Modifier.width(6.dp))
+                        val distText =
+                            if (dist < 1000) "${dist.toInt()}m" else "${(dist / 1000.0).format(1)}km"
                         Text(
-                            text = if (dist < 1000) "${dist.toInt()}m" else "${(dist / 100).toInt() / 10.0}km",
+                            text = distText,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -108,11 +111,6 @@ fun RestaurantCard(
             }
         }
     }
-}
-
-private fun priceString(price: Double): String {
-    val cents = (price * 100).toLong()
-    return "${cents / 100}.${(cents % 100).toString().padStart(2, '0')}"
 }
 
 // ── Previews ────────────────────────────────────────────────────────────────

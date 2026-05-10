@@ -39,6 +39,7 @@ import com.amitshilo.menudeldia.ui.preview.previewMenu
 import com.amitshilo.menudeldia.ui.preview.previewRestaurant
 import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
+import com.amitshilo.menudeldia.util.format
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.arrow_back
 import org.jetbrains.compose.resources.painterResource
@@ -114,10 +115,8 @@ internal fun RestaurantDetailContent(
 
             if (menu != null) {
                 Spacer(Modifier.height(20.dp))
-                val cents = (menu.price * 100).toLong()
-                val priceStr = "${cents / 100}.${(cents % 100).toString().padStart(2, '0')}"
                 Text(
-                    "Menú del día — €$priceStr",
+                    "Menú del día — €${menu.price.format(2)}",
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )
