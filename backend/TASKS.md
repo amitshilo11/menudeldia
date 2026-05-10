@@ -7,11 +7,14 @@ Reference: `PLAN.md` (strategy) and `ARCHITECTURE.md` (technical).
 
 ## Phase 0 — Cleanup
 
-- [ ] **B0.1** Delete `/server/` Ktor scaffold (Application.kt, db/, routes/, build.gradle.kts) —
+- [x] **B0.1** Delete `/server/` Ktor scaffold (Application.kt, db/, routes/, build.gradle.kts) —
   confirm no other module references it
-- [ ] **B0.2** Update root `settings.gradle.kts` to remove `:server` and add `:backend`
-- [ ] **B0.3** Decide whether shared module's `RestaurantDto` / `MenuDto` need any DTO-shape changes
+- [x] **B0.2** Update root `settings.gradle.kts` to remove `:server` and add `:backend`
+- [x] **B0.3** Decide whether shared module's `RestaurantDto` / `MenuDto` need any DTO-shape changes
   for the new API; if so, list them — don't change yet
+  - `priceIncludesEs`/`priceIncludesEn` missing from `RestaurantDto` — add before Phase 1 seed
+  - `rating` in DTO but no DB column — stays null until Phase 2 (Google Places)
+  - `MenuDto` unused in v1 (no menus table)
 
 ---
 
