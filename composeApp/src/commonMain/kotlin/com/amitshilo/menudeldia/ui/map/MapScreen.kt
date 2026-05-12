@@ -143,11 +143,8 @@ fun MapScreen(navController: NavController) {
                             .padding(horizontal = 16.dp, vertical = 12.dp),
                     ) {
                         MapSearchBar(
-                            query = state.filterState.query,
-                            activeFilterCount = state.filterState.activeCount.let {
-                                if (state.filterState.query.isNotBlank()) it - 1 else it
-                            },
-                            onQueryChange = { viewModel.onSearchQueryChange(it) },
+                            filterState = state.filterState,
+                            onFilterChange = { viewModel.onFilterChange(it) },
                             onFilterClick = { filterPanelVisible = true },
                         )
                     }

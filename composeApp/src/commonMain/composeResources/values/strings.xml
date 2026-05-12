@@ -8,6 +8,9 @@
     <string name="search_placeholder">Search restaurants…</string>
     <string name="clear_search">Clear search</string>
     <string name="filters">Filters</string>
+    <string name="filter_open_now">Open now</string>
+    <string name="filter_vegan">Vegan</string>
+    <string name="filter_gluten_free">Gluten free</string>
     <string name="recenter">Recenter</string>
     <string name="recenter_on_me">Recenter on me</string>
     <string name="restaurants_nearby">%1$d restaurants nearby</string>

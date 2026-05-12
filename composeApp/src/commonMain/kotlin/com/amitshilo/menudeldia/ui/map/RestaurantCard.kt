@@ -93,6 +93,14 @@ fun RestaurantCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
+                    if (restaurant.isVeganFriendly) {
+                        Spacer(Modifier.width(6.dp))
+                        Text(text = "🌱", fontSize = 12.sp)
+                    }
+                    if (restaurant.isGlutenFreeFriendly) {
+                        Spacer(Modifier.width(6.dp))
+                        Text(text = "🌾", fontSize = 12.sp)
+                    }
                     restaurant.distanceMeters?.let { dist ->
                         Spacer(Modifier.width(6.dp))
                         Text(

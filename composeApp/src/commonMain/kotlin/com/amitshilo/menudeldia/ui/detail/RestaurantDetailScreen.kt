@@ -2,6 +2,7 @@ package com.amitshilo.menudeldia.ui.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -145,6 +147,18 @@ internal fun RestaurantDetailContent(
                 address = restaurant.address,
                 distanceMeters = restaurant.distanceMeters,
             )
+
+            if (restaurant.isVeganFriendly || restaurant.isGlutenFreeFriendly) {
+                Spacer(Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (restaurant.isVeganFriendly) {
+                        DietaryBadge(text = "Vegano", icon = "🌱")
+                    }
+                    if (restaurant.isGlutenFreeFriendly) {
+                        DietaryBadge(text = "Sin gluten", icon = "🌾")
+                    }
+                }
+            }
 
             Spacer(Modifier.height(16.dp))
             Button(
@@ -303,6 +317,25 @@ private fun HoursSection(restaurant: Restaurant) {
             fontWeight = if (isToday) FontWeight.Bold else FontWeight.Normal,
             color = if (isToday) MaterialTheme.colorScheme.onSurface
             else MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@Composable
+private fun DietaryBadge(text: String, icon: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .clip(RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f))
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+    ) {
+        Text(text = icon, fontSize = 14.sp)
+        Spacer(Modifier.width(4.dp))
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
         )
     }
 }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
@@ -82,6 +83,28 @@ private fun FilterPanelContent(
                 selected = filterState.openNowOnly,
                 onClick = { onFilterChange(filterState.copy(openNowOnly = !filterState.openNowOnly)) },
                 label = { Text("Abierto ahora") },
+                leadingIcon = { Text("🕒") },
+                shape = RoundedCornerShape(24.dp),
+            )
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        FilterSectionLabel("Dieta")
+        ChipRow {
+            FilterChip(
+                selected = filterState.isVegan,
+                onClick = { onFilterChange(filterState.copy(isVegan = !filterState.isVegan)) },
+                label = { Text("Vegano") },
+                leadingIcon = { Text("🌱") },
+                shape = RoundedCornerShape(24.dp),
+            )
+            FilterChip(
+                selected = filterState.isGlutenFree,
+                onClick = { onFilterChange(filterState.copy(isGlutenFree = !filterState.isGlutenFree)) },
+                label = { Text("Sin gluten") },
+                leadingIcon = { Text("🌾") },
+                shape = RoundedCornerShape(24.dp),
             )
         }
 
@@ -103,6 +126,7 @@ private fun FilterPanelContent(
                     selected = filterState.cuisineType == null,
                     onClick = { onFilterChange(filterState.copy(cuisineType = null)) },
                     label = { Text("Todas") },
+                    shape = RoundedCornerShape(24.dp),
                 )
                 cuisineTypes.forEach { type ->
                     FilterChip(
@@ -115,6 +139,7 @@ private fun FilterPanelContent(
                             )
                         },
                         label = { Text(type) },
+                        shape = RoundedCornerShape(24.dp),
                     )
                 }
             }
@@ -175,6 +200,7 @@ private fun PriceOption(
             )
         },
         label = { Text(label) },
+        shape = RoundedCornerShape(24.dp),
     )
 }
 
@@ -195,6 +221,7 @@ private fun DistanceOption(
             )
         },
         label = { Text(label) },
+        shape = RoundedCornerShape(24.dp),
     )
 }
 

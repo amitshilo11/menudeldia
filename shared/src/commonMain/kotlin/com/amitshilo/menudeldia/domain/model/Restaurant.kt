@@ -19,4 +19,6 @@ data class Restaurant(
     val cuisineType: String? = null,
     val distanceMeters: Double? = null,
     val rating: Double? = null,
+    val isVeganFriendly: Boolean = false,
+    val isGlutenFreeFriendly: Boolean = false,
 )
