@@ -63,3 +63,10 @@ internal val previewMenu = Menu(
     desserts = listOf(Dish("Crema catalana"), Dish("Fruta del tiempo")),
     notes = "Pan y bebida incluidos.",
 )
+
+internal val previewRestaurants = listOf(
+    previewRestaurant,
+    previewRestaurantNoMenu,
+    previewRestaurant.copy(id = "3", name = "Pizzeria Napoletana", cuisineType = "Italiana"),
+    previewRestaurant.copy(id = "4", name = "Sushi Bar", cuisineType = "Japonesa"),
+)

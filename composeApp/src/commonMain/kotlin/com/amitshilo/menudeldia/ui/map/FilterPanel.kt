@@ -19,9 +19,12 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.domain.model.SearchFilterState
+import com.amitshilo.menudeldia.ui.preview.previewRestaurants
+import com.amitshilo.menudeldia.ui.theme.MenuTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,83 +41,97 @@ fun FilterPanel(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp),
+        FilterPanelContent(
+            filterState = filterState,
+            cuisineTypes = cuisineTypes,
+            onFilterChange = onFilterChange,
+        )
+    }
+}
+
+@Composable
+private fun FilterPanelContent(
+    filterState: SearchFilterState,
+    cuisineTypes: List<String>,
+    onFilterChange: (SearchFilterState) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text("Filtros", style = MaterialTheme.typography.titleLarge)
-                if (filterState.isActive) {
-                    TextButton(onClick = { onFilterChange(SearchFilterState()) }) {
-                        Text("Borrar todo")
-                    }
+            Text("Filtros", style = MaterialTheme.typography.titleLarge)
+            if (filterState.isActive) {
+                TextButton(onClick = { onFilterChange(SearchFilterState()) }) {
+                    Text("Borrar todo")
                 }
             }
+        }
 
+        Spacer(Modifier.height(16.dp))
+
+        FilterSectionLabel("Disponibilidad")
+        ChipRow {
+            FilterChip(
+                selected = filterState.openNowOnly,
+                onClick = { onFilterChange(filterState.copy(openNowOnly = !filterState.openNowOnly)) },
+                label = { Text("Abierto ahora") },
+            )
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        FilterSectionLabel("Precio")
+        ChipRow {
+            PriceOption(null, null, "Cualquier precio", filterState, onFilterChange)
+            PriceOption(null, 10.0, "< €10", filterState, onFilterChange)
+            PriceOption(10.0, 15.0, "€10 – €15", filterState, onFilterChange)
+            PriceOption(15.0, null, "> €15", filterState, onFilterChange)
+        }
+
+        if (cuisineTypes.isNotEmpty()) {
             Spacer(Modifier.height(16.dp))
-
-            FilterSectionLabel("Disponibilidad")
+            FilterSectionLabel("Cocina")
             ChipRow {
                 FilterChip(
-                    selected = filterState.openNowOnly,
-                    onClick = { onFilterChange(filterState.copy(openNowOnly = !filterState.openNowOnly)) },
-                    label = { Text("Abierto ahora") },
+                    selected = filterState.cuisineType == null,
+                    onClick = { onFilterChange(filterState.copy(cuisineType = null)) },
+                    label = { Text("Todas") },
                 )
-            }
-
-            Spacer(Modifier.height(16.dp))
-
-            FilterSectionLabel("Precio")
-            ChipRow {
-                PriceOption(null, null, "Cualquier precio", filterState, onFilterChange)
-                PriceOption(null, 10.0, "< €10", filterState, onFilterChange)
-                PriceOption(10.0, 15.0, "€10 – €15", filterState, onFilterChange)
-                PriceOption(15.0, null, "> €15", filterState, onFilterChange)
-            }
-
-            if (cuisineTypes.isNotEmpty()) {
-                Spacer(Modifier.height(16.dp))
-                FilterSectionLabel("Cocina")
-                ChipRow {
+                cuisineTypes.forEach { type ->
                     FilterChip(
-                        selected = filterState.cuisineType == null,
-                        onClick = { onFilterChange(filterState.copy(cuisineType = null)) },
-                        label = { Text("Todas") },
+                        selected = filterState.cuisineType == type,
+                        onClick = {
+                            onFilterChange(
+                                filterState.copy(
+                                    cuisineType = if (filterState.cuisineType == type) null else type,
+                                ),
+                            )
+                        },
+                        label = { Text(type) },
                     )
-                    cuisineTypes.forEach { type ->
-                        FilterChip(
-                            selected = filterState.cuisineType == type,
-                            onClick = {
-                                onFilterChange(
-                                    filterState.copy(
-                                        cuisineType = if (filterState.cuisineType == type) null else type,
-                                    ),
-                                )
-                            },
-                            label = { Text(type) },
-                        )
-                    }
                 }
             }
-
-            Spacer(Modifier.height(16.dp))
-
-            FilterSectionLabel("Distancia máxima")
-            ChipRow {
-                DistanceOption(null, "Cualquier distancia", filterState, onFilterChange)
-                DistanceOption(500.0, "500m", filterState, onFilterChange)
-                DistanceOption(1000.0, "1 km", filterState, onFilterChange)
-                DistanceOption(2000.0, "2 km", filterState, onFilterChange)
-                DistanceOption(5000.0, "5 km", filterState, onFilterChange)
-            }
-
-            Spacer(Modifier.height(32.dp))
         }
+
+        Spacer(Modifier.height(16.dp))
+
+        FilterSectionLabel("Distancia máxima")
+        ChipRow {
+            DistanceOption(null, "Cualquier distancia", filterState, onFilterChange)
+            DistanceOption(500.0, "500m", filterState, onFilterChange)
+            DistanceOption(1000.0, "1 km", filterState, onFilterChange)
+            DistanceOption(2000.0, "2 km", filterState, onFilterChange)
+            DistanceOption(5000.0, "5 km", filterState, onFilterChange)
+        }
+
+        Spacer(Modifier.height(32.dp))
     }
 }
 
@@ -179,4 +196,35 @@ private fun DistanceOption(
         },
         label = { Text(label) },
     )
+}
+
+// ── Previews ────────────────────────────────────────────────────────────────
+
+@PreviewLightDark
+@Composable
+private fun PreviewFilterPanelDefault() {
+    MenuTheme {
+        FilterPanelContent(
+            filterState = SearchFilterState(),
+            cuisineTypes = previewRestaurants.mapNotNull { it.cuisineType }.distinct().sorted(),
+            onFilterChange = {}
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewFilterPanelActive() {
+    MenuTheme {
+        FilterPanelContent(
+            filterState = SearchFilterState(
+                openNowOnly = true,
+                minPrice = 10.0,
+                maxPrice = 15.0,
+                cuisineType = "Catalana"
+            ),
+            cuisineTypes = previewRestaurants.mapNotNull { it.cuisineType }.distinct().sorted(),
+            onFilterChange = {}
+        )
+    }
 }

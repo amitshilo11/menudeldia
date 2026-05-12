@@ -22,7 +22,9 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.amitshilo.menudeldia.ui.theme.MenuTheme
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.clear_search
 import menudeldia.composeapp.generated.resources.close
@@ -100,7 +102,7 @@ fun MapSearchBar(
         BadgedBox(
             badge = {
                 if (activeFilterCount > 0) {
-                    Badge { Text("$activeFilterCount") }
+                    Badge { Text(activeFilterCount.toString()) }
                 }
             },
         ) {
@@ -113,5 +115,49 @@ fun MapSearchBar(
                 )
             }
         }
+    }
+}
+
+// ── Previews ────────────────────────────────────────────────────────────────
+
+@PreviewLightDark
+@Composable
+private fun PreviewMapSearchBarEmpty() {
+    MenuTheme {
+        MapSearchBar(
+            query = "",
+            activeFilterCount = 0,
+            onQueryChange = {},
+            onFilterClick = {},
+            modifier = Modifier.padding(16.dp),
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewMapSearchBarQuery() {
+    MenuTheme {
+        MapSearchBar(
+            query = "Paella",
+            activeFilterCount = 0,
+            onQueryChange = {},
+            onFilterClick = {},
+            modifier = Modifier.padding(16.dp),
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewMapSearchBarFiltered() {
+    MenuTheme {
+        MapSearchBar(
+            query = "",
+            activeFilterCount = 3,
+            onQueryChange = {},
+            onFilterClick = {},
+            modifier = Modifier.padding(16.dp),
+        )
     }
 }
