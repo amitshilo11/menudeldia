@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -73,6 +74,7 @@ fun MapScreen(navController: NavController) {
             }
 
             BoxWithConstraints(Modifier.fillMaxSize()) {
+                val sheetMaxHeight = maxHeight * 0.8f
                 Box(Modifier.fillMaxSize()) {
                     BottomSheetScaffold(
                         scaffoldState = scaffoldState,
@@ -84,6 +86,7 @@ fun MapScreen(navController: NavController) {
                                 onRestaurantTap = { viewModel.selectRestaurant(it) },
                                 filterState = state.filterState,
                                 totalCount = state.allRestaurants.size,
+                                modifier = Modifier.heightIn(max = sheetMaxHeight),
                             )
                         },
                     ) {
@@ -175,6 +178,7 @@ private fun RestaurantListSheet(
     onRestaurantTap: (String) -> Unit,
     filterState: com.amitshilo.menudeldia.domain.model.SearchFilterState,
     totalCount: Int,
+    modifier: Modifier = Modifier,
 ) {
     val headerText = if (filterState.isActive) {
         "${restaurants.size} de $totalCount restaurantes"
@@ -184,7 +188,7 @@ private fun RestaurantListSheet(
 
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
     ) {
         item {
             Text(
