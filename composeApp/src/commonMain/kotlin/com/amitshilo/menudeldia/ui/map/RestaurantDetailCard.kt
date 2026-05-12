@@ -29,15 +29,22 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.ui.preview.previewRestaurant
 import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
 import com.amitshilo.menudeldia.util.format
+import com.amitshilo.menudeldia.util.isCurrentlyOpen
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.close
+import menudeldia.composeapp.generated.resources.closed_now
+import menudeldia.composeapp.generated.resources.daily_menu
+import menudeldia.composeapp.generated.resources.no_menu_today_short
+import menudeldia.composeapp.generated.resources.open_now
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 private val cardShape = RoundedCornerShape(20.dp)
 
@@ -72,14 +79,24 @@ private fun PhotoSection(restaurant: Restaurant) {
             .padding(12.dp)
             .clip(cardShape),
     ) {
-        AsyncImage(
-            model = restaurant.thumbnailUrl,
-            contentDescription = restaurant.name,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(220.dp),
-            contentScale = ContentScale.Crop,
-        )
+        if (restaurant.thumbnailUrl != null) {
+            AsyncImage(
+                model = restaurant.thumbnailUrl,
+                contentDescription = restaurant.name,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp),
+                contentScale = ContentScale.Crop,
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp)
+                    .background(MaterialTheme.colorScheme.primaryContainer),
+                contentAlignment = Alignment.Center,
+            ) { Text(text = "🍽", fontSize = 64.sp) }
+        }
 
         Box(
             modifier = Modifier
@@ -101,7 +118,8 @@ private fun PhotoSection(restaurant: Restaurant) {
         }
 
         OpenStatusBadge(
-            isOpen = restaurant.todayHasMenu,
+            isOpen = restaurant.isCurrentlyOpen(),
+            hasMenuToday = restaurant.todayHasMenu,
             modifier = Modifier.align(Alignment.TopEnd).padding(12.dp),
         )
     }
@@ -131,7 +149,12 @@ private fun RatingBadge(rating: Double, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun OpenStatusBadge(isOpen: Boolean, modifier: Modifier = Modifier) {
+private fun OpenStatusBadge(isOpen: Boolean, hasMenuToday: Boolean, modifier: Modifier = Modifier) {
+    val label = when {
+        isOpen -> stringResource(Res.string.open_now)
+        !hasMenuToday -> stringResource(Res.string.no_menu_today_short)
+        else -> stringResource(Res.string.closed_now)
+    }
     val bgColor =
         if (isOpen) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.surfaceVariant
     val textColor =
@@ -142,7 +165,7 @@ private fun OpenStatusBadge(isOpen: Boolean, modifier: Modifier = Modifier) {
         modifier = modifier,
     ) {
         Text(
-            text = if (isOpen) "Abierto" else "Sin menú hoy",
+            text = label,
             style = MaterialTheme.typography.labelMedium,
             color = textColor,
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
@@ -174,7 +197,7 @@ private fun InfoSection(restaurant: Restaurant, onDismiss: () -> Unit) {
             IconButton(onClick = onDismiss) {
                 Icon(
                     painter = painterResource(Res.drawable.close),
-                    contentDescription = "Cerrar",
+                    contentDescription = stringResource(Res.string.close),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
@@ -201,14 +224,14 @@ private fun InfoSection(restaurant: Restaurant, onDismiss: () -> Unit) {
             if (restaurant.todayHasMenu && menuPrice != null) {
                 val priceStr = menuPrice.format(2)
                 Text(
-                    text = "Menú del día  €$priceStr",
+                    text = "${stringResource(Res.string.daily_menu)}  €$priceStr",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold,
                 )
             } else if (!restaurant.todayHasMenu) {
                 Text(
-                    text = "Sin menú del día",
+                    text = stringResource(Res.string.no_menu_today_short),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

@@ -293,18 +293,26 @@ users
 - [x] **T3.7** Pin tap → bottom sheet expands to that restaurant
 - [ ] **T3.2** Pin clustering (Android: Maps Utils; iOS: `GMUClusterManager`)
 
-### Week 4 — Detail screen & UI/UX polish
+### Week 4 — Detail screen & UI/UX polish ✓ (mostly)
 
 - [x] **T4.1** Restaurant detail UI: photo header, name, today's menu (dishes + price), hours,
   address, phone
-- [ ] **T4.2** Walking directions CTA — `expect`/`actual` `UriLauncher` that deep-links to Google
-  Maps (Android) or Apple Maps (iOS) in walking mode
-- [ ] **T4.3** Distance from user (Haversine, `commonMain`; populate `distanceMeters` field)
-- [ ] **T4.4** i18n setup: Spanish + English string resources
-- [ ] **T4.5** App icon + adaptive icon (Android) + splash screen
-- [ ] **T4.6** Empty states ("No hay menús cerca" + recenter CTA), error states (no internet)
-- [ ] **T4.7** UI/UX polish pass — all items in section 9b
-- [ ] **T4.8** iOS location stub → real CoreLocation implementation
+- [x] **T4.2** Walking directions CTA — `expect`/`actual` `UriLauncher` + `walkingDirectionsUri`
+  deep-link to Google Maps (Android: `google.navigation:`) / Apple Maps (iOS:
+  `maps.apple.com?dirflg=w`)
+- [x] **T4.3** Distance from user (`haversineMeters` in shared util; `MapViewModel` recomputes
+  client-side on user-location change)
+- [x] **T4.4** i18n setup: Compose Resources `values/strings.xml` (EN default) +
+  `values-es/strings.xml`; 25+ user-facing strings extracted
+- [x] **T4.5** App icon + adaptive icon (Android) + splash screen — *scaffolding only:*
+  `core-splashscreen` lib wired, saffron splash theme, `installSplashScreen()` in `MainActivity`.
+  Placeholder grid art retained — drop in real PNGs / vector when ready
+- [x] **T4.6** Empty states + error states — `EmptySheetState` (filtered vs no-menus variants with
+  appropriate CTAs) + `ErrorState` with Retry button in `MapScreen`
+- [~] **T4.7** UI/UX polish pass — most of section 9b done; **U17** (custom typography) and **U19**
+  (dark map tiles) deferred as future polish
+- [x] **T4.8** iOS location stub → real `CLLocationManager` wrapper in `LocationState.ios.kt`;
+  `NSLocationWhenInUseUsageDescription` added to `Info.plist`
 
 ### Week 5 — Search & Filters ✓
 
@@ -378,39 +386,45 @@ Grouped by screen.
 ### Map screen
 
 - [x] **U1** "Recenter on me" FAB (bottom-right, above sheet peek) — done (T3.5)
-- [ ] **U2** Show user location dot on map — Android done; iOS location stub needs real
-  implementation (T4.8)
+- [x] **U2** Show user location dot on map — iOS now uses real `CLLocationManager` (T4.8)
 - [x] **U3** "Open now" visual state on pins — grey out restaurants with no menu today (T5.7)
-- [ ] **U4** Bottom sheet drag handle (visible pill) — default Material handle is too subtle
-- [ ] **U5** Bottom sheet peek height (120dp) shows only a sliver of the first card — bump to ~160dp
-  or show partial card properly
+- [x] **U4** Bottom sheet drag handle — `sheetDragHandle = { BottomSheetDefaults.DragHandle() }`
+  passed explicitly in `MapScreen`
+- [x] **U5** Bottom sheet peek height — already 160dp in `MapScreen.kt`
 
 ### Restaurant card (bottom sheet list)
 
-- [ ] **U6** "Abierto / Cerrado" status badge — most important signal for a lunch app
-- [ ] **U7** Distance from user (e.g. "350m") — needs Haversine wiring (T4.3)
+- [x] **U6** "Abierto / Cerrado" status badge — client-side computed via
+  `Restaurant.isCurrentlyOpen()` (uses today's `OpeningHours` window + device clock)
+- [x] **U7** Distance from user (e.g. "350m") — `haversineMeters` populated in `MapViewModel`
+  (T4.3)
 - [x] **U8** Cuisine type label next to price (e.g. "Mediterráneo · €12.50") for scannability (T5.8)
-- [ ] **U9** Improve "Menú del día" + price row — currently plain small text, needs more visual
-  weight
+- [x] **U9** "Menú del día" + price row — `titleMedium` price in primary color, label in
+  `labelLarge`
 
 ### Restaurant detail screen
 
-- [ ] **U10** TopAppBar title is blank — show restaurant name (available in `DetailUiState.Success`)
-- [ ] **U11** Highlight "open now" in the hours section — bold today's row + show open/closed inline
-- [ ] **U12** Make phone number tappable — `tel:` URI intent via `expect`/`actual` `UriLauncher`
-- [ ] **U13** Add restaurant description (`descriptionEs` / `descriptionEn` fields exist, not
-  displayed)
-- [ ] **U14** Replace dish `AssistChip` with plain text rows — chips are tappable but do nothing;
-  misleading
-- [ ] **U15** "Get directions" button — walking deep-link CTA (T4.2)
-- [ ] **U16** Graceful photo fallback — branded placeholder when `thumbnailUrl` is null
+- [x] **U10** TopAppBar title — restaurant name with ellipsis overflow
+- [x] **U11** Hours section — bold today's row + inline "Open · closes 17:00" / "Closed" chip
+- [x] **U12** Tappable phone — `tel:` URI via `rememberUriLauncher()`, underlined primary-color
+  text
+- [x] **U13** Restaurant description — locale-aware (`descriptionEs` for es/ca, `descriptionEn`
+  otherwise) with graceful fallback to the other language
+- [x] **U14** Replaced dish `AssistChip` with plain `Text` rows inside each section
+- [x] **U15** "Get directions" filled button — walking deep-link CTA (T4.2)
+- [x] **U16** Photo fallback — branded `🍽` emoji on `primaryContainer` background when
+  `thumbnailUrl` is null (applied in detail screen, list card, and bottom-sheet detail card)
 
 ### Theme & global polish
 
-- [ ] **U17** Custom typography — warmer/rounder display font for headings (Google Fonts, bundled)
-- [ ] **U18** App icon + adaptive icon (Android) — currently default KMP icon (T4.5)
-- [ ] **U19** Dark mode map tiles — Google Maps dark style JSON when `isSystemInDarkTheme()`
-- [ ] **U20** Empty state screen — "No hay menús cerca" illustration + recenter CTA (T4.6)
+- [ ] **U17** Custom typography — deferred (needs Google Font file bundled into
+  `composeResources/font/` + Typography config in `MenuTheme`)
+- [x] **U18** App icon + adaptive icon (Android) — scaffolding done; placeholder grid art retained
+  for future replacement (T4.5)
+- [ ] **U19** Dark mode map tiles — deferred (needs Google Maps dark style JSON applied via
+  `MapProperties(mapStyleOptions = ...)` on Android + iOS)
+- [x] **U20** Empty state screen — "No menús nearby" with recenter CTA + filtered-empty variant
+  with "Clear filters" CTA (T4.6)
 
 ---
 

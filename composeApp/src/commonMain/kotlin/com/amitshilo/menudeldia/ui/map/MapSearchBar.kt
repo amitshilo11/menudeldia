@@ -24,10 +24,14 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.clear_search
 import menudeldia.composeapp.generated.resources.close
 import menudeldia.composeapp.generated.resources.filter_list
+import menudeldia.composeapp.generated.resources.filters
 import menudeldia.composeapp.generated.resources.search
+import menudeldia.composeapp.generated.resources.search_placeholder
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MapSearchBar(
@@ -70,7 +74,7 @@ fun MapSearchBar(
             decorationBox = { innerTextField ->
                 if (query.isEmpty()) {
                     Text(
-                        text = "Buscar restaurantes...",
+                        text = stringResource(Res.string.search_placeholder),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -87,7 +91,7 @@ fun MapSearchBar(
             IconButton(onClick = { onQueryChange("") }) {
                 Icon(
                     painter = painterResource(Res.drawable.close),
-                    contentDescription = "Clear search",
+                    contentDescription = stringResource(Res.string.clear_search),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
@@ -103,7 +107,7 @@ fun MapSearchBar(
             IconButton(onClick = onFilterClick) {
                 Icon(
                     painter = painterResource(Res.drawable.filter_list),
-                    contentDescription = "Filters",
+                    contentDescription = stringResource(Res.string.filters),
                     tint = if (activeFilterCount > 0) MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.onSurfaceVariant,
                 )

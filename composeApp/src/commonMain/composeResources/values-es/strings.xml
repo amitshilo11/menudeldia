@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Navigation -->
+    <string name="back">Atrás</string>
+    <string name="close">Cerrar</string>
+
+    <!-- Map screen -->
+    <string name="search_placeholder">Buscar restaurantes…</string>
+    <string name="clear_search">Borrar búsqueda</string>
+    <string name="filters">Filtros</string>
+    <string name="recenter">Centrar</string>
+    <string name="recenter_on_me">Centrar en mi ubicación</string>
+    <string name="restaurants_nearby">%1$d restaurantes cerca</string>
+    <string name="restaurants_of_total">%1$d de %2$d restaurantes</string>
+
+    <!-- Empty / Error -->
+    <string name="empty_no_menus">No hay menús cerca</string>
+    <string name="empty_no_menus_sub">Mueve el mapa o céntralo en tu ubicación.</string>
+    <string name="empty_filtered">Ningún restaurante coincide con tus filtros</string>
+    <string name="empty_filtered_sub">Borra los filtros para ver más sitios.</string>
+    <string name="clear_filters">Borrar filtros</string>
+    <string name="error_title">No podemos llegar a la cocina</string>
+    <string name="retry">Reintentar</string>
+
+    <!-- Status badges -->
+    <string name="open_now">Abierto</string>
+    <string name="closed_now">Cerrado</string>
+    <string name="no_menu_today_short">Sin menú hoy</string>
+    <string name="open_closes_at">Abierto · cierra a las %1$s</string>
+
+    <!-- Detail screen -->
+    <string name="daily_menu">Menú del día</string>
+    <string name="daily_menu_with_price">Menú del día — €%1$s</string>
+    <string name="get_directions">Cómo llegar</string>
+    <string name="hours_header">Horario</string>
+    <string name="phone_header">Teléfono</string>
+    <string name="dish_firsts">Primeros</string>
+    <string name="dish_seconds">Segundos</string>
+    <string name="dish_desserts">Postres</string>
+    <string name="no_menu_today_long">Sin menú del día hoy</string>
+</resources>

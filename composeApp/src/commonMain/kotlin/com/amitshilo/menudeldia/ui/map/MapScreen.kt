@@ -3,8 +3,10 @@ package com.amitshilo.menudeldia.ui.map
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,15 +15,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
@@ -34,14 +41,29 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.amitshilo.menudeldia.location.rememberLocationState
 import com.amitshilo.menudeldia.navigation.Screen
 import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.clear_filters
+import menudeldia.composeapp.generated.resources.empty_filtered
+import menudeldia.composeapp.generated.resources.empty_filtered_sub
+import menudeldia.composeapp.generated.resources.empty_no_menus
+import menudeldia.composeapp.generated.resources.empty_no_menus_sub
+import menudeldia.composeapp.generated.resources.error_title
 import menudeldia.composeapp.generated.resources.my_location
+import menudeldia.composeapp.generated.resources.recenter
+import menudeldia.composeapp.generated.resources.recenter_on_me
+import menudeldia.composeapp.generated.resources.restaurants_nearby
+import menudeldia.composeapp.generated.resources.restaurants_of_total
+import menudeldia.composeapp.generated.resources.retry
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 private val detailCardHeight = 300.dp
 
@@ -55,14 +77,19 @@ fun MapScreen(navController: NavController) {
     var recenterTrigger by remember { mutableIntStateOf(0) }
     var filterPanelVisible by remember { mutableStateOf(false) }
 
+    LaunchedEffect(locationState.location) {
+        viewModel.onUserLocationChanged(locationState.location)
+    }
+
     when (val state = uiState) {
         is MapUiState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
 
-        is MapUiState.Error -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(state.message, color = MaterialTheme.colorScheme.error)
-        }
+        is MapUiState.Error -> ErrorState(
+            message = state.message,
+            onRetry = { viewModel.refresh() },
+        )
 
         is MapUiState.Success -> {
             val isCardMode = state.selectedRestaurant != null
@@ -79,6 +106,7 @@ fun MapScreen(navController: NavController) {
                     BottomSheetScaffold(
                         scaffoldState = scaffoldState,
                         sheetPeekHeight = sheetPeekHeight,
+                        sheetDragHandle = { BottomSheetDefaults.DragHandle() },
                         sheetContent = {
                             RestaurantListSheet(
                                 restaurants = state.restaurants,
@@ -86,6 +114,8 @@ fun MapScreen(navController: NavController) {
                                 onRestaurantTap = { viewModel.selectRestaurant(it) },
                                 filterState = state.filterState,
                                 totalCount = state.allRestaurants.size,
+                                onClearFilters = { viewModel.clearFilters() },
+                                onRecenter = { recenterTrigger++ },
                                 modifier = Modifier.heightIn(max = sheetMaxHeight),
                             )
                         },
@@ -134,7 +164,7 @@ fun MapScreen(navController: NavController) {
                         ) {
                             Icon(
                                 painter = painterResource(Res.drawable.my_location),
-                                contentDescription = "Recenter on me",
+                                contentDescription = stringResource(Res.string.recenter_on_me),
                             )
                         }
                     }
@@ -178,12 +208,24 @@ private fun RestaurantListSheet(
     onRestaurantTap: (String) -> Unit,
     filterState: com.amitshilo.menudeldia.domain.model.SearchFilterState,
     totalCount: Int,
+    onClearFilters: () -> Unit,
+    onRecenter: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val headerText = if (filterState.isActive) {
-        "${restaurants.size} de $totalCount restaurantes"
+        stringResource(Res.string.restaurants_of_total, restaurants.size, totalCount)
     } else {
-        "${restaurants.size} restaurantes cerca"
+        stringResource(Res.string.restaurants_nearby, restaurants.size)
+    }
+
+    if (restaurants.isEmpty()) {
+        EmptySheetState(
+            modifier = modifier,
+            isFiltered = filterState.isActive,
+            onClearFilters = onClearFilters,
+            onRecenter = onRecenter,
+        )
+        return
     }
 
     LazyColumn(
@@ -206,5 +248,82 @@ private fun RestaurantListSheet(
             )
         }
         item { Spacer(Modifier.navigationBarsPadding().height(16.dp)) }
+    }
+}
+
+@Composable
+private fun EmptySheetState(
+    isFiltered: Boolean,
+    onClearFilters: () -> Unit,
+    onRecenter: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Box(
+            modifier = Modifier
+                .size(72.dp)
+                .clip(RoundedCornerShape(36.dp))
+                .background(MaterialTheme.colorScheme.primaryContainer),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(text = "🍽", fontSize = 36.sp)
+        }
+        Spacer(Modifier.height(16.dp))
+        Text(
+            text = stringResource(if (isFiltered) Res.string.empty_filtered else Res.string.empty_no_menus),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold,
+        )
+        Spacer(Modifier.height(6.dp))
+        Text(
+            text = stringResource(if (isFiltered) Res.string.empty_filtered_sub else Res.string.empty_no_menus_sub),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(Modifier.height(20.dp))
+        if (isFiltered) {
+            Button(onClick = onClearFilters) { Text(stringResource(Res.string.clear_filters)) }
+        } else {
+            OutlinedButton(onClick = onRecenter) { Text(stringResource(Res.string.recenter)) }
+        }
+    }
+}
+
+@Composable
+private fun ErrorState(message: String, onRetry: () -> Unit) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(horizontal = 24.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(72.dp)
+                    .clip(RoundedCornerShape(36.dp))
+                    .background(MaterialTheme.colorScheme.errorContainer),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(text = "🍳", fontSize = 36.sp)
+            }
+            Spacer(Modifier.height(16.dp))
+            Text(
+                text = stringResource(Res.string.error_title),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+            )
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Spacer(Modifier.height(20.dp))
+            Button(onClick = onRetry) { Text(stringResource(Res.string.retry)) }
+        }
     }
 }
