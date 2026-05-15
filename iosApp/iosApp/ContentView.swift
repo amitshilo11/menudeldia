@@ -3,8 +3,11 @@ import SwiftUI
 import ComposeApp
 
 struct ComposeView: UIViewControllerRepresentable {
+
+    private let bridge = CompositeAuthBridge()
+
     func makeUIViewController(context: Context) -> UIViewController {
-        MainViewControllerKt.MainViewController()
+        MainViewControllerKt.MainViewController(bridge: bridge)
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}

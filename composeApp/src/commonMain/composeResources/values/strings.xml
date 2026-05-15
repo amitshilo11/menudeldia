@@ -4,6 +4,17 @@
     <string name="back">Back</string>
     <string name="close">Close</string>
 
+    <!-- Login screen -->
+    <string name="login_title">Menú del Día</string>
+    <string name="login_subtitle">Find the best daily menus in Barcelona</string>
+    <string name="login_google">Continue with Google</string>
+    <string name="login_apple">Continue with Apple</string>
+    <string name="login_guest">Continue as guest</string>
+
+    <!-- Account screen -->
+    <string name="account_title">Account</string>
+    <string name="account_sign_out">Sign out</string>
+
     <!-- Map screen -->
     <string name="search_placeholder">Search restaurants…</string>
     <string name="clear_search">Clear search</string>

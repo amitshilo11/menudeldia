@@ -1,4 +1,12 @@
 # Local dev overrides. Database from docker-compose.yml.
+#
+# Auth: set a local signing key for dev. In prod, use JWT_SIGNING_KEY env var.
+# Generate one with: openssl rand -hex 32
+# Then: export JWT_SIGNING_KEY="<output>"
+#
+# Google OAuth client ID from Google Cloud Console (web client).
+# Apple bundle ID defaults to com.menudeldia.app in application.yml.
+
 spring:
   jpa:
     show-sql: true

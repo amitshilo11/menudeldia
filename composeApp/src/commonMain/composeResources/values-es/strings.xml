@@ -4,6 +4,17 @@
     <string name="back">Atrás</string>
     <string name="close">Cerrar</string>
 
+    <!-- Login screen -->
+    <string name="login_title">Menú del Día</string>
+    <string name="login_subtitle">Encuentra los mejores menús del día en Barcelona</string>
+    <string name="login_google">Continuar con Google</string>
+    <string name="login_apple">Continuar con Apple</string>
+    <string name="login_guest">Continuar como invitado</string>
+
+    <!-- Account screen -->
+    <string name="account_title">Cuenta</string>
+    <string name="account_sign_out">Cerrar sesión</string>
+
     <!-- Map screen -->
     <string name="search_placeholder">Buscar restaurantes…</string>
     <string name="clear_search">Borrar búsqueda</string>
