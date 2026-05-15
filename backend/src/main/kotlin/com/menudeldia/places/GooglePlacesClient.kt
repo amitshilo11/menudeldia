@@ -25,6 +25,10 @@ class GooglePlacesClient(private val props: AppProperties) {
 
     @CircuitBreaker(name = "googlePlaces", fallbackMethod = "placeDetailsFallback")
     fun placeDetails(placeId: String): PlaceDetailsResponse {
+        if (props.google.placesApiKey.isBlank()) {
+            log.error("GOOGLE_PLACES_API_KEY is empty! Enrichment will fail.")
+            throw PlacesException.ApiError("API Key is missing")
+        }
         return try {
             http.get()
                 .uri("/places/{id}", placeId)
@@ -34,10 +38,20 @@ class GooglePlacesClient(private val props: AppProperties) {
                 .body(PlaceDetailsResponse::class.java)
                 ?: throw PlacesException.ApiError("Empty response for place $placeId")
         } catch (ex: HttpClientErrorException) {
-            log.warn("Google Places 4xx for place {}: {}", placeId, ex.statusCode)
+            log.warn(
+                "Google Places 4xx for place {}: {} — {}",
+                placeId,
+                ex.statusCode,
+                ex.responseBodyAsString
+            )
             throw PlacesException.ApiError("Client error ${ex.statusCode} for place $placeId", ex)
         } catch (ex: HttpServerErrorException) {
-            log.warn("Google Places 5xx for place {}: {}", placeId, ex.statusCode)
+            log.warn(
+                "Google Places 5xx for place {}: {} — {}",
+                placeId,
+                ex.statusCode,
+                ex.responseBodyAsString
+            )
             throw PlacesException.ApiError("Server error ${ex.statusCode} for place $placeId", ex)
         }
     }
@@ -46,7 +60,7 @@ class GooglePlacesClient(private val props: AppProperties) {
     fun photoBytes(photoName: String, maxHeightPx: Int): ByteArray {
         return try {
             http.get()
-                .uri("/{name}/media?maxHeightPx={px}&skipHttpRedirect=true", photoName, maxHeightPx)
+                .uri("/$photoName/media?maxHeightPx=$maxHeightPx&skipHttpRedirect=true")
                 .header("X-Goog-Api-Key", props.google.placesApiKey)
                 .retrieve()
                 .body(ByteArray::class.java)
