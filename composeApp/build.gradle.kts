@@ -80,6 +80,7 @@ kotlin {
             implementation(libs.androidx.core.splashscreen)
             implementation(libs.maps.compose)
             implementation(libs.play.services.location)
+            implementation(libs.timber)
         }
 
         commonTest.dependencies {
@@ -99,6 +100,9 @@ android {
         versionCode = 1
         versionName = "1.0"
         manifestPlaceholders["MAPS_API_KEY"] = localProps["MAPS_API_KEY"]?.toString() ?: ""
+    }
+    buildFeatures {
+        buildConfig = true
     }
     packaging {
         resources {
