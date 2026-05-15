@@ -75,6 +75,13 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
 }
 
+tasks.withType<org.springframework.boot.gradle.tasks.run.BootRun> {
+    systemProperty("spring.profiles.active", project.properties["profiles"] ?: "dev")
+    environment("GOOGLE_PLACES_API_KEY", System.getenv("GOOGLE_PLACES_API_KEY") ?: "")
+    environment("GOOGLE_OAUTH_CLIENT_ID", System.getenv("GOOGLE_OAUTH_CLIENT_ID") ?: "")
+    environment("JWT_SIGNING_KEY", System.getenv("JWT_SIGNING_KEY") ?: "")
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }

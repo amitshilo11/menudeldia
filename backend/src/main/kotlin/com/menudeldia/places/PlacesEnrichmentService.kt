@@ -7,6 +7,7 @@ import com.menudeldia.places.dto.PlaceDetailsResponse
 import com.menudeldia.restaurant.Restaurant
 import com.menudeldia.restaurant.RestaurantRepository
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.util.UUID
@@ -24,6 +25,14 @@ class PlacesEnrichmentService(
     private val inFlight = Caffeine.newBuilder()
         .expireAfterWrite(60, TimeUnit.SECONDS)
         .build<UUID, Boolean>()
+
+    /** Fetches all stale rows (up to [limit]) and enriches them. Returns the count processed. */
+    fun enrichAllStale(limit: Int = 50): Int {
+        val cutoff = Instant.now().minus(props.google.placesCacheTtl)
+        val rows = repo.findStale(cutoff, PageRequest.of(0, limit))
+        rows.forEach { refresh(it) }
+        return rows.size
+    }
 
     fun refreshIfStale(rows: List<Restaurant>) {
         val now = Instant.now()
@@ -45,7 +54,14 @@ class PlacesEnrichmentService(
             repo.save(row)
             log.debug("Enriched restaurant {} ({})", row.name, row.id)
         } catch (ex: PlacesException) {
-            log.warn("Enrichment failed for {} ({}): {}", row.name, row.id, ex.message)
+            val rootCause = generateSequence(ex as Throwable) { it.cause }.last()
+            log.warn(
+                "Enrichment failed for {} ({}): {} | root: {}",
+                row.name,
+                row.id,
+                ex.message,
+                rootCause.message
+            )
         }
     }
 

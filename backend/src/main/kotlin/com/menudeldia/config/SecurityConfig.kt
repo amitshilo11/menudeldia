@@ -26,6 +26,7 @@ class SecurityConfig(
                     .requestMatchers("${ApiPaths.V1}/health").permitAll()
                     .requestMatchers("${ApiPaths.V1}/auth/**").permitAll()
                     .requestMatchers("${ApiPaths.V1}/restaurants/**").permitAll()
+                    .requestMatchers("${ApiPaths.V1}/admin/**").permitAll()
                     .requestMatchers("${ApiPaths.V1}/me/**").authenticated()
                     .anyRequest().denyAll()
             }
