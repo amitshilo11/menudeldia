@@ -33,8 +33,11 @@ fun RestaurantDto.toDomain(): Restaurant = Restaurant(
 
 fun OpeningHoursDto.toDomain(): OpeningHours = OpeningHours(
     dayOfWeek = DayOfWeek(dayOfWeek),
-    openTime = LocalTime.parse(openTime),
-    closeTime = LocalTime.parse(closeTime),
+    openTime = if (isClosed || openTime.isEmpty()) LocalTime(0, 0) else LocalTime.parse(openTime),
+    closeTime = if (isClosed || closeTime.isEmpty()) LocalTime(
+        0,
+        0
+    ) else LocalTime.parse(closeTime),
     isClosed = isClosed,
 )
 

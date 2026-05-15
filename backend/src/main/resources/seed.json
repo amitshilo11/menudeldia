@@ -1,0 +1,3046 @@
+[
+  {
+    "name": "Kemo",
+    "googlePlaceId": "ChIJd1V-d_OipBIRk2tJR6Ilzi8",
+    "phone": "+34936227430",
+    "website": "https://www.kemo.es/",
+    "menuPrice": 12.5,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:30-16:00",
+      "tue": "12:30-16:00",
+      "wed": "12:30-16:00",
+      "thu": "12:30-16:00",
+      "fri": "12:30-16:00"
+    }
+  },
+  {
+    "name": "Lady babka",
+    "googlePlaceId": "ChIJiZWAJLmjpBIRr41fGxzzhBU",
+    "phone": "+34931267051",
+    "website": "http://ladybabka.es/",
+    "menuPrice": 18.9,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Vabowl",
+    "googlePlaceId": "ChIJy7JDzvGjpBIReD2kIZ5wYvs",
+    "phone": "+34936844115",
+    "website": "https://vabowl.com/",
+    "menuPrice": 13.9,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Dim sum",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Dim Sum",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:30-16:00",
+      "tue": "12:30-16:00",
+      "wed": "12:30-16:00",
+      "thu": "12:30-16:00",
+      "fri": "12:30-16:00"
+    }
+  },
+  {
+    "name": "Kobe",
+    "googlePlaceId": "ChIJGbZRPZijpBIR83Hd4qrvrnc",
+    "phone": "+34615219121",
+    "website": "https://kobebcn.com/",
+    "menuPrice": 15.95,
+    "cuisineType": "JAPANESE",
+    "cuisineEmoji": "🍣",
+    "priceIncludesEs": [
+      "Primero",
+      "Sushi",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Sushi",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Via granados",
+    "googlePlaceId": "ChIJIfWp1I-ipBIRhFFsCgHhQ1c",
+    "phone": "+34937070621",
+    "website": "https://viagranados.com/?utm_source=google&utm_medium=organico&utm_campaign=gbp&utm_id=enlace+web",
+    "menuPrice": 17.5,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:30",
+      "tue": "13:00-15:30",
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "La Martina",
+    "googlePlaceId": "ChIJoxhPyFSjpBIRtwOMUscSLv4",
+    "phone": "+34932853943",
+    "website": "http://lamartinadegracia.com/",
+    "menuPrice": 18.0,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:30",
+      "tue": "13:00-15:30",
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "Oishii Remen",
+    "googlePlaceId": "ChIJSwuRmPqipBIRsPPvzN9uNps",
+    "phone": "+34613270042",
+    "website": "http://www.oishiiramen.com/",
+    "menuPrice": 14.5,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Pho Ha Noi",
+    "googlePlaceId": "ChIJ65tSeIyipBIRmnRniTpTLO0",
+    "phone": "+34930101092",
+    "website": "http://phohanoibarcelona.com/",
+    "menuPrice": 13.9,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Royal Nepal",
+    "googlePlaceId": "ChIJO1iQHsKipBIR2XVDsXqwpBo",
+    "phone": "+34931054243",
+    "website": "http://www.royalnepalbcn.com/",
+    "menuPrice": 14.5,
+    "cuisineType": "INDIAN",
+    "cuisineEmoji": "🍛",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Mi Tierra",
+    "googlePlaceId": "ChIJB3aEIfOYpBIRadElqY8lBfw",
+    "phone": "+34934407121",
+    "website": "https://mytierra.es/",
+    "menuPrice": 13.5,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Mi Tierra",
+    "googlePlaceId": "ChIJ__8zu4mipBIR3gz6pByh1qQ",
+    "phone": "+34938324148",
+    "website": "http://mytierra.es/",
+    "menuPrice": 13.5,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Can Tresó",
+    "googlePlaceId": "ChIJnTySwqKipBIR7mChDrE8LaY",
+    "phone": "+34938095043",
+    "website": "https://cantreso.com/",
+    "menuPrice": 16.8,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Balthazar",
+    "googlePlaceId": "ChIJH0DTCJCipBIRJDTuMCJ1Hkc",
+    "phone": "+34932178250",
+    "website": "https://andilana.com/locales/balthazar/",
+    "menuPrice": 14.95,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Viet Kitchen",
+    "googlePlaceId": "ChIJW86eupqipBIRFnFvQTns--Q",
+    "phone": "+34931090041",
+    "website": "https://vietkitchenbcn.com/",
+    "menuPrice": 14.9,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Pho Viet",
+    "googlePlaceId": "ChIJzav1ORqjpBIRNmmAgGz1MDw",
+    "phone": "+34930278661",
+    "website": "https://www.instagram.com/pho_viet_barcelona/",
+    "menuPrice": 13.9,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Patron Restaurant and Lounge",
+    "googlePlaceId": "ChIJZ9PCF5yipBIR4UARKasX5kE",
+    "phone": "+34934146622",
+    "website": "https://patronrestaurante.com/carta-de-patron/",
+    "menuPrice": 18.9,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Cuina Panda",
+    "googlePlaceId": "ChIJZTXy9WKipBIRO0boxRcvjXk",
+    "phone": "+34938074751",
+    "website": "https://www.instagram.com/cuinapanda/",
+    "menuPrice": 13.0,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "El Glop Gaudí",
+    "googlePlaceId": "ChIJxwZOJVWjpBIRteiF7ny9ZFc",
+    "phone": "+34934870097",
+    "website": "https://elglop.com/",
+    "menuPrice": 16.4,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Restaurante L'Encant Vegetarià",
+    "googlePlaceId": "ChIJowSUHd-ipBIRpt2RLDbxl6U",
+    "phone": "+34932440016",
+    "website": "http://www.lencantvegetaria.es/",
+    "menuPrice": 14.95,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "3 platos a elegir",
+      "Postre",
+      "Agua"
+    ],
+    "priceIncludesEn": [
+      "3 dishes of choice",
+      "Dessert",
+      "Water"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Last Monkey",
+    "googlePlaceId": "ChIJNZvQj2GipBIRjaO0ElWtnEI",
+    "phone": "+34935328995",
+    "website": "https://www.lastmonkey-bcn.com/",
+    "menuPrice": 10.9,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Bol a elegir",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Bowl of choice",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "Bar Casi",
+    "googlePlaceId": "ChIJPfDI3bqipBIRjgWxclrllwE",
+    "phone": "+34669295850",
+    "website": "https://www.instagram.com/barcasibcn/",
+    "menuPrice": 17.5,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:00-15:30",
+      "tue": "12:00-15:30",
+      "wed": "12:00-15:30",
+      "thu": "12:00-15:30",
+      "fri": "12:00-15:30"
+    }
+  },
+  {
+    "name": "El Glop Plaça Catalunya",
+    "googlePlaceId": "ChIJ48XbxfGipBIR5iX1WNlrDWE",
+    "phone": "+34933187575",
+    "website": "http://www.elglop.com/",
+    "menuPrice": 16.4,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "MOSCADA",
+    "googlePlaceId": "ChIJbzY6rRWjpBIRNVxSPbboqZA",
+    "phone": "+34931018764",
+    "website": "https://www.moscadabcn.com/",
+    "menuPrice": 18.8,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:30-16:00",
+      "tue": "12:30-16:00",
+      "wed": "12:30-16:00",
+      "thu": "12:30-16:00",
+      "fri": "12:30-16:00"
+    }
+  },
+  {
+    "name": "Casa Jaime",
+    "googlePlaceId": "ChIJKQBtTYmipBIRJef4Qcuk_Rk",
+    "phone": "+34931893222",
+    "website": "http://www.casajaime.cat/",
+    "menuPrice": 15.0,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:30",
+      "tue": "13:00-15:30",
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "DosManos",
+    "googlePlaceId": "ChIJ911FNZSipBIRWbFCLWx3fXY",
+    "phone": "+34937605211",
+    "website": "https://www.instagram.com/dosmanos_pitabar/",
+    "menuPrice": 14.9,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Pan de pita",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Pita",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:30-16:00",
+      "tue": "12:30-16:00",
+      "wed": "12:30-16:00",
+      "thu": "12:30-16:00",
+      "fri": "12:30-16:00"
+    }
+  },
+  {
+    "name": "kawamura",
+    "googlePlaceId": "ChIJsULx642ipBIRvk3v1A8OhYI",
+    "phone": "+34930237546",
+    "website": "https://www.instagram.com/popular/kawamura-barcelona/",
+    "menuPrice": 16.4,
+    "cuisineType": "JAPANESE",
+    "cuisineEmoji": "🍣",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal (Ramen)",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main (Ramen)",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:30-16:00",
+      "tue": "13:30-16:00",
+      "wed": "13:30-16:00",
+      "fri": "13:30-16:00"
+    }
+  },
+  {
+    "name": "Hanoi Restaurant",
+    "googlePlaceId": "ChIJsULx642ipBIRjbvvPBntZDc",
+    "phone": "+34934511233",
+    "website": "https://www.tripadvisor.com/Restaurant_Review-g187497-d1074510-Reviews-Hanoi-Barcelona_Catalonia.html",
+    "menuPrice": 15.0,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:30-16:00",
+      "tue": "12:30-16:00",
+      "wed": "12:30-16:00",
+      "thu": "12:30-16:00",
+      "fri": "12:30-16:00"
+    }
+  },
+  {
+    "name": "El Provisional",
+    "googlePlaceId": "ChIJU0arm42ipBIR4smWwYSnhRk",
+    "phone": "+34930151659",
+    "website": "http://www.elprovisional.com/",
+    "menuPrice": 22.8,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Taller de Tapas | Rambla Catalunya",
+    "googlePlaceId": "ChIJ1Q6UUI2ipBIR7ZgHITkmI94",
+    "phone": "+34934874842",
+    "website": "http://tallerdetapas.com/restaurantes/argenteria/",
+    "menuPrice": 16.5,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Asian Ways",
+    "googlePlaceId": "ChIJp0HT2l2ipBIR_vyA7IWuu94",
+    "phone": "+34938324560",
+    "website": "https://restaurantasianways.es/",
+    "menuPrice": 14.8,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Asian Ways",
+    "googlePlaceId": "ChIJmbipzZKjpBIRlrRtzF5h7h0",
+    "phone": "+34934974431",
+    "website": "https://restaurantasianways.es/",
+    "menuPrice": 14.8,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Asian Ways",
+    "googlePlaceId": "ChIJSRsN-LajpBIR2NRiDoSKEDc",
+    "phone": "+34932703467",
+    "website": "https://restaurantasianways.es/",
+    "menuPrice": 14.8,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Asian Ways",
+    "googlePlaceId": "ChIJHU9Q4XuZpBIRqhCdkLqAOT8",
+    "phone": "+34930322948",
+    "website": "https://restaurantasianways.es/",
+    "menuPrice": 14.8,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Hanoi Umami",
+    "googlePlaceId": "ChIJffVxYgCjpBIReo7DGHyiFOw",
+    "phone": "+34930076397",
+    "website": "https://www.instagram.com/hanoiumami.barcelona/",
+    "menuPrice": 16.5,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Kayi Sushi",
+    "googlePlaceId": "ChIJGcJQNwCjpBIRJOq4UbkioO4",
+    "phone": "+34936227911",
+    "website": "http://www.kayisushi.es/",
+    "menuPrice": 14.9,
+    "cuisineType": "JAPANESE",
+    "cuisineEmoji": "🍣",
+    "priceIncludesEs": [
+      "5 platos a elegir",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "5 dishes of choice",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Messié Sin Gluten Muntaner",
+    "googlePlaceId": "ChIJu_Zhho-ipBIRWGFXjskdtPY",
+    "phone": "+34938082303",
+    "website": "http://www.messiepizza.es/messie-pizza-sin-gluten/",
+    "menuPrice": 15.5,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:00-16:00",
+      "tue": "12:00-16:00",
+      "wed": "12:00-16:00",
+      "thu": "12:00-16:00",
+      "fri": "12:00-16:00"
+    }
+  },
+  {
+    "name": "Le Romane",
+    "googlePlaceId": "ChIJNzTNpo-ipBIRO8i0UZsVyzs",
+    "phone": "+34937069803",
+    "website": "http://www.leromane.com/",
+    "menuPrice": 14.5,
+    "cuisineType": "ITALIAN",
+    "cuisineEmoji": "🍝",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:30",
+      "tue": "13:00-15:30",
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30"
+    }
+  },
+  {
+    "name": "Bodega Borràs",
+    "googlePlaceId": "ChIJX1Ja4xyjpBIRmL-rZufI7-I",
+    "phone": "+34936042669",
+    "website": "https://bodegaborras.com/en/",
+    "menuPrice": 19.9,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:30",
+      "tue": "13:00-15:30",
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30"
+    }
+  },
+  {
+    "name": "Pampa Grill Asador Argentino",
+    "googlePlaceId": "ChIJA3y6k4OjpBIRZPPp8EkXH-o",
+    "phone": "+34930044946",
+    "website": "https://www.instagram.com/pampagrill.bcn/",
+    "menuPrice": 20.0,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Primero",
+      "Entrante",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Appetizer",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Florida Grill",
+    "googlePlaceId": "ChIJZYbL5BOjpBIRKZTgjYOY-LU",
+    "phone": "+34933257039",
+    "website": "https://florida.cat/",
+    "menuPrice": 18.5,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Sol Argentini",
+    "googlePlaceId": "ChIJKc1NhRyjpBIRf2Z5AtAroQM",
+    "phone": "+34935251411",
+    "website": "https://www.instagram.com/solargentino.bcn/",
+    "menuPrice": 14.5,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Shanti Restaurant",
+    "googlePlaceId": "ChIJAZLwTWWYpBIRYlgiaEFiI4U",
+    "phone": "+34932051985",
+    "website": "https://www.shanti.es/",
+    "menuPrice": 15.5,
+    "cuisineType": "INDIAN",
+    "cuisineEmoji": "🍛",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:00",
+      "tue": "13:00-15:00",
+      "wed": "13:00-15:00",
+      "thu": "13:00-15:00",
+      "fri": "13:00-15:00"
+    }
+  },
+  {
+    "name": "Collonut | Gelabert",
+    "googlePlaceId": "ChIJ51AzRzmZpBIRxwKMCKjWORo",
+    "phone": "+34930384403",
+    "website": "https://www.collonut.com/",
+    "menuPrice": 15.5,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00"
+    }
+  },
+  {
+    "name": "El Casal Café Bar",
+    "googlePlaceId": "ChIJwVsjHf-ipBIRDiGdeunEFX0",
+    "phone": "+34932684004",
+    "website": "https://www.elcasalcafe.es/",
+    "menuPrice": 14.0,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Elisabets",
+    "googlePlaceId": "ChIJCWo2LvSipBIRTvKXpqi4N38",
+    "phone": "+34933175826",
+    "website": "https://www.instagram.com/elisabets1962/",
+    "menuPrice": 16.5,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:45",
+      "tue": "13:00-15:45",
+      "wed": "13:00-15:45",
+      "thu": "13:00-15:45",
+      "fri": "13:00-15:45"
+    }
+  },
+  {
+    "name": "El Sentit",
+    "googlePlaceId": "ChIJh81fEZGYpBIR6T43kQTrns0",
+    "phone": "+34936012979",
+    "website": "https://www.restaurantelsentit.es/",
+    "menuPrice": 15.9,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Brasas el Pera",
+    "googlePlaceId": "ChIJq5j_z4GYpBIRWQKHa9Bkays",
+    "phone": "+34631718760",
+    "website": "https://www.instagram.com/brasaselpera/",
+    "menuPrice": 13.95,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Perú En Tu Mesa",
+    "googlePlaceId": "ChIJgZxbzniipBIRvEiy8N---7A",
+    "phone": "+34670549504",
+    "website": "https://www.peruentumesa.es/",
+    "menuPrice": 15.5,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Donde Siempre Restaurantes",
+    "googlePlaceId": "ChIJlTYJq3iipBIRJ1VSSuXu1v4",
+    "phone": "+34931377010",
+    "website": "https://lunexio.com/olp/ES/12288_2step_2/index.php?sub5=d6tt3m1ipanc739e3a4g&sub1=84&sub2=2018&sub4=ES&sub3=17506&lp_key=17739603c43fb8eaed9dfcc612fb39fd5dd5916932",
+    "menuPrice": 15.5,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "tue": "12:00-16:00",
+      "wed": "12:00-16:00",
+      "thu": "12:00-16:00",
+      "fri": "12:00-16:00"
+    }
+  },
+  {
+    "name": "La Nova Farga",
+    "googlePlaceId": "ChIJ-7Su64SYpBIRT0sQO35Y8Lg",
+    "phone": "+34600592909",
+    "website": "https://www.instagram.com/lanovafarga?igsh=MWI2MXp4dDY0OHoybw==",
+    "menuPrice": 14.5,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:30",
+      "tue": "13:00-15:30",
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "Corea Street Food",
+    "googlePlaceId": "ChIJP9BKJOKZpBIRK9tTnUj73Tg",
+    "phone": "+34659810850",
+    "website": "https://www.instagram.com/coreastreetfood.bcn?igsh=OXg5cHF0eWE3dXVz",
+    "menuPrice": 15.0,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:30-17:00",
+      "tue": "13:30-17:00",
+      "wed": "13:30-17:00",
+      "thu": "13:30-17:00",
+      "fri": "13:30-17:00"
+    }
+  },
+  {
+    "name": "Can Coca",
+    "googlePlaceId": "ChIJF5uciY-YpBIRSQ1qeqxUuQE",
+    "phone": "+34934217727",
+    "website": "https://www.instagram.com/cancocarestaurant/",
+    "menuPrice": 16.4,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "La Piazzetta GranVia",
+    "googlePlaceId": "ChIJRfgEqouipBIRfsPcqi0_8Do",
+    "phone": "+34930079608",
+    "website": "https://www.instagram.com/lapiazzettagranvia/",
+    "menuPrice": 17.9,
+    "cuisineType": "ITALIAN",
+    "cuisineEmoji": "🍝",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "El Farolito L'H",
+    "googlePlaceId": "ChIJgeaJD5SYpBIRWn1aT_nGZYY",
+    "phone": "+34935289200",
+    "website": "https://elfarolito.eatbu.com/?lang=es",
+    "menuPrice": 13.5,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "A fuego lento",
+    "googlePlaceId": "ChIJ4_-HR8ejpBIR44jprjCq0bc",
+    "phone": "+34936470515",
+    "website": "https://www.restauranteafuegolento.es/",
+    "menuPrice": 14.9,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Ristorante Meraviglioso",
+    "googlePlaceId": "ChIJgUxix3-ipBIRdTAkivBCBgQ",
+    "phone": "+34646710705",
+    "website": "http://www.ristorantemeraviglioso.com/",
+    "menuPrice": 14.0,
+    "cuisineType": "ITALIAN",
+    "cuisineEmoji": "🍝",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:15",
+      "tue": "13:00-15:15",
+      "wed": "13:00-15:15",
+      "thu": "13:00-15:15",
+      "fri": "13:00-15:15"
+    }
+  },
+  {
+    "name": "Le Bistrot Restaurant",
+    "googlePlaceId": "ChIJZQwVe36ipBIRd2dGIIRvI7o",
+    "phone": "+34694296230",
+    "website": "https://bistrotbcn.com/",
+    "menuPrice": 16.5,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:30-15:30",
+      "tue": "12:30-15:30",
+      "wed": "12:30-15:30",
+      "thu": "12:30-15:30",
+      "fri": "12:30-15:30"
+    }
+  },
+  {
+    "name": "Hakone Eixample",
+    "googlePlaceId": "ChIJVawIX46ipBIRYYNiRUu7Y3c",
+    "phone": "+34932053139",
+    "website": "https://hakone.es/",
+    "menuPrice": 16.8,
+    "cuisineType": "JAPANESE",
+    "cuisineEmoji": "🍣",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "True burgers",
+    "googlePlaceId": "ChIJWWfv_46ipBIRd5NxrHO0tgU",
+    "phone": "+34675464880",
+    "website": "https://trueburgers.es/",
+    "menuPrice": 15.9,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Hamburguesa",
+      "Patatas fritas",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Burger",
+      "Fries",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Cal ninot by rosi",
+    "googlePlaceId": "ChIJASKrf4WipBIREYDiKNo6Snk",
+    "phone": "+34931244297",
+    "website": "https://www.instagram.com/calninotbyrosi?igsh=MWk1ZXd4ZmZoa3l3Yw==",
+    "menuPrice": 25.0,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Entrante",
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Appetizer",
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Fonda Can Portell",
+    "googlePlaceId": "ChIJPf1-eoaYpBIRL9G7K5lv8Wg",
+    "phone": "+34934904115",
+    "website": "https://www.fondacanportell.cat/",
+    "menuPrice": 24.9,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:30",
+      "tue": "13:00-15:30",
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "Mannà",
+    "googlePlaceId": "ChIJG497BhqjpBIRLkL0Yr5_6lA",
+    "phone": "+34633832057",
+    "website": "https://www.tripadvisor.com/Restaurant_Review-g187497-d986418-Reviews-Restaurante_Manna-Barcelona_Catalonia.html",
+    "menuPrice": 14.5,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Cuadro",
+    "googlePlaceId": "ChIJjyT22LujpBIRCsjWkIva4gU",
+    "phone": "+34640065174",
+    "website": "https://cuadrobarcelona.com/",
+    "menuPrice": 14.9,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:00-16:00",
+      "tue": "12:00-16:00",
+      "wed": "12:00-16:00",
+      "thu": "12:00-16:00",
+      "fri": "12:00-16:00"
+    }
+  },
+  {
+    "name": "Bistro Marina",
+    "googlePlaceId": "ChIJsa6LlQ-jpBIR_oKI_70xI1w",
+    "phone": "+34934482617",
+    "website": "https://www.instagram.com/bistromarinabcn/",
+    "menuPrice": 14.95,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:00-16:00",
+      "tue": "12:00-16:00",
+      "wed": "12:00-16:00",
+      "thu": "12:00-16:00",
+      "fri": "12:00-16:00"
+    }
+  },
+  {
+    "name": "Norai Raval",
+    "googlePlaceId": "ChIJ3Z4FM1eipBIRaKDHn26Iuoc",
+    "phone": "+34646852697",
+    "website": "https://forsale.godaddy.com/forsale/norai.org?utm_source=TDFS_BINNS2&utm_medium=parkedpages&utm_campaign=x_corp_tdfs-binns2_base&traffic_type=TDFS_BINNS2&traffic_id=binns2&",
+    "menuPrice": 15.4,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "La Pau",
+    "googlePlaceId": "ChIJUcBW8laipBIR_utToQXImUw",
+    "phone": "+34613043258",
+    "website": "https://www.restaurantlapau.com/",
+    "menuPrice": 20.0,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "tue": "13:00-15:30",
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "La Pubilla",
+    "googlePlaceId": "ChIJY8W2OJiipBIRYUXNUk3sh50",
+    "phone": "+34932182994",
+    "website": "https://www.instagram.com/lapubillagracia?igsh=c3UxZnprcmJ2b3p1",
+    "menuPrice": 23.0,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "tue": "13:00-15:30",
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "Salero",
+    "googlePlaceId": "ChIJqxz_If6ipBIR_9ch1tSjMqI",
+    "phone": "+34933198022",
+    "website": "https://www.restaurantesalero.com/en/",
+    "menuPrice": 17.9,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Ramen Shin",
+    "googlePlaceId": "ChIJPdH2Ab2ipBIRXwEVBwJs2oY",
+    "phone": "+34930117067",
+    "website": "https://www.instagram.com/ramenshin_bcn/",
+    "menuPrice": 15.8,
+    "cuisineType": "JAPANESE",
+    "cuisineEmoji": "🍣",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "tue": "13:00-15:30",
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "Casa López",
+    "googlePlaceId": "ChIJ-6QmNaOipBIRGQThjOiMGCY",
+    "phone": "+34690084406",
+    "website": "https://www.instagram.com/casalopezgracia?igsh=YzNpZDJpamt0aG93",
+    "menuPrice": 15.0,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "tue": "13:15-15:45",
+      "wed": "13:15-15:45",
+      "thu": "13:15-15:45",
+      "fri": "13:15-15:45"
+    }
+  },
+  {
+    "name": "En Ville | Gluten Free",
+    "googlePlaceId": "ChIJU_9ByfWipBIRsd7JEThKbVo",
+    "phone": "+34933028467",
+    "website": "https://www.envillebarcelona.es/",
+    "menuPrice": 23.0,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Agua"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Water"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:30",
+      "tue": "13:00-15:30",
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "La Cachapera",
+    "googlePlaceId": "ChIJP4jCw46jpBIRP6zr3cEFmlU",
+    "phone": "+34932200980",
+    "website": "https://lacachapera.es/en/?utm_source=GMB&utm_medium=gmb&utm_campaign=gmb&utm_id=web",
+    "menuPrice": 13.5,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:30-16:00",
+      "tue": "12:30-16:00",
+      "wed": "12:30-16:00",
+      "thu": "12:30-16:00",
+      "fri": "12:30-16:00"
+    }
+  },
+  {
+    "name": "La Cachapera villarroel",
+    "googlePlaceId": "ChIJLa7InImipBIR-D8X64z6OIs",
+    "phone": "+34932200709",
+    "website": "https://lacachapera.es/en/?utm_source=GMB&utm_medium=gmb&utm_campaign=gmb&utm_id=web",
+    "menuPrice": 13.5,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:30-16:00",
+      "tue": "12:30-16:00",
+      "wed": "12:30-16:00",
+      "thu": "12:30-16:00",
+      "fri": "12:30-16:00"
+    }
+  },
+  {
+    "name": "La Cachapera",
+    "googlePlaceId": "ChIJfzrxNwWjpBIRB5L_z3rEd6o",
+    "phone": "+34932200981",
+    "website": "https://lacachapera.es/en/?utm_source=GMB&utm_medium=gmb&utm_campaign=gmb&utm_id=web",
+    "menuPrice": 13.5,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:30-16:00",
+      "tue": "12:30-16:00",
+      "wed": "12:30-16:00",
+      "thu": "12:30-16:00",
+      "fri": "12:30-16:00"
+    }
+  },
+  {
+    "name": "Guixot",
+    "googlePlaceId": "ChIJ4RsUA1-ipBIRwahzJ0kOPNY",
+    "phone": "+34933299553",
+    "website": "https://guixot.cat/",
+    "menuPrice": 16.4,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "UMAMI ASIATICO",
+    "googlePlaceId": "ChIJj1Hzw4OYpBIRfp_jLASF1C8",
+    "phone": "+34688587950",
+    "website": null,
+    "menuPrice": 12.9,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:30-16:30",
+      "tue": "12:30-16:30",
+      "wed": "12:30-16:30",
+      "thu": "12:30-16:30",
+      "fri": "12:30-16:30"
+    }
+  },
+  {
+    "name": "Alegoria",
+    "googlePlaceId": "ChIJO4ov2f6ipBIRKMYEmoUeZf4",
+    "phone": "+34931069281",
+    "website": "https://www.facebook.com/61583530344938/",
+    "menuPrice": 19.9,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Marinada Restaurant",
+    "googlePlaceId": "ChIJialXoeWipBIR8rDYI80XYiM",
+    "phone": "+34932315928",
+    "website": "https://www.instagram.com/restaurantmarinada/?hl=es",
+    "menuPrice": 15.9,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "La Pedreta",
+    "googlePlaceId": "ChIJP5ZAQ8KipBIR8Lx0phgNvpQ",
+    "phone": "+34933472621",
+    "website": "https://www.lapedreta.es/",
+    "menuPrice": 15.5,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "H83",
+    "googlePlaceId": "ChIJoWyonu6jpBIRmCUECXW9VWw",
+    "phone": "+34933402385",
+    "website": "https://www.instagram.com/sagradafamilia_h83_buffet?igsh=MTdkdTZhNjZra2J4Zw==",
+    "menuPrice": 13.95,
+    "cuisineType": "JAPANESE",
+    "cuisineEmoji": "🍣",
+    "priceIncludesEs": [
+      "Bebida",
+      "4 platos a elegir",
+      "Café"
+    ],
+    "priceIncludesEn": [
+      "Drink",
+      "4 dishes of choice",
+      "Coffee"
+    ],
+    "weekdayHours": {
+      "mon": "12:30-16:30",
+      "tue": "12:30-16:30",
+      "wed": "12:30-16:30",
+      "thu": "12:30-16:30",
+      "fri": "12:30-16:30"
+    }
+  },
+  {
+    "name": "Cierzo Restaurant",
+    "googlePlaceId": "ChIJD-_TQu-ipBIRjB9_hXRfRa8",
+    "phone": "+34930009257",
+    "website": "https://www.instagram.com/restaurantecierzo/",
+    "menuPrice": 16.0,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "SUSHI SUN",
+    "googlePlaceId": "ChIJ3aCmsduipBIRm4FgzI0qqpE",
+    "phone": "+34932657576",
+    "website": "https://www.instagram.com/sushisun_bcn?igsh=MWV0djNuN3RrcXdkMA==",
+    "menuPrice": 13.85,
+    "cuisineType": "JAPANESE",
+    "cuisineEmoji": "🍣",
+    "priceIncludesEs": [
+      "4 platos a elegir",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "4 plates of choice",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:00-16:00",
+      "tue": "12:00-16:00",
+      "wed": "12:00-16:00",
+      "thu": "12:00-16:00",
+      "fri": "12:00-16:00"
+    }
+  },
+  {
+    "name": "Murivecchi",
+    "googlePlaceId": "ChIJqWiau_2ipBIRK6OJz_dItU4",
+    "phone": "+34933152297",
+    "website": "https://www.murivecchi.com/",
+    "menuPrice": 18.6,
+    "cuisineType": "ITALIAN",
+    "cuisineEmoji": "🍝",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Ramen master",
+    "googlePlaceId": "ChIJoeIoqOiipBIReMQe7bMi9m4",
+    "phone": "+34648914726",
+    "website": "https://ramenmaster.es/",
+    "menuPrice": 13.95,
+    "cuisineType": "JAPANESE",
+    "cuisineEmoji": "🍣",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Kserol",
+    "googlePlaceId": "ChIJxXT2zueipBIRhT17oqbcnx8",
+    "phone": "+34936393342",
+    "website": "https://www.kserol.com/",
+    "menuPrice": 17.5,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Agua"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Water"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Tortuga Restaurante",
+    "googlePlaceId": "ChIJV6o4KuSipBIRZctAmCO_wlI",
+    "phone": "+34658474227",
+    "website": "https://tortugarestaurante.es/",
+    "menuPrice": 14.9,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "El Tros de La Rambla",
+    "googlePlaceId": "ChIJ3e3lQ0OjpBIR-FhvPgNsTLQ",
+    "phone": "+34932718533",
+    "website": "https://eltrosdelarambla.com/",
+    "menuPrice": 18.0,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:00-16:00",
+      "tue": "12:00-16:00",
+      "wed": "12:00-16:00",
+      "thu": "12:00-16:00",
+      "fri": "12:00-16:00"
+    }
+  },
+  {
+    "name": "Cumpanamá",
+    "googlePlaceId": "ChIJ5TETZeGjpBIR9Fjp3o4ZobM",
+    "phone": "+34935154054",
+    "website": "https://cumpanama.com/",
+    "menuPrice": 15.9,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-17:00",
+      "tue": "13:00-17:00",
+      "wed": "13:00-17:00",
+      "thu": "13:00-17:00",
+      "fri": "13:00-17:00"
+    }
+  },
+  {
+    "name": "La vietnamita - gracia",
+    "googlePlaceId": "ChIJcRNmG5aipBIRvjtddo3D5pk",
+    "phone": "+34935181803",
+    "website": "http://www.lavietnamita.com/",
+    "menuPrice": 12.95,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "El manaba - aribau",
+    "googlePlaceId": "ChIJ6ywn9zejpBIRxkiXD757pw4",
+    "phone": "+34930244720",
+    "website": "https://www.elmanaba.es/",
+    "menuPrice": 15.9,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:00-17:00",
+      "tue": "12:00-17:00",
+      "wed": "12:00-17:00",
+      "thu": "12:00-17:00",
+      "fri": "12:00-17:00"
+    }
+  },
+  {
+    "name": "El manaba",
+    "googlePlaceId": "ChIJl8YfjiejpBIRQOXfF5PsxU8",
+    "phone": "+34931438897",
+    "website": "https://www.elmanaba.es/",
+    "menuPrice": 15.9,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:00-17:00",
+      "tue": "12:00-17:00",
+      "wed": "12:00-17:00",
+      "thu": "12:00-17:00",
+      "fri": "12:00-17:00"
+    }
+  },
+  {
+    "name": "Noble barcelona",
+    "googlePlaceId": "ChIJvaE4-eKjpBIRlqp-_oo4GVc",
+    "phone": "+34936295555",
+    "website": "https://www.instagram.com/noble_barcelona/",
+    "menuPrice": 18.9,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "tue": "13:00-15:00",
+      "wed": "13:00-15:00",
+      "thu": "13:00-15:00",
+      "fri": "13:00-15:00"
+    }
+  },
+  {
+    "name": "Labalabusta",
+    "googlePlaceId": "ChIJ0W_S1DejpBIRm7hsjrPoByQ",
+    "phone": "+34648124179",
+    "website": "https://www.instagram.com/labalabusta/?hl=es",
+    "menuPrice": 23.5,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:45",
+      "tue": "13:00-15:45",
+      "wed": "13:00-15:45",
+      "thu": "13:00-15:45",
+      "fri": "13:00-15:45"
+    }
+  },
+  {
+    "name": "Can culleretes",
+    "googlePlaceId": "ChIJGYMCSPaipBIRXpfmNOCEE3A",
+    "phone": "+34933173022",
+    "website": "https://culleretes.com/",
+    "menuPrice": 21.5,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "tue": "13:00-15:00",
+      "wed": "13:00-15:00",
+      "thu": "13:00-15:00",
+      "fri": "13:00-15:00"
+    }
+  },
+  {
+    "name": "Inti&Chaska",
+    "googlePlaceId": "ChIJu1m3s6SjpBIRSwPy97fOslU",
+    "phone": "+34685169935",
+    "website": "https://www.instagram.com/inti.chaska/",
+    "menuPrice": 14.9,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:45",
+      "tue": "13:00-15:45",
+      "wed": "13:00-15:45",
+      "thu": "13:00-15:45",
+      "fri": "13:00-15:45"
+    }
+  },
+  {
+    "name": "Inti&Chaska",
+    "googlePlaceId": "ChIJrcDbtaKjpBIRHTaWW2pTBf4",
+    "phone": "+34931389502",
+    "website": "https://www.instagram.com/inti.chaska/",
+    "menuPrice": 14.9,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:45",
+      "tue": "13:00-15:45",
+      "wed": "13:00-15:45",
+      "thu": "13:00-15:45",
+      "fri": "13:00-15:45"
+    }
+  },
+  {
+    "name": "petit muu",
+    "googlePlaceId": "ChIJV_gWwI2ipBIR9TrcWqcHp1M",
+    "phone": "+34608633036",
+    "website": "https://petitmuu.es/",
+    "menuPrice": 15.8,
+    "cuisineType": "SPANISH",
+    "cuisineEmoji": "🥘",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Flamant",
+    "googlePlaceId": "ChIJi1SzS4yipBIRq9RqyVGXzDs",
+    "phone": "+34933231635",
+    "website": "https://andilana.com/locales/flamant/",
+    "menuPrice": 14.95,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:45",
+      "tue": "13:00-15:45",
+      "wed": "13:00-15:45",
+      "thu": "13:00-15:45",
+      "fri": "13:00-15:45"
+    }
+  },
+  {
+    "name": "Market Cuina Fresca",
+    "googlePlaceId": "ChIJzxoBoxejpBIRI94cLjWfnCM",
+    "phone": "+34934854563",
+    "website": "https://www.instagram.com/marketcuina/",
+    "menuPrice": 18.5,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:30",
+      "tue": "13:00-15:30",
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "Pueblo libre",
+    "googlePlaceId": "ChIJr8z65tOjpBIRGnO9ChKwbHw",
+    "phone": "+34629098442",
+    "website": "https://www.pueblolibretaberna.com/",
+    "menuPrice": 16.9,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:30",
+      "tue": "13:00-15:30",
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "Hosomaki Sants",
+    "googlePlaceId": "ChIJlw5BW4aYpBIRboS3-dPAGS0",
+    "phone": "+34931994297",
+    "website": "https://sants.teamhosomaki.com/",
+    "menuPrice": 15.9,
+    "cuisineType": "JAPANESE",
+    "cuisineEmoji": "🍣",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Algrano Bistro | Tamarit",
+    "googlePlaceId": "ChIJPbdtq5yjpBIRwa8Sn6zcxG0",
+    "phone": "+34640399988",
+    "website": "http://www.algranobistro.com/",
+    "menuPrice": 19.0,
+    "cuisineType": "ITALIAN",
+    "cuisineEmoji": "🍝",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Agua"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Water"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:30",
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "Motomaki & sushi",
+    "googlePlaceId": "ChIJuRD4GYqjpBIRaXb9Y9HmZlE",
+    "phone": "+34935396892",
+    "website": "https://sushify.es/sushi/motomaki-sushi-2/",
+    "menuPrice": 12.9,
+    "cuisineType": "JAPANESE",
+    "cuisineEmoji": "🍣",
+    "priceIncludesEs": [
+      "3 platos a elegir",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "3 dishes of choice",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:15-16:00",
+      "tue": "12:15-16:00",
+      "wed": "12:15-16:00",
+      "thu": "12:15-16:00",
+      "fri": "12:15-16:00"
+    }
+  },
+  {
+    "name": "Lamalva",
+    "googlePlaceId": "ChIJ8U98946jpBIRinhPCufu2EQ",
+    "phone": "+34937304692",
+    "website": "https://www.lamalvabcn.com/",
+    "menuPrice": 22.0,
+    "cuisineType": "MEDITERRANEAN",
+    "cuisineEmoji": "🫒",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Agua"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Water"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-17:00",
+      "tue": "13:00-17:00",
+      "wed": "13:00-17:00",
+      "thu": "13:00-17:00",
+      "fri": "13:00-17:00"
+    }
+  },
+  {
+    "name": "GYOJASANG Korean BBQ & Bar",
+    "googlePlaceId": "ChIJiQNFsI-ipBIR0-qFLOEbr7Y",
+    "phone": "+34938326594",
+    "website": "https://gyojasang.com/barcelona-mallorca/",
+    "menuPrice": 14.9,
+    "cuisineType": "ASIAN",
+    "cuisineEmoji": "🥢",
+    "priceIncludesEs": [
+      "Hot Pot (6 platos)",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Hot Pot (6 plates)",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "wed": "13:00-15:30",
+      "thu": "13:00-15:30",
+      "fri": "13:00-15:30"
+    }
+  },
+  {
+    "name": "Riko's",
+    "googlePlaceId": "ChIJXTdhPjujpBIRcAYGcOvM9iU",
+    "phone": "+34933657587",
+    "website": "https://pollosrikos.com/",
+    "menuPrice": 14.9,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-17:00",
+      "tue": "13:00-17:00",
+      "wed": "13:00-17:00",
+      "thu": "13:00-17:00",
+      "fri": "13:00-17:00"
+    }
+  },
+  {
+    "name": "ÁNDELE Gràcia",
+    "googlePlaceId": "ChIJ6-WKRr6ipBIRbZ8sdEdsbwk",
+    "phone": "+34650548610",
+    "website": "http://andele.es/",
+    "menuPrice": 16.5,
+    "cuisineType": "MEXICAN",
+    "cuisineEmoji": "🌮",
+    "priceIncludesEs": [
+      "Primero",
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Starter",
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "12:30-16:00",
+      "tue": "12:30-16:00",
+      "wed": "12:30-16:00",
+      "thu": "12:30-16:00",
+      "fri": "12:30-16:00"
+    }
+  },
+  {
+    "name": "Alsur Café | Llúria",
+    "googlePlaceId": "ChIJyZYIJu6ipBIRe1lRArLwfXo",
+    "phone": "+34936241577",
+    "website": "https://www.alsurcafe.com/",
+    "menuPrice": 13.0,
+    "cuisineType": "OTHER",
+    "cuisineEmoji": "🍽️",
+    "priceIncludesEs": [
+      "Principal",
+      "Postre",
+      "Bebida"
+    ],
+    "priceIncludesEn": [
+      "Main",
+      "Dessert",
+      "Drink"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-15:00",
+      "tue": "13:00-15:00",
+      "wed": "13:00-15:00",
+      "thu": "13:00-15:00",
+      "fri": "13:00-15:00"
+    }
+  },
+  {
+    "name": "Más Que Sushi",
+    "googlePlaceId": "ChIJ_6F7-n2jpBIRYlQYGI-hj0o",
+    "phone": "+34936271761",
+    "website": "https://masquesushiuniversitat.com/",
+    "menuPrice": 16.95,
+    "cuisineType": "JAPANESE",
+    "cuisineEmoji": "🍣",
+    "priceIncludesEs": [
+      "Bufé libre (sin bebida ni postre)"
+    ],
+    "priceIncludesEn": [
+      "Free buffet – no drink, no dessert"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Más Que Sushi | Ronda Universitat",
+    "googlePlaceId": "ChIJ20rfgu2jpBIR5oypjJu0sAM",
+    "phone": "+34936636958",
+    "website": "https://masquesushiuniversitat.com/",
+    "menuPrice": 16.95,
+    "cuisineType": "JAPANESE",
+    "cuisineEmoji": "🍣",
+    "priceIncludesEs": [
+      "Bufé libre (sin bebida ni postre)"
+    ],
+    "priceIncludesEn": [
+      "Free buffet – no drink, no dessert"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Más Que Sushi Viladomat",
+    "googlePlaceId": "ChIJA_SyRHWjpBIRNEpw6Za0rbU",
+    "phone": "+34932761746",
+    "website": "https://masquesushiuniversitat.com/",
+    "menuPrice": 16.95,
+    "cuisineType": "JAPANESE",
+    "cuisineEmoji": "🍣",
+    "priceIncludesEs": [
+      "Bufé libre (sin bebida ni postre)"
+    ],
+    "priceIncludesEn": [
+      "Free buffet – no drink, no dessert"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  },
+  {
+    "name": "Más Que Sushi - St. Gervasi",
+    "googlePlaceId": "ChIJQ2tbTECZpBIRFjtHmFj6tv0",
+    "phone": "+34937849734",
+    "website": "https://masquesushiuniversitat.com/",
+    "menuPrice": 16.95,
+    "cuisineType": "JAPANESE",
+    "cuisineEmoji": "🍣",
+    "priceIncludesEs": [
+      "Bufé libre (sin bebida ni postre)"
+    ],
+    "priceIncludesEn": [
+      "Free buffet – no drink, no dessert"
+    ],
+    "weekdayHours": {
+      "mon": "13:00-16:00",
+      "tue": "13:00-16:00",
+      "wed": "13:00-16:00",
+      "thu": "13:00-16:00",
+      "fri": "13:00-16:00"
+    }
+  }
+]
