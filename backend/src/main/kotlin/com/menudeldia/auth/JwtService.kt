@@ -1,25 +1,39 @@
 package com.menudeldia.auth
 
 import com.menudeldia.config.AppProperties
+import io.jsonwebtoken.JwtException
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.springframework.stereotype.Service
+import java.util.Date
 import java.util.UUID
 
-/**
- * Issues + verifies our session JWT (HS256).
- * TODO B3.2.1: implement with io.jsonwebtoken (jjwt). Subject = userId; ttl = props.auth.jwtTtl.
- */
 @Service
-class JwtService(
-    private val props: AppProperties,
-) {
+class JwtService(private val props: AppProperties) {
+
+    private val key by lazy {
+        val raw = props.auth.jwtSigningKey
+        require(raw.length >= 32) { "jwt-signing-key must be at least 32 characters" }
+        Keys.hmacShaKeyFor(raw.toByteArray(Charsets.UTF_8))
+    }
 
     fun issue(userId: UUID): String {
-        // TODO: build signed JWT, base64url-encode, return.
-        TODO("Phase 3 — task B3.2.1")
+        val now = System.currentTimeMillis()
+        val exp = now + props.auth.jwtTtl.toMillis()
+        return Jwts.builder()
+            .subject(userId.toString())
+            .issuedAt(Date(now))
+            .expiration(Date(exp))
+            .signWith(key)
+            .compact()
     }
 
     fun verify(token: String): UUID {
-        // TODO: parse + validate signature + expiry; return subject as UUID; throw on failure.
-        TODO("Phase 3 — task B3.2.1")
+        val claims = try {
+            Jwts.parser().verifyWith(key).build().parseSignedClaims(token).payload
+        } catch (ex: JwtException) {
+            throw IllegalArgumentException("Invalid or expired JWT: ${ex.message}", ex)
+        }
+        return UUID.fromString(claims.subject)
     }
 }

@@ -2,26 +2,40 @@ package com.menudeldia.auth
 
 import org.springframework.stereotype.Service
 import java.time.Instant
+import java.util.UUID
 
-/**
- * Upserts users from verified ID-token claims.
- * TODO B3.3.5: implement upsertFromIdToken and lookup helpers.
- */
 @Service
-class UserService(
-    private val users: UserRepository,
-) {
+class UserService(private val users: UserRepository) {
 
     fun upsertFromIdToken(provider: String, claims: VerifiedClaims): User {
-        // TODO: find by (provider, externalId); create or update display fields; set lastLogin = now.
-        TODO("Phase 3 — task B3.3.5")
+        val existing = users.findByProviderAndExternalId(provider, claims.sub)
+        val now = Instant.now()
+        return if (existing != null) {
+            // Never blank name/email — Apple only returns them on first sign-in.
+            if (claims.email != null) existing.email = claims.email
+            if (claims.name != null) existing.displayName = claims.name
+            if (claims.picture != null) existing.avatarUrl = claims.picture
+            existing.lastLogin = now
+            users.save(existing)
+        } else {
+            users.save(
+                User(
+                    provider = provider,
+                    externalId = claims.sub,
+                    email = claims.email,
+                    displayName = claims.name,
+                    avatarUrl = claims.picture,
+                    lastLogin = now,
+                )
+            )
+        }
     }
 
-    fun byId(id: java.util.UUID): User =
+    fun byId(id: UUID): User =
         users.findById(id).orElseThrow { NoSuchElementException("user $id not found") }
 }
 
-/** Subset of claims we actually use after token verification. */
+/** Subset of claims extracted after token verification. */
 data class VerifiedClaims(
     val sub: String,
     val email: String?,

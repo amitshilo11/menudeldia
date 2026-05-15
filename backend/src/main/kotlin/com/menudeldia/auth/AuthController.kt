@@ -2,6 +2,7 @@ package com.menudeldia.auth
 
 import com.menudeldia.auth.dto.SignInRequest
 import com.menudeldia.auth.dto.SignInResponse
+import com.menudeldia.auth.dto.UserDto
 import com.menudeldia.common.ApiPaths
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.PostMapping
@@ -9,10 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-/**
- * Sign-in endpoints. Both verify the platform ID token, upsert a user, then issue our session JWT.
- * TODO B3.3.6: implement signInWithGoogle / signInWithApple.
- */
 @RestController
 @RequestMapping("${ApiPaths.V1}/auth")
 class AuthController(
@@ -24,13 +21,17 @@ class AuthController(
 
     @PostMapping("/google")
     fun signInWithGoogle(@Valid @RequestBody body: SignInRequest): SignInResponse {
-        // TODO: google.verify(body.idToken) -> claims -> users.upsert -> jwt.issue -> SignInResponse.
-        TODO("Phase 3 — task B3.3.6")
+        val claims = google.verify(body.idToken)
+        val user = users.upsertFromIdToken("google", claims)
+        return SignInResponse(accessToken = jwt.issue(user.id), user = user.toDto())
     }
 
     @PostMapping("/apple")
     fun signInWithApple(@Valid @RequestBody body: SignInRequest): SignInResponse {
-        // TODO: apple.verify(body.idToken) -> claims -> users.upsert -> jwt.issue -> SignInResponse.
-        TODO("Phase 3 — task B3.3.6")
+        val claims = apple.verify(body.idToken, body.nonce)
+        val user = users.upsertFromIdToken("apple", claims)
+        return SignInResponse(accessToken = jwt.issue(user.id), user = user.toDto())
     }
 }
+
+fun User.toDto() = UserDto(id = id, email = email, displayName = displayName, avatarUrl = avatarUrl)

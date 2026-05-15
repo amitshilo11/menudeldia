@@ -81,6 +81,9 @@ kotlin {
             implementation(libs.maps.compose)
             implementation(libs.play.services.location)
             implementation(libs.timber)
+            implementation(libs.androidx.credentials)
+            implementation(libs.androidx.credentials.play.services.auth)
+            implementation(libs.googleid)
         }
 
         commonTest.dependencies {
@@ -100,6 +103,13 @@ android {
         versionCode = 1
         versionName = "1.0"
         manifestPlaceholders["MAPS_API_KEY"] = localProps["MAPS_API_KEY"]?.toString() ?: ""
+        // Web OAuth Client ID from Google Cloud Console (NOT the Android client ID).
+        // Set GOOGLE_WEB_CLIENT_ID=your_client_id in local.properties.
+        buildConfigField(
+            "String",
+            "GOOGLE_WEB_CLIENT_ID",
+            "\"${localProps["GOOGLE_WEB_CLIENT_ID"] ?: ""}\""
+        )
     }
     buildFeatures {
         buildConfig = true
