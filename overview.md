@@ -335,18 +335,50 @@ users
 - [ ] **T5.9** Early TestFlight build (iOS) + Play Store internal testing build (Android) — get on
   real devices
 
-### Week 6 — Authentication
+### Week 6 — Authentication ✓ (code complete; iOS Xcode manual steps pending)
 
-- [ ] **T6.1** Decide auth backend: Firebase Auth (simpler KMP integration) vs custom JWT (depends
-  on backend architecture choice — resolve by start of this week)
-- [ ] **T6.2** Login screen UI: Google Sign-In button + Sign in with Apple button, skip/guest option
-- [ ] **T6.3** Android: Google Sign-In SDK integration (Credential Manager API)
-- [ ] **T6.4** iOS: Sign in with Apple (native `ASAuthorizationController`) + Google Sign-In iOS SDK
-- [ ] **T6.5** `expect`/`actual` `AuthProvider` in `shared` — platform-specific sign-in flows
-- [ ] **T6.6** Backend: validate Google ID token + Apple identity token, issue session, `users`
-  table
-- [ ] **T6.7** Auth state in app — show login screen if unauthenticated, persist session
-- [ ] **T6.8** Sign out flow + account screen (minimal: show name/avatar + sign out button)
+- [x] **T6.1** Decided: custom JWT backend (HS256, JJWT). `JwtService` issue/verify,
+  `JwtAuthFilter`,
+  `AuthExceptionAdvice`. `JwtServiceTest` + `UserServiceTest` pass.
+- [x] **T6.2** Login screen UI: Google Sign-In button + Sign in with Apple button (iOS only,
+  `getPlatform()` guard) + guest `TextButton`. `LoginScreen` + `LoginViewModel` in `commonMain`.
+- [x] **T6.3** Android: Google Sign-In via Credential Manager API (`GetSignInWithGoogleOption`,
+  `GoogleIdTokenCredential`). `AuthProvider.android.kt` actual. `GOOGLE_WEB_CLIENT_ID` build config
+  field from `local.properties`.
+- [x] **T6.4** iOS: `ASAuthorizationController` (Apple) + `GIDSignIn` (Google) via Swift bridge.
+  `AppleSignInBridge.swift`, `GoogleSignInBridge.swift`, `CompositeAuthBridge.swift` created.
+  `AuthProvider.ios.kt` actual with nonce design (KMP generates rawNonce, Swift SHA-256 hashes it
+  with CryptoKit, rawNonce returned to backend for verification).
+  **Manual Xcode steps required — see below.**
+- [x] **T6.5** `expect`/`actual` `AuthProvider` in `composeApp/commonMain`. `AuthProviderHolder`
+  for Activity/bridge injection. `IosAuthBridge` protocol bridging KMP↔Swift.
+- [x] **T6.6** Backend: `GoogleIdTokenVerifierBean` (audience list), `AppleIdTokenVerifier` (Nimbus
+  RS256 + JWKS), `UserService.upsertFromIdToken` (never overwrites stored name/email with null),
+  `AuthController` `/auth/google` + `/auth/apple`, `MeController` `/me`, `UserRepository`
+  `findByProviderAndExternalId`. `SignInRequest.nonce` for Apple. `AuthControllerIT` TODO.
+- [x] **T6.7** Auth state in app: `RootViewModel` drives `LaunchedEffect` in `App.kt` —
+  navigates Login↔Map on `AuthState` changes. `SessionStore` persists token + guest flag via
+  `multiplatform-settings`. Cold-start `refreshFromMe()` restores session. Splash covers `Loading`.
+- [x] **T6.8** `AccountScreen` + `AccountViewModel`: shows avatar (Coil), name, email, sign-out
+  button for Authenticated; sign-in CTA for Guest. `AuthRepository.signOut()` clears session.
+
+#### iOS manual steps (do in Xcode before building)
+
+1. **Add Google Sign-In package** — Xcode → File → Add Package Dependencies →
+   `https://github.com/google/GoogleSignIn-iOS` → add `GoogleSignIn` library to `iosApp` target.
+2. **Add Auth Swift files to target** — drag `iosApp/iosApp/Auth/` into the Xcode project navigator
+   and ensure all three files (`AppleSignInBridge.swift`, `GoogleSignInBridge.swift`,
+   `CompositeAuthBridge.swift`) are checked for the `iosApp` target membership.
+3. **Fill in Google OAuth client IDs** — in `iosApp/Configuration/Config.xcconfig` set:
+    - `GID_CLIENT_ID` = your iOS OAuth client ID (e.g. `123456-abc.apps.googleusercontent.com`)
+    - `GID_REVERSED_CLIENT_ID` = the reversed form (e.g. `com.googleusercontent.apps.123456-abc`)
+    - Also add the web client ID and Android client ID to `menudeldia.auth.google-client-id` in
+      `backend/src/main/resources/application.yml` (comma-separated) for audience validation.
+4. **Add Sign in with Apple capability** — Xcode → `iosApp` target → Signing & Capabilities →
+   `+` → "Sign in with Apple". Requires paid Apple Developer account ($99/yr).
+5. **Set JWT signing key** — add `JWT_SIGNING_KEY` env var (≥32 chars) for backend. For dev,
+   set in `backend/src/main/resources/application-dev.yml`:
+   `menudeldia.auth.jwt-signing-key: <random-32-char-string>`
 
 ### Week 7 — Backend deploy & ship
 
