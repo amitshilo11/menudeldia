@@ -125,40 +125,40 @@ Reference: `PLAN.md` (strategy) and `ARCHITECTURE.md` (technical).
 
 ### 3.1 — Spring Security baseline
 
-- [ ] **B3.1.1** `SecurityFilterChain` bean — public for
+- [x] **B3.1.1** `SecurityFilterChain` bean — public for
   `/api/v1/{health, restaurants/**, auth/**}`, authenticated for `/api/v1/me/**`
-- [ ] **B3.1.2** CORS config — allow client domain(s) from env var, methods GET/POST, headers
+- [x] **B3.1.2** CORS config — allow client domain(s) from env var, methods GET/POST, headers
   Content-Type + Authorization
-- [ ] **B3.1.3** CSRF disabled (we're a stateless JSON API with bearer tokens)
+- [x] **B3.1.3** CSRF disabled (we're a stateless JSON API with bearer tokens)
 
 ### 3.2 — JWT issuance + filter
 
-- [ ] **B3.2.1** `JwtService.issue(userId)` and `verify(token)` — HS256, 30-day expiry, signing key
+- [x] **B3.2.1** `JwtService.issue(userId)` and `verify(token)` — HS256, 30-day expiry, signing key
   from env
-- [ ] **B3.2.2** `JwtAuthFilter extends OncePerRequestFilter` — extracts `Authorization: Bearer …`,
+- [x] **B3.2.2** `JwtAuthFilter extends OncePerRequestFilter` — extracts `Authorization: Bearer …`,
   validates, populates `SecurityContext`
-- [ ] **B3.2.3** 401 response shape `{ "error": "unauthorized", "message": "..." }`
+- [x] **B3.2.3** 401 response shape `{ "error": "unauthorized", "message": "..." }`
 
 ### 3.3 — Google + Apple sign-in
 
-- [ ] **B3.3.1** Add `google-api-client` + `nimbus-jose-jwt` dependencies
-- [ ] **B3.3.2** `GoogleIdTokenVerifierBean` — verifier with our OAuth client ID as audience
-- [ ] **B3.3.3** `AppleIdTokenVerifier` — uses `nimbus-jose-jwt` with Apple's JWKS URL (
+- [x] **B3.3.1** Add `google-api-client` + `nimbus-jose-jwt` dependencies
+- [x] **B3.3.2** `GoogleIdTokenVerifierBean` — verifier with our OAuth client ID as audience
+- [x] **B3.3.3** `AppleIdTokenVerifier` — uses `nimbus-jose-jwt` with Apple's JWKS URL (
   `https://appleid.apple.com/auth/keys`)
-- [ ] **B3.3.4** `User` entity + `UserRepository`
-- [ ] **B3.3.5** `UserService.upsertFromIdToken(provider, claims)` — creates or updates user, sets
+- [x] **B3.3.4** `User` entity + `UserRepository`
+- [x] **B3.3.5** `UserService.upsertFromIdToken(provider, claims)` — creates or updates user, sets
   `last_login`
-- [ ] **B3.3.6** `AuthController` — `POST /api/v1/auth/google` and `POST /api/v1/auth/apple`, both
+- [x] **B3.3.6** `AuthController` — `POST /api/v1/auth/google` and `POST /api/v1/auth/apple`, both
   return `{accessToken, user}`
-- [ ] **B3.3.7** `MeController` — `GET /api/v1/me` returns the authenticated user
-- [ ] **B3.3.8** Bucket4j: stricter limit on `/auth/*` (10/min per IP)
+- [x] **B3.3.7** `MeController` — `GET /api/v1/me` returns the authenticated user
+- [x] **B3.3.8** Bucket4j: stricter limit on `/auth/*` (10/min per IP)
 
 ### 3.4 — Verification
 
-- [ ] **B3.4.1** Test with a real Google ID token (via Google's playground) → receive our JWT →
+- [x] **B3.4.1** Test with a real Google ID token (via Google's playground) → receive our JWT →
   `/me` returns user
-- [ ] **B3.4.2** Test invalid/expired token → 401
-- [ ] **B3.4.3** Test missing Bearer header on `/me` → 401
+- [x] **B3.4.2** Test invalid/expired token → 401
+- [x] **B3.4.3** Test missing Bearer header on `/me` → 401
 
 ---
 
@@ -166,22 +166,22 @@ Reference: `PLAN.md` (strategy) and `ARCHITECTURE.md` (technical).
 
 ### 4.1 — Production hardening
 
-- [ ] **B4.1.1** Bucket4j rate limit filter on read endpoints (60/min/IP)
-- [ ] **B4.1.2** HTTP security headers (`HSTS`, `X-Frame-Options`, `X-Content-Type-Options`, CSP
+- [x] **B4.1.1** Bucket4j rate limit filter on read endpoints (60/min/IP)
+- [x] **B4.1.2** HTTP security headers (`HSTS`, `X-Frame-Options`, `X-Content-Type-Options`, CSP
   allowing image-src self)
-- [ ] **B4.1.3** Spring Boot Actuator — expose only `/actuator/health` publicly; rest behind
-  `Authorization: Bearer <admin token>`
-- [ ] **B4.1.4** Application metrics — Micrometer + Prometheus endpoint (admin-only)
+- [x] **B4.1.3** Spring Boot Actuator — expose only `/actuator/health` publicly; rest behind
+  `X-Admin-Token` header
+- [x] **B4.1.4** Application metrics — Micrometer + Prometheus endpoint (admin-only)
 - [ ] **B4.1.5** Verify no secrets in committed files — `git secrets` or `truffleHog` in CI
 
 ### 4.2 — Containerization
 
-- [ ] **B4.2.1** `Dockerfile` — multi-stage Gradle build, JRE-21 slim runtime, non-root user
-- [ ] **B4.2.2** `docker-compose.prod.yml` — Caddy (TLS) → Spring Boot (port 8080) →
+- [x] **B4.2.1** `Dockerfile` — multi-stage Gradle build, JRE-21 slim runtime, non-root user
+- [x] **B4.2.2** `docker-compose.prod.yml` — Caddy (TLS) → Spring Boot (port 8080) →
   Postgres+PostGIS, named volumes for `pgdata` and `photos`
-- [ ] **B4.2.3** Caddyfile — auto-issues Let's Encrypt cert, proxies to backend, gzip, basic
+- [x] **B4.2.3** Caddyfile — auto-issues Let's Encrypt cert, proxies to backend, gzip, basic
   security headers
-- [ ] **B4.2.4** Health-check in compose — `curl -f http://localhost:8080/api/v1/health`
+- [x] **B4.2.4** Health-check in compose — `wget -qO- http://localhost:8080/api/v1/health`
 
 ### 4.3 — CI
 

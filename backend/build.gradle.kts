@@ -62,6 +62,9 @@ dependencies {
     // --- Rate limiting ---
     implementation("com.bucket4j:bucket4j_jdk17-core:8.14.0")
 
+    // --- Metrics ---
+    implementation("io.micrometer:micrometer-registry-prometheus")
+
     // --- Test ---
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")

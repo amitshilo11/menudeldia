@@ -8,12 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
-/**
- * Reads `Authorization: Bearer <our-jwt>`, verifies, populates SecurityContext.
- * Public endpoints simply skip when header is absent.
- *
- * TODO B3.2.2: implement parsing + verification + SecurityContext population.
- */
+/** Reads `Authorization: Bearer <our-jwt>`, verifies, populates SecurityContext. */
 @Component
 class JwtAuthFilter(
     private val jwt: JwtService,
@@ -31,13 +26,11 @@ class JwtAuthFilter(
             ?.trim()
 
         if (token != null) {
-            // TODO: jwt.verify(token) -> User; on failure, leave SecurityContext empty.
-            //       SecurityContext shouldn't write if already authenticated for the request.
             try {
                 val userId = jwt.verify(token)
                 val user = users.byId(userId)
-                val auth = UsernamePasswordAuthenticationToken(user, null, emptyList())
-                SecurityContextHolder.getContext().authentication = auth
+                SecurityContextHolder.getContext().authentication =
+                    UsernamePasswordAuthenticationToken(user, null, emptyList())
             } catch (_: Exception) {
                 // swallow: downstream authorize will reject if endpoint requires auth.
             }
