@@ -11,8 +11,10 @@ import java.time.Duration
 data class AppProperties(
     val google: GoogleProps,
     val auth: AuthProps,
+    val cors: CorsProps,
     val photos: PhotoProps,
     val rateLimit: RateLimitProps,
+    val adminToken: String = "",
 ) {
     data class GoogleProps(
         val placesApiKey: String,
@@ -25,6 +27,10 @@ data class AppProperties(
         val appleClientId: String,
         val jwtSigningKey: String,
         val jwtTtl: Duration,
+    )
+
+    data class CorsProps(
+        val allowedOrigins: List<String>,
     )
 
     data class PhotoProps(

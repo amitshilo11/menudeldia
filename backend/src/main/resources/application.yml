@@ -26,7 +26,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,prometheus,metrics
   endpoint:
     health:
       show-details: never
@@ -41,11 +41,14 @@ menudeldia:
     apple-client-id: ${APPLE_BUNDLE_ID:com.menudeldia.app}
     jwt-signing-key: ${JWT_SIGNING_KEY:}
     jwt-ttl: P30D
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
   photos:
     storage-root: ${PHOTOS_DIR:./var/photos}
   rate-limit:
     read-rpm: 60
     auth-rpm: 10
+  admin-token: ${ADMIN_TOKEN:}
 
 resilience4j:
   circuitbreaker:
