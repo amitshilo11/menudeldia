@@ -78,11 +78,40 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
 }
 
+fun loadEnv(): Map<String, String> {
+    val envMap = mutableMapOf<String, String>()
+    val envFile = project.file(".env")
+    if (envFile.exists()) {
+        envFile.forEachLine { line ->
+            val trimmed = line.trim()
+            if (trimmed.isNotEmpty() && !trimmed.startsWith("#") && trimmed.contains("=")) {
+                val (key, value) = trimmed.split("=", limit = 2)
+                envMap[key.trim()] = value.trim()
+            }
+        }
+    }
+    return envMap
+}
+
 tasks.withType<org.springframework.boot.gradle.tasks.run.BootRun> {
     systemProperty("spring.profiles.active", project.properties["profiles"] ?: "dev")
-    environment("GOOGLE_PLACES_API_KEY", System.getenv("GOOGLE_PLACES_API_KEY") ?: "")
-    environment("GOOGLE_OAUTH_CLIENT_ID", System.getenv("GOOGLE_OAUTH_CLIENT_ID") ?: "")
-    environment("JWT_SIGNING_KEY", System.getenv("JWT_SIGNING_KEY") ?: "")
+
+    val env = loadEnv()
+    environment(
+        "GOOGLE_PLACES_API_KEY",
+        System.getenv("GOOGLE_PLACES_API_KEY") ?: env["GOOGLE_PLACES_API_KEY"] ?: ""
+    )
+    environment(
+        "GOOGLE_OAUTH_CLIENT_ID",
+        System.getenv("GOOGLE_OAUTH_CLIENT_ID") ?: env["GOOGLE_OAUTH_CLIENT_ID"] ?: ""
+    )
+    environment("JWT_SIGNING_KEY", System.getenv("JWT_SIGNING_KEY") ?: env["JWT_SIGNING_KEY"] ?: "")
+
+    // Also pass DB config from .env if present
+    env["DB_URL"]?.let { environment("DB_URL", it) }
+    env["DB_USER"]?.let { environment("DB_USER", it) }
+    env["DB_PASSWORD"]?.let { environment("DB_PASSWORD", it) }
+    env["PHOTOS_DIR"]?.let { environment("PHOTOS_DIR", it) }
 }
 
 tasks.withType<Test> {

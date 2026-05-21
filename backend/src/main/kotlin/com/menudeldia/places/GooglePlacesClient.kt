@@ -25,14 +25,15 @@ class GooglePlacesClient(private val props: AppProperties) {
 
     @CircuitBreaker(name = "googlePlaces", fallbackMethod = "placeDetailsFallback")
     fun placeDetails(placeId: String): PlaceDetailsResponse {
-        if (props.google.placesApiKey.isBlank()) {
+        val apiKey = props.google.placesApiKey
+        if (apiKey.isBlank()) {
             log.error("GOOGLE_PLACES_API_KEY is empty! Enrichment will fail.")
             throw PlacesException.ApiError("API Key is missing")
         }
         return try {
             http.get()
                 .uri("/places/{id}", placeId)
-                .header("X-Goog-Api-Key", props.google.placesApiKey)
+                .header("X-Goog-Api-Key", apiKey)
                 .header("X-Goog-FieldMask", FIELD_MASK)
                 .retrieve()
                 .body(PlaceDetailsResponse::class.java)

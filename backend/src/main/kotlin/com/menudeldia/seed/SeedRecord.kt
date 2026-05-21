@@ -8,6 +8,8 @@ import java.math.BigDecimal
  */
 data class SeedRecord(
     val name: String,
+    val lat: Double? = null,
+    val lng: Double? = null,
     val googlePlaceId: String?,
     val phone: String?,
     val website: String?,

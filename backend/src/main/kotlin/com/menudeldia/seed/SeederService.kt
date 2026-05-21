@@ -40,8 +40,8 @@ class SeederService(
 
     private fun SeedRecord.toRestaurant() = Restaurant(
         name = name,
-        lat = barcelonaLat,
-        lng = barcelonaLng,
+        lat = lat ?: barcelonaLat,
+        lng = lng ?: barcelonaLng,
         googlePlaceId = googlePlaceId,
         phone = phone,
         website = website,
