@@ -1,6 +1,7 @@
 package com.menudeldia.places
 
 import com.menudeldia.config.AppProperties
+import com.menudeldia.places.dto.PhotoMediaResponse
 import com.menudeldia.places.dto.PlaceDetailsResponse
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
 import org.slf4j.LoggerFactory
@@ -60,12 +61,28 @@ class GooglePlacesClient(private val props: AppProperties) {
     @CircuitBreaker(name = "googlePlaces", fallbackMethod = "photoBytesFallback")
     fun photoBytes(photoName: String, maxHeightPx: Int): ByteArray {
         return try {
-            http.get()
+            val mediaResponse = http.get()
                 .uri("/$photoName/media?maxHeightPx=$maxHeightPx&skipHttpRedirect=true")
                 .header("X-Goog-Api-Key", props.google.placesApiKey)
                 .retrieve()
+                .body(PhotoMediaResponse::class.java)
+                ?: throw PlacesException.ApiError("Empty photo metadata response for $photoName")
+
+            val bytes = RestClient.create().get()
+                .uri(mediaResponse.photoUri)
+                .retrieve()
                 .body(ByteArray::class.java)
-                ?: throw PlacesException.ApiError("Empty photo response for $photoName")
+                ?: throw PlacesException.ApiError("Empty photo bytes response for $photoName")
+
+            if (bytes.size < 100) {
+                log.warn(
+                    "Photo {} download is suspiciously small ({} bytes): {}",
+                    photoName,
+                    bytes.size,
+                    String(bytes.take(100).toByteArray())
+                )
+            }
+            bytes
         } catch (ex: HttpClientErrorException) {
             log.warn("Google Places 4xx for photo {}: {}", photoName, ex.statusCode)
             throw PlacesException.ApiError("Client error ${ex.statusCode} for photo $photoName", ex)
