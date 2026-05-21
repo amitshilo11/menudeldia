@@ -1,5 +1,6 @@
 package com.amitshilo.menudeldia.data.mapper
 
+import com.amitshilo.menudeldia.data.remote.apiBaseUrl
 import com.amitshilo.menudeldia.data.remote.dto.MenuDto
 import com.amitshilo.menudeldia.data.remote.dto.OpeningHoursDto
 import com.amitshilo.menudeldia.data.remote.dto.RestaurantDto
@@ -18,8 +19,8 @@ fun RestaurantDto.toDomain(): Restaurant = Restaurant(
     lng = lng,
     address = address,
     phone = phone,
-    thumbnailUrl = thumbnailUrl,
-    photos = photos,
+    thumbnailUrl = thumbnailUrl?.let { if (it.startsWith("/")) "$apiBaseUrl$it" else it },
+    photos = photos.map { if (it.startsWith("/")) "$apiBaseUrl$it" else it },
     descriptionEs = descriptionEs,
     descriptionEn = descriptionEn,
     openingHours = openingHours.map { it.toDomain() },
