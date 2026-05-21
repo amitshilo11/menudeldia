@@ -52,7 +52,7 @@ class PlacesEnrichmentService(
             row.photoCount = photos.downloadPhotos(row.id, photoNames)
             row.placesFetchedAt = Instant.now()
             repo.save(row)
-            log.debug("Enriched restaurant {} ({})", row.name, row.id)
+            log.info("Enriched restaurant {} ({})", row.name, row.id)
         } catch (ex: PlacesException) {
             val rootCause = generateSequence(ex as Throwable) { it.cause }.last()
             log.warn(
