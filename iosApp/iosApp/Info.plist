@@ -4,5 +4,25 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Show restaurants near you and how far to walk for lunch.</string>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>maps</string>
+        <string>comgooglemaps</string>
+    </array>
+    <!-- Google Sign-In: replace with your iOS OAuth client ID from Google Cloud Console -->
+    <key>GIDClientID</key>
+    <string>$(GID_CLIENT_ID)</string>
+    <!-- Reversed iOS OAuth client ID for Google Sign-In callback URL scheme -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>$(GID_REVERSED_CLIENT_ID)</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>

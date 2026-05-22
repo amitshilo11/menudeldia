@@ -14,7 +14,6 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-
 dependencyResolutionManagement {
     repositories {
         google {
@@ -29,5 +28,5 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
-include(":server")
 include(":shared")
+include(":backend")

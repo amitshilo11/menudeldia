@@ -3,7 +3,7 @@
 **Project codename:** TBD
 **Author:** Amit
 **Date:** May 2026
-**Status:** Pre-development, MVP scoping
+**Status:** In development — MVP v1
 
 ---
 
@@ -13,24 +13,29 @@ A mobile-first map app that helps locals (and later, tourists) in Barcelona find
 
 The product competes with `menudia.app` and the `menudeldia.lovable.app` prototype. The bet: **win on map UX and on trustworthy ratings specific to the menú del día itself** (not generic restaurant ratings, which often don't reflect the lunch menu quality).
 
-**MVP target:** ship a working app to Barcelona users in **1–2 months**, solo, with mock data, basic map, and the core map + bottom sheet + restaurant detail flow. Ratings/reviews come in v2.
+**MVP target:** ship iOS + Android apps to Barcelona users, with real backend data, search, filters,
+user accounts (Google + Apple Sign-In), and a polished map UX. Web platform is deferred to v2.
+Ratings/reviews come in v2.
 
 ---
 
 ## 2. Target Users
 
 ### v1 (MVP) — Locals
+
 - Office workers in Barcelona looking for affordable lunch within walking distance of their workplace
 - Repeat-use behavior — same user, different days, different neighborhoods
 - Barcelona-only geography
 - Spanish/Catalan/English UI
 
 ### v2 — Tourists
+
 - One-time use, language-first (English/multi-language)
 - Higher reliance on photos, translations, and dietary filters
 - Discovery beyond their immediate location
+- Web platform
 
-**Not in scope:** restaurants as users (no self-publish flow in MVP — we curate manually).
+**Not in scope for MVP:** restaurants as users (no self-publish flow — we curate manually).
 
 ---
 
@@ -38,37 +43,48 @@ The product competes with `menudia.app` and the `menudeldia.lovable.app` prototy
 
 The reference apps already cover the basics. We win on two things:
 
-1. **Map UX.** Faster, smoother, more legible than competitors. Pin clustering done right, location accuracy that feels native, bottom sheet that doesn't fight the map.
+1. **Map UX.** Faster, smoother, more legible than competitors. Pin clustering done right, location
+   accuracy that feels native, bottom sheet that doesn't fight the map. Search and filters built in
+   from the start.
 2. **Menú del día-specific ratings (v2).** Generic Google ratings don't tell you if the lunch is good. We rate the *menu del día itself*: portion size, freshness, value-for-money, dish variety on rotation.
 
-**Out of scope for v1** (deliberately): filters, ratings, reviews, accounts, favorites, restaurant onboarding, reservations, payments. These are v2+.
+**Out of scope for v1** (deliberately): ratings, reviews, restaurant onboarding, reservations,
+payments, web platform. These are v2+.
 
 ---
 
-## 4. MVP Scope (v1, 1–2 months)
+## 4. MVP Scope (v1)
 
 ### In scope
 
 - **Map view** with restaurant pins (clustered when zoomed out)
-- **User location** on the map with smooth follow/recenter
+- **User location** dot on the map with smooth follow/recenter
 - **Bottom sheet** that surfaces nearby restaurants, expanding to detail when a pin is tapped
-- **Restaurant detail screen:** name, address, today's menu (dishes + price), opening hours, distance from user, photo
-- **Mock data** — JSON file shipped with the app, ~20–30 hand-curated Barcelona restaurants
-- **Backend skeleton** — Spring Boot + Kotlin service that returns the same mock data over HTTP, ready to swap from local to remote without UI changes
-- **Three platforms** — iOS, Android, Web (Compose Multiplatform shared UI)
+- **Restaurant detail screen:** name, address, today's menu (dishes + price), opening hours,
+  distance from user, photo, walking directions CTA
+- **Search** — by restaurant name, dish/menu item, or cuisine type
+- **Filters** — open now, price range, distance, cuisine type
+- **Authentication** — Sign in with Google + Sign in with Apple (no email/password in v1)
+- **Walking directions** — "Get directions" CTA deep-links to Google Maps / Apple Maps with walking
+  mode
+- **Two platforms** — iOS + Android (Compose Multiplatform shared UI)
+- **Backend** — real restaurant + menu data served from own API (architecture TBD — see open
+  questions)
+- **Data sourcing** — own backend is primary (menu data, curated info, photos); Google Places API
+  fills gaps (missing photos, supplemental hours) server-side only — the app never calls Google
+  Places directly
 - **Spanish + English UI strings** (Catalan optional but cheap to add)
+- **Polished UI/UX** — full pass on map screen, cards, detail screen, theme (see section 9b)
 
 ### Out of scope (v2+)
 
+- Web / Wasm platform
 - Ratings, reviews, photos uploaded by users
-- User accounts (anonymous device-ID-based later)
-- Filters (cuisine, price, distance, open now, dietary)
 - Favorites / saved restaurants
-- Search by dish or neighborhood
 - Restaurant self-publish portal
 - Push notifications
 - Reservations / bookings
-- Monetization (free for users, free for everyone in v1)
+- Monetization (free for everyone in v1)
 
 ---
 
@@ -77,24 +93,33 @@ The reference apps already cover the basics. We win on two things:
 ```
 App open
   ↓
-Request location permission
+Login screen (if not authenticated)
+  → Sign in with Google or Sign in with Apple
   ↓
-Map centers on user (or on Barcelona center if denied)
+Map centers on user (or on Barcelona center if location denied)
   ↓
-Pins load from API → cluster when zoomed out
+Pins load from API → cluster when zoomed out → user dot visible on map
   ↓
-User taps pin → bottom sheet expands with that restaurant
+[Optional] Tap search bar → search by name / dish / cuisine → results highlight on map
+[Optional] Tap filter icon → filter panel (open now, price, distance, cuisine) → pins update
   ↓
-User taps card → full restaurant detail (menu, price, hours, photo, "Open in Maps" CTA)
+User taps pin → bottom sheet expands with that restaurant's card
+  ↓
+User taps card → full restaurant detail (menu, price, hours, photo, distance, phone)
+  ↓
+Tap "Get directions" → opens Google Maps / Apple Maps in walking mode
   ↓
 User backs out → map state preserved
 ```
 
 **Critical UX details:**
-- Pin tap and bottom-sheet card are **synced** — tapping pin highlights card, swiping card highlights pin (deferred to v1.1 if tight on time; v1 is just pin-tap → sheet)
+
+- Pin tap and bottom-sheet card are **synced** — tapping pin highlights card (swiping card to
+  highlight pin is v1.1 stretch goal)
 - "Recenter on me" button always accessible
 - Map should not jank when pins re-cluster on zoom
 - Bottom sheet has 3 states: peek (nearest restaurant only), half (list of ~5), full (full detail of selected)
+- Pins visually distinct for "open now" vs "no menu today" (greyed out)
 
 ---
 
@@ -102,47 +127,46 @@ User backs out → map state preserved
 
 ### Stack
 
-| Layer | Choice | Notes |
-|---|---|---|
-| **Mobile + Web UI** | Kotlin Multiplatform + Compose Multiplatform | Shared UI across iOS, Android, Web (Wasm) |
-| **Backend** | Spring Boot + Kotlin | REST API, PostgreSQL with PostGIS for geo queries |
-| **Database** | PostgreSQL + PostGIS | Geographic queries (`ST_DWithin`, `ST_Distance`) |
-| **Map (mobile)** | Google Maps SDK | Native on iOS + Android via expect/actual |
-| **Map (web)** | Google Maps JavaScript API | Wrapped in Compose Web wrapper |
-| **DI** | Metro (Zac Sweers) | Compile-time DI via Kotlin compiler plugin, Dagger-familiar API, full KMP support (JVM/JS/Wasm/Native), no KAPT/KSP needed |
-| **Networking** | Ktor Client | KMP-native HTTP |
-| **Serialization** | kotlinx.serialization | KMP-native |
-| **State management** | Compose state + ViewModel pattern | Standard Compose Multiplatform |
-| **Build / CI** | Gradle + GitHub Actions (or Bitbucket if preferred) | |
+| Layer                | Choice                                       | Notes                                                                       |
+|----------------------|----------------------------------------------|-----------------------------------------------------------------------------|
+| **Mobile UI**        | Kotlin Multiplatform + Compose Multiplatform | Shared UI across iOS + Android                                              |
+| **Backend**          | TBD — Spring Boot + Kotlin **or** Firebase   | See open questions; architecture decision before Week 5                     |
+| **Database**         | PostgreSQL + PostGIS **or** Firestore        | Depends on backend choice                                                   |
+| **Map (mobile)**     | Google Maps SDK                              | Native on iOS + Android via expect/actual                                   |
+| **Places data**      | Google Places API                            | Backend only — enriches DB at seed/curation time; never called from the app |
+| **Auth**             | TBD — Firebase Auth **or** custom JWT        | Depends on backend choice; covers Google + Apple Sign-In                    |
+| **DI**               | Metro (Zac Sweers)                           | Compile-time DI, full KMP support, no KAPT/KSP needed                       |
+| **Networking**       | Ktor Client                                  | KMP-native HTTP                                                             |
+| **Serialization**    | kotlinx.serialization                        | KMP-native                                                                  |
+| **State management** | Compose state + ViewModel pattern            | Standard Compose Multiplatform                                              |
+| **Build / CI**       | Gradle + GitHub Actions                      |                                                                             |
 
-### Critical architectural call-out: Google Maps on Web
+### Data sourcing split
 
-Google Maps does **not** have an official Compose Multiplatform Web binding. We solve this with the **`expect/actual`** pattern:
+| Data type                                                | Source                                                                                                |
+|----------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| Menu price, dishes (firsts/seconds/desserts), menu notes | **Own backend** — primary                                                                             |
+| Restaurant name, address, lat/lng, phone, cuisine type   | **Own backend** — curated manually                                                                    |
+| Opening hours                                            | **Own backend** primary; backend fetches from Google Places API at seed/curation time if missing      |
+| Photos                                                   | **Own backend** if available; backend fetches from Google Places API at seed/curation time if missing |
+| Walking directions                                       | Google Maps / Apple Maps deep-link (no in-app routing)                                                |
 
-- Define a common `MapView` composable in `commonMain`
-- `androidMain` → wraps Google Maps Android SDK in `AndroidView`
-- `iosMain` → wraps `GMSMapView` (Google Maps iOS SDK) via `UIKitView`
-- `wasmJsMain` → wraps Google Maps JS API via JS interop, rendered in a `<div>` inside the Compose Web canvas
-
-This is the single biggest technical risk in the project. **Build a spike of this in week 1** before committing to the rest of the architecture. If web is too painful, we fall back to: KMP for iOS+Android, separate Next.js app for web sharing the backend (option 3 from your earlier choices).
-
-### Project structure (proposed)
+### Project structure
 
 ```
 menu-del-dia/
 ├── composeApp/                  # Compose Multiplatform app
 │   ├── src/
-│   │   ├── commonMain/          # Shared UI, view models, navigation
-│   │   ├── androidMain/         # Google Maps Android wrapper
-│   │   ├── iosMain/             # Google Maps iOS wrapper
-│   │   └── wasmJsMain/          # Google Maps JS wrapper
+│   │   ├── commonMain/          # Shared UI, view models, navigation, search, filters, auth UI
+│   │   ├── androidMain/         # Google Maps Android wrapper, Google Sign-In
+│   │   └── iosMain/             # Google Maps iOS wrapper, Sign in with Apple
 │   └── build.gradle.kts
 ├── shared/                      # Shared business logic
 │   ├── src/
-│   │   ├── commonMain/          # Domain models, repositories, use cases, networking
-│   │   └── ...                  # Platform-specific impls (location, etc.)
+│   │   ├── commonMain/          # Domain models, repositories, use cases, networking, search/filter logic
+│   │   └── ...                  # Platform-specific impls (location, auth, URI launcher)
 │   └── build.gradle.kts
-├── backend/                     # Spring Boot + Kotlin
+├── backend/                     # Spring Boot + Kotlin (or Firebase functions)
 │   ├── src/main/kotlin/
 │   └── build.gradle.kts
 └── iosApp/                      # iOS entry point (Xcode project)
@@ -150,11 +174,14 @@ menu-del-dia/
 
 ### Backend API (v1 endpoints)
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| `GET` | `/api/v1/restaurants?lat={lat}&lng={lng}&radius={m}` | Nearby restaurants for map |
-| `GET` | `/api/v1/restaurants/{id}` | Restaurant detail with today's menu |
-| `GET` | `/api/v1/health` | Health check |
+| Method | Endpoint                                                                                                               | Purpose                                              |
+|--------|------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------|
+| `GET`  | `/api/v1/restaurants?lat={lat}&lng={lng}&radius={m}&q={query}&openNow={bool}&cuisine={type}&minPrice={n}&maxPrice={n}` | Nearby restaurants — supports search + filter params |
+| `GET`  | `/api/v1/restaurants/{id}`                                                                                             | Restaurant detail with today's menu                  |
+| `GET`  | `/api/v1/restaurants/{id}/menu/today`                                                                                  | Today's menu only                                    |
+| `POST` | `/api/v1/auth/google`                                                                                                  | Exchange Google ID token for session                 |
+| `POST` | `/api/v1/auth/apple`                                                                                                   | Exchange Apple identity token for session            |
+| `GET`  | `/api/v1/health`                                                                                                       | Health check                                         |
 
 **Response shape (`/restaurants` list):**
 
@@ -169,140 +196,307 @@ menu-del-dia/
       "menuPrice": 14.50,
       "currency": "EUR",
       "todayHasMenu": true,
-      "thumbnailUrl": "https://..."
+      "cuisineType": "Mediterranean",
+      "thumbnailUrl": "https://...",
+      "distanceMeters": 350,
+      "isOpenNow": true
     }
   ]
 }
 ```
 
-**Response shape (`/restaurants/{id}`):** same fields + `address`, `openingHours`, `phone`, `dishesToday[]`, `photos[]`, `description`.
+**Response shape (`/restaurants/{id}`):** same fields + `address`, `openingHours`, `phone`,
+`dishesToday[]`, `photos[]`, `descriptionEs`, `descriptionEn`, `googlePlaceId`.
 
-### Data model (PostgreSQL)
+### Data model
 
 ```
 restaurants
   id, name, address, lat, lng, geom (PostGIS Point),
   phone, photo_urls[], description_es, description_en,
-  opening_hours (jsonb), created_at, updated_at
+  opening_hours (jsonb), cuisine_type, google_place_id,
+  created_at, updated_at
 
 menus
   id, restaurant_id, date, price, currency,
   dishes (jsonb: {firsts: [...], seconds: [...], desserts: [...]}),
   notes, created_at
 
--- v2 tables (not in MVP)
--- ratings, reviews, users, favorites
+users
+  id, external_id (Google/Apple sub), provider (google|apple),
+  email, display_name, avatar_url, created_at, last_login
+
+-- v2 tables
+-- ratings, reviews, favorites
 ```
 
 ---
 
 ## 7. Risks & Mitigations
 
-| Risk | Impact | Mitigation |
-|---|---|---|
-| Google Maps on Compose Wasm is painful | High — could derail web | Spike it in week 1. Fallback: separate Next.js web app. |
-| Google Maps API costs at scale | Medium | Free tier is generous for MVP; monitor usage. Mapbox/MapLibre as v2 fallback if needed. |
-| Manual data curation doesn't scale | Low for MVP | Fine for 20–30 restaurants. Plan for restaurant self-publish in v2. |
-| Solo developer, 1–2 month timeline | High | Aggressively cut scope. Ship ugly. Ratings come later. |
-| iOS deployment requires Mac + Apple Developer account ($99/yr) | Low but real | Confirm you have Mac access; budget the $99. |
-| Compose Multiplatform Web (Wasm) still maturing | Medium | Accept some rough edges on web; mobile is primary. |
+| Risk                                                           | Impact                              | Mitigation                                                                                         |
+|----------------------------------------------------------------|-------------------------------------|----------------------------------------------------------------------------------------------------|
+| Backend architecture decision delayed                          | High — auth and deploy depend on it | Decide Spring Boot vs Firebase before week 5.                                                      |
+| Google + Apple Sign-In on KMP is non-trivial                   | Medium — expect/actual boilerplate  | Build auth spike early in week 6; use Firebase Auth if it simplifies KMP integration.              |
+| Google Places API costs at scale                               | Medium                              | Free tier covers MVP; cap daily requests; own backend is primary so Places calls are rare.         |
+| Manual data curation doesn't scale                             | Low for MVP                         | Fine for 20–30 restaurants. Plan for self-publish in v2.                                           |
+| Solo developer, extended scope                                 | High                                | Prioritize: map + search + filters first, auth second, full UI polish last. Ship TestFlight early. |
+| iOS deployment requires Mac + Apple Developer account ($99/yr) | Low but real                        | Budget the $99. Sign in with Apple also requires a paid account.                                   |
 
 ---
 
 ## 8. Success Metrics (MVP)
 
-- **Technical:** App ships on iOS, Android, and Web with the same codebase. Map loads in <2s on 4G. No crashes in first 50 sessions.
-- **Product:** 20+ Barcelona restaurants curated. Map UX feels noticeably smoother than menudia.app (subjective, validate with 5–10 users).
-- **Distribution:** TestFlight + Play Store internal testing track + a public web URL by end of month 2.
+- **Technical:** App ships on iOS + Android. Map loads in <2s on 4G. No crashes in first 50
+  sessions. Search returns results in <500ms.
+- **Product:** 20+ Barcelona restaurants curated. Map UX feels noticeably smoother than menudia.app.
+  Search and filters feel fast and intuitive.
+- **Distribution:** TestFlight + Play Store internal testing mid-development (not just at end).
+  Public App Store + Google Play submission by end of MVP phase.
 
 ---
 
 ## 9. Task List
 
-Tasks grouped by week. Aggressive but doable solo if scope holds.
+### Week 1 — Foundations ✓
 
-### Week 1 — Foundations & risk spike
+- [x] **T1.1** Set up Gradle project: KMP + Compose Multiplatform (iOS, Android targets)
+- [x] **T1.3** Google Maps SDK on Android with custom price+emoji markers
+- [x] **T1.4** Google Maps SDK on iOS (`UIKitView` wrapper)
+- [x] **T1.5** `expect`/`actual` `MapView` composable in `commonMain`
+- [x] **T1.6** Backend project set up, `/health` endpoint
+- [ ] **T1.7** Buy domain, set up Google Cloud project, get Maps API keys (Android + iOS — two
+  separate keys)
+- ~~**T1.2** Wasm spike~~ — *cancelled; web platform moved to v2*
 
-- [ ] **T1.1** Set up Gradle project: KMP + Compose Multiplatform (iOS, Android, Wasm targets)
-- [ ] **T1.2** **Spike Google Maps on Wasm** (highest risk — do first). Get a working map with one pin rendered on web. If blocked >3 days, switch web to separate Next.js.
-- [ ] **T1.3** Set up Google Maps SDK on Android with one pin
-- [ ] **T1.4** Set up Google Maps SDK on iOS with one pin (`UIKitView` wrapper)
-- [ ] **T1.5** Define `expect`/`actual` `MapView` composable in `commonMain`
-- [ ] **T1.6** Set up Spring Boot + Kotlin backend project, basic `/health` endpoint
-- [ ] **T1.7** Buy domain, set up Google Cloud project, get Maps API keys (Android, iOS, JS — three separate keys)
+### Week 2 — Core data flow ✓
 
-### Week 2 — Core data flow & UI shell
+- [x] **T2.1** Domain models: `Restaurant`, `Menu`, `Dish`, `OpeningHours`
+- [x] **T2.2** Mock data: hand-curated Barcelona restaurants (real names, real coords, plausible
+  menus)
+- [x] **T2.3** `RestaurantRepository` with `MockRestaurantRepository` + `RemoteRepository` (Ktor
+  skeleton)
+- [x] **T2.4** Backend: Postgres schema, seed from mock data,
+  `GET /api/v1/restaurants?lat&lng&radius`
+- [x] **T2.5** Backend: `GET /api/v1/restaurants/{id}` and `GET /api/v1/restaurants/{id}/menu/today`
+- [x] **T2.6** Metro DI wired: `AppGraph`, `RestaurantRepository`, `HttpClient`
+- [x] **T2.7** Top-level navigation scaffold
 
-- [ ] **T2.1** Define domain models in `commonMain`: `Restaurant`, `Menu`, `Dish`, `OpeningHours`
-- [ ] **T2.2** Create mock JSON file with 20–30 hand-curated Barcelona restaurants (real names, real coordinates, plausible menus)
-- [ ] **T2.3** Build `RestaurantRepository` with two impls: `LocalMockRepository` (reads JSON) and `RemoteRepository` (Ktor Client → backend)
-- [ ] **T2.4** Backend: Postgres + PostGIS schema, seed with the same 20–30 restaurants, `GET /api/v1/restaurants` endpoint with radius query
-- [ ] **T2.5** Backend: `GET /api/v1/restaurants/{id}` endpoint
-- [ ] **T2.6** Set up Metro DI: define `AppGraph` with `@DependencyGraph`, wire `RestaurantRepository`, `LocationProvider`, and Ktor `HttpClient` as `@Provides` / `@Inject` dependencies
-- [ ] **T2.7** Build top-level navigation scaffold (Compose Multiplatform navigation)
+### Week 3 — Map experience (mostly ✓)
 
-### Week 3 — Map experience
+- [x] **T3.1** `MapView` wired to repository — renders live pins from mock data
+- [x] **T3.3** User location: `expect`/`actual` `rememberLocationState()` (Android:
+  FusedLocationProviderClient; iOS: stub)
+- [x] **T3.4** Location permission flow + fallback to Barcelona center (41.3851, 2.1734)
+- [x] **T3.5** "Recenter on me" FAB — shown when permission granted, animates camera to user
+- [x] **T3.6** Bottom sheet with list/detail states using `BottomSheetScaffold`
+- [x] **T3.7** Pin tap → bottom sheet expands to that restaurant
+- [ ] **T3.2** Pin clustering (Android: Maps Utils; iOS: `GMUClusterManager`)
 
-- [ ] **T3.1** Wire `MapView` to repository — render pins from data
-- [ ] **T3.2** Implement pin clustering (Android: Maps Utils library; iOS: `GMUClusterManager`; Web: `MarkerClusterer`)
-- [ ] **T3.3** Implement user location: `expect`/`actual` `LocationProvider` (FusedLocationProvider on Android, `CLLocationManager` on iOS, `navigator.geolocation` on web)
-- [ ] **T3.4** Permission flow: request location, handle denied state (fallback to Barcelona center: 41.3851, 2.1734)
-- [ ] **T3.5** "Recenter on me" floating action button
-- [ ] **T3.6** Bottom sheet shell with 3 states (peek, half, full) using Compose Material 3 `BottomSheetScaffold`
-- [ ] **T3.7** Pin tap → bottom sheet expands to that restaurant (basic card)
+### Week 4 — Detail screen & UI/UX polish ✓ (mostly)
 
-### Week 4 — Detail screen, polish, ship
+- [x] **T4.1** Restaurant detail UI: photo header, name, today's menu (dishes + price), hours,
+  address, phone
+- [x] **T4.2** Walking directions CTA — `expect`/`actual` `UriLauncher` + `walkingDirectionsUri`
+  deep-link to Google Maps (Android: `google.navigation:`) / Apple Maps (iOS:
+  `maps.apple.com?dirflg=w`)
+- [x] **T4.3** Distance from user (`haversineMeters` in shared util; `MapViewModel` recomputes
+  client-side on user-location change)
+- [x] **T4.4** i18n setup: Compose Resources `values/strings.xml` (EN default) +
+  `values-es/strings.xml`; 25+ user-facing strings extracted
+- [x] **T4.5** App icon + adaptive icon (Android) + splash screen — *scaffolding only:*
+  `core-splashscreen` lib wired, saffron splash theme, `installSplashScreen()` in `MainActivity`.
+  Placeholder grid art retained — drop in real PNGs / vector when ready
+- [x] **T4.6** Empty states + error states — `EmptySheetState` (filtered vs no-menus variants with
+  appropriate CTAs) + `ErrorState` with Retry button in `MapScreen`
+- [~] **T4.7** UI/UX polish pass — most of section 9b done; **U17** (custom typography) and **U19**
+  (dark map tiles) deferred as future polish
+- [x] **T4.8** iOS location stub → real `CLLocationManager` wrapper in `LocationState.ios.kt`;
+  `NSLocationWhenInUseUsageDescription` added to `Info.plist`
 
-- [ ] **T4.1** Restaurant detail UI: photo header, name, today's menu (dishes + price), hours, address, phone
-- [ ] **T4.2** "Open in Google Maps" / "Open in Apple Maps" CTA (`expect`/`actual` URL builder)
-- [ ] **T4.3** Distance from user calculation (Haversine, shared in `commonMain`)
-- [ ] **T4.4** i18n setup: Spanish + English string resources (Compose Multiplatform `stringResource`)
-- [ ] **T4.5** App icon, splash screen, basic branding (placeholder OK if needed)
-- [ ] **T4.6** Loading states, empty states, error states (no internet, no restaurants in radius)
-- [ ] **T4.7** Backend: deploy Spring Boot to a free/cheap host (Railway, Fly.io, or Hetzner — avoid AWS for solo MVP)
-- [ ] **T4.8** Configure HTTPS, env vars, API key rotation procedure
-- [ ] **T4.9** TestFlight build + Play Store internal testing build
-- [ ] **T4.10** Web deploy (Vercel, Netlify, or Cloudflare Pages)
-- [ ] **T4.11** Manual QA on all 3 platforms with real Barcelona walking test
+### Week 5 — Search & Filters ✓
+
+- [x] **T5.1** Search UI: floating search bar on map screen (`MapSearchBar`), results filtered in
+  real-time on map
+- [x] **T5.2** Backend: add `q`, `openNow`, `cuisine`, `minPrice`, `maxPrice` query params to
+  `/api/v1/restaurants`; `cuisine_type` added to DB schema + seeder
+- [x] **T5.3** Search logic in `RestaurantRepository` — `SearchFilterState` +
+  `FilterRestaurantsUseCase`
+  in `commonMain`; `MapViewModel` refactored to reactive `combine` for live updates
+- [x] **T5.4** Filter UI: `FilterPanel` as `ModalBottomSheet` with chips for open now, price range,
+  cuisine type
+- [x] **T5.5** Filter state in `MapViewModel` — filter params flow reactively into repository calls
+- [ ] **T5.6** Add `google_place_id` field to restaurant schema; backend enrichment script fetches
+  missing photos/hours from Google Places API and stores them in DB (one-time per restaurant, not
+  per request)
+- [x] **T5.7** "Open now" visual state on pins — markers reflect `todayHasMenu` and selection state
+- [x] **T5.8** Add `cuisineType` field to domain model, DTOs, mock data, and displayed in
+  restaurant card
+- [ ] **T5.9** Early TestFlight build (iOS) + Play Store internal testing build (Android) — get on
+  real devices
+
+### Week 6 — Authentication ✓ (code complete; iOS Xcode manual steps pending)
+
+- [x] **T6.1** Decided: custom JWT backend (HS256, JJWT). `JwtService` issue/verify,
+  `JwtAuthFilter`,
+  `AuthExceptionAdvice`. `JwtServiceTest` + `UserServiceTest` pass.
+- [x] **T6.2** Login screen UI: Google Sign-In button + Sign in with Apple button (iOS only,
+  `getPlatform()` guard) + guest `TextButton`. `LoginScreen` + `LoginViewModel` in `commonMain`.
+- [x] **T6.3** Android: Google Sign-In via Credential Manager API (`GetSignInWithGoogleOption`,
+  `GoogleIdTokenCredential`). `AuthProvider.android.kt` actual. `GOOGLE_WEB_CLIENT_ID` build config
+  field from `local.properties`.
+- [x] **T6.4** iOS: `ASAuthorizationController` (Apple) + `GIDSignIn` (Google) via Swift bridge.
+  `AppleSignInBridge.swift`, `GoogleSignInBridge.swift`, `CompositeAuthBridge.swift` created.
+  `AuthProvider.ios.kt` actual with nonce design (KMP generates rawNonce, Swift SHA-256 hashes it
+  with CryptoKit, rawNonce returned to backend for verification).
+  **Manual Xcode steps required — see below.**
+- [x] **T6.5** `expect`/`actual` `AuthProvider` in `composeApp/commonMain`. `AuthProviderHolder`
+  for Activity/bridge injection. `IosAuthBridge` protocol bridging KMP↔Swift.
+- [x] **T6.6** Backend: `GoogleIdTokenVerifierBean` (audience list), `AppleIdTokenVerifier` (Nimbus
+  RS256 + JWKS), `UserService.upsertFromIdToken` (never overwrites stored name/email with null),
+  `AuthController` `/auth/google` + `/auth/apple`, `MeController` `/me`, `UserRepository`
+  `findByProviderAndExternalId`. `SignInRequest.nonce` for Apple. `AuthControllerIT` TODO.
+- [x] **T6.7** Auth state in app: `RootViewModel` drives `LaunchedEffect` in `App.kt` —
+  navigates Login↔Map on `AuthState` changes. `SessionStore` persists token + guest flag via
+  `multiplatform-settings`. Cold-start `refreshFromMe()` restores session. Splash covers `Loading`.
+- [x] **T6.8** `AccountScreen` + `AccountViewModel`: shows avatar (Coil), name, email, sign-out
+  button for Authenticated; sign-in CTA for Guest. `AuthRepository.signOut()` clears session.
+
+#### iOS manual steps (do in Xcode before building)
+
+1. **Add Google Sign-In package** — Xcode → File → Add Package Dependencies →
+   `https://github.com/google/GoogleSignIn-iOS` → add `GoogleSignIn` library to `iosApp` target.
+2. **Add Auth Swift files to target** — drag `iosApp/iosApp/Auth/` into the Xcode project navigator
+   and ensure all three files (`AppleSignInBridge.swift`, `GoogleSignInBridge.swift`,
+   `CompositeAuthBridge.swift`) are checked for the `iosApp` target membership.
+3. **Fill in Google OAuth client IDs** — in `iosApp/Configuration/Config.xcconfig` set:
+    - `GID_CLIENT_ID` = your iOS OAuth client ID (e.g. `123456-abc.apps.googleusercontent.com`)
+    - `GID_REVERSED_CLIENT_ID` = the reversed form (e.g. `com.googleusercontent.apps.123456-abc`)
+    - Also add the web client ID and Android client ID to `menudeldia.auth.google-client-id` in
+      `backend/src/main/resources/application.yml` (comma-separated) for audience validation.
+4. **Add Sign in with Apple capability** — Xcode → `iosApp` target → Signing & Capabilities →
+   `+` → "Sign in with Apple". Requires paid Apple Developer account ($99/yr).
+5. **Set JWT signing key** — add `JWT_SIGNING_KEY` env var (≥32 chars) for backend. For dev,
+   set in `backend/src/main/resources/application-dev.yml`:
+   `menudeldia.auth.jwt-signing-key: <random-32-char-string>`
+
+### Week 7 — Backend deploy & ship
+
+- [ ] **T7.1** Backend: deploy to Railway / Fly.io / Hetzner (or Firebase if using Firebase)
+- [ ] **T7.2** HTTPS, env vars, API key rotation, secrets management
+- [ ] **T7.3** Connect app to production backend (remove mock data fallback)
+- [ ] **T7.4** Manual QA on iOS + Android — golden path + edge cases
+- [ ] **T7.5** App Store submission (iOS)
+- [ ] **T7.6** Google Play production submission (Android)
+- [ ] **T7.7** Domain setup + any web landing page (optional)
+
+### Extra completed (not in original plan)
+
+- [x] Custom Material 3 theme — saffron-orange / terracotta / olive palette, full light + dark mode
+- [x] Custom price+emoji map markers (selected state with primary color highlight)
+- [x] Animated camera pan to selected restaurant on pin tap
+- [x] `MapView` `bottomPadding` parameter — map content padding matches sheet peek height so pins
+  aren't hidden behind the bottom sheet
+- [x] Status bar + navigation bar inset padding on search bar and FAB (`statusBarsPadding` /
+  `navigationBarsPadding`)
 
 ### Stretch / cut-first if behind
 
 - [ ] Pin ↔ card sync (swiping cards highlights pins)
 - [ ] Catalan translations
-- [ ] Custom map style (Mapbox-style aesthetic via Google Maps style JSON)
+- [ ] Custom map style (Google Maps style JSON for dark mode)
 - [ ] Skeleton loading shimmer on bottom sheet
+- [ ] Saved favorites (requires user account, which is now in scope)
+
+---
+
+## 9b. UI/UX Improvement Checklist
+
+Focused pass to make the app feel polished and production-ready. All items are in scope for v1.
+Grouped by screen.
+
+### Map screen
+
+- [x] **U1** "Recenter on me" FAB (bottom-right, above sheet peek) — done (T3.5)
+- [x] **U2** Show user location dot on map — iOS now uses real `CLLocationManager` (T4.8)
+- [x] **U3** "Open now" visual state on pins — grey out restaurants with no menu today (T5.7)
+- [x] **U4** Bottom sheet drag handle — `sheetDragHandle = { BottomSheetDefaults.DragHandle() }`
+  passed explicitly in `MapScreen`
+- [x] **U5** Bottom sheet peek height — already 160dp in `MapScreen.kt`
+
+### Restaurant card (bottom sheet list)
+
+- [x] **U6** "Abierto / Cerrado" status badge — client-side computed via
+  `Restaurant.isCurrentlyOpen()` (uses today's `OpeningHours` window + device clock)
+- [x] **U7** Distance from user (e.g. "350m") — `haversineMeters` populated in `MapViewModel`
+  (T4.3)
+- [x] **U8** Cuisine type label next to price (e.g. "Mediterráneo · €12.50") for scannability (T5.8)
+- [x] **U9** "Menú del día" + price row — `titleMedium` price in primary color, label in
+  `labelLarge`
+
+### Restaurant detail screen
+
+- [x] **U10** TopAppBar title — restaurant name with ellipsis overflow
+- [x] **U11** Hours section — bold today's row + inline "Open · closes 17:00" / "Closed" chip
+- [x] **U12** Tappable phone — `tel:` URI via `rememberUriLauncher()`, underlined primary-color
+  text
+- [x] **U13** Restaurant description — locale-aware (`descriptionEs` for es/ca, `descriptionEn`
+  otherwise) with graceful fallback to the other language
+- [x] **U14** Replaced dish `AssistChip` with plain `Text` rows inside each section
+- [x] **U15** "Get directions" filled button — walking deep-link CTA (T4.2)
+- [x] **U16** Photo fallback — branded `🍽` emoji on `primaryContainer` background when
+  `thumbnailUrl` is null (applied in detail screen, list card, and bottom-sheet detail card)
+
+### Theme & global polish
+
+- [ ] **U17** Custom typography — deferred (needs Google Font file bundled into
+  `composeResources/font/` + Typography config in `MenuTheme`)
+- [x] **U18** App icon + adaptive icon (Android) — scaffolding done; placeholder grid art retained
+  for future replacement (T4.5)
+- [ ] **U19** Dark mode map tiles — deferred (needs Google Maps dark style JSON applied via
+  `MapProperties(mapStyleOptions = ...)` on Android + iOS)
+- [x] **U20** Empty state screen — "No menús nearby" with recenter CTA + filtered-empty variant
+  with "Clear filters" CTA (T4.6)
 
 ---
 
 ## 10. Decisions Locked
 
-| Question | Decision |
-|---|---|
-| Primary user (MVP) | Locals first |
-| Differentiators | Map UX + menú del día-specific ratings (ratings v2) |
-| Monetization (v1) | Free for everyone |
-| Architecture | KMP + Compose Multiplatform (iOS, Android, Wasm) |
-| Map provider | Google Maps |
-| Backend | Spring Boot + Kotlin, PostgreSQL + PostGIS |
-| Data sourcing (MVP) | Manual curation by Amit |
-| MVP feature scope | Map + bottom sheet + restaurant detail only |
-| User accounts | None in MVP |
-| Map interaction | Pins clustered, tap pin → bottom sheet |
-| Timeline | 1–2 months |
-| Team | Solo |
-| Geography | Barcelona only |
+| Question                | Decision                                                                                                                                               |
+|-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Primary user (MVP)      | Locals first                                                                                                                                           |
+| Differentiators         | Map UX + search/filters + menú del día-specific ratings (ratings v2)                                                                                   |
+| Monetization (v1)       | Free for everyone                                                                                                                                      |
+| Platforms (MVP)         | iOS + Android only — web deferred to v2                                                                                                                |
+| Architecture            | KMP + Compose Multiplatform (iOS, Android)                                                                                                             |
+| Map provider            | Google Maps SDK                                                                                                                                        |
+| Data sourcing           | Own backend primary; Google Places API fills gaps server-side only — backend enriches DB at seed/curation time, app never calls Google Places directly |
+| Navigation (directions) | Deep-link to Google Maps / Apple Maps in walking mode                                                                                                  |
+| Search scope            | Restaurant name + dish/menu item + cuisine type                                                                                                        |
+| Filters                 | Open now, price range, distance, cuisine type                                                                                                          |
+| Authentication          | Sign in with Google + Sign in with Apple (no email/password in v1)                                                                                     |
+| App store releases      | Mid-development (week 5), not just at end                                                                                                              |
+| Timeline                | ~7 weeks                                                                                                                                               |
+| Team                    | Solo                                                                                                                                                   |
+| Geography               | Barcelona only                                                                                                                                         |
 
 ---
 
-## 11. Open Questions to Resolve Before Coding
+## 11. Open Questions
 
-1. **Project name + domain.** Do you have one in mind?
-2. **Apple Developer account.** Do you already have one, or need to budget the $99/yr?
-3. **Hosting budget.** Are you OK paying ~€5–20/mo for backend hosting + Postgres + Maps API?
-4. **Restaurant photos.** Do we use stock/placeholder photos for MVP, or shoot/source real ones for the 20–30 curated spots? (Real photos make the app *significantly* more credible — worth one weekend of walking around with a phone.)
-5. **Analytics.** Add Firebase Analytics / PostHog from day 1 to measure usage? (Strongly recommended — you'll need this to validate the v2 direction.)
-6. **Backup plan if Wasm map fails.** Confirm you're OK with separate Next.js web app as the fallback after the week-1 spike.
+1. **Backend architecture.** Spring Boot + PostgreSQL or Firebase (Firestore + Firebase Auth + Cloud
+   Functions)? This decision unblocks auth implementation (week 6) and deploy (week 7). Need to
+   decide before week 5.
+2. **Project name + domain.** Do you have one in mind?
+3. **Apple Developer account.** Do you already have one, or need to budget the $99/yr? (Required for
+   TestFlight + Sign in with Apple.)
+4. **Hosting budget.** OK paying ~€5–20/mo for backend + Postgres + Maps API? (Firebase has a
+   generous free tier that may cover MVP.)
+5. **Restaurant photos.** Stock/placeholder photos for MVP, or shoot real ones for the 20–30 curated
+   spots? Real photos make the app significantly more credible.
+6. **Analytics.** Add Firebase Analytics / PostHog from day 1? Strongly recommended to validate v2
+   direction.
 
 ---
 
-*End of characterization. Once these open questions are resolved, we can move to detailed sprint planning and start cutting tickets.*
+*End of characterization.*
