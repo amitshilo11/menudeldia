@@ -1,3 +1,3 @@
 package com.amitshilo.menudeldia.data.remote
 
-actual val apiBaseUrl: String = "http://10.0.2.2:8080"
+actual val apiBaseUrl: String = com.amitshilo.menudeldia.shared.BuildConfig.API_BASE_URL
