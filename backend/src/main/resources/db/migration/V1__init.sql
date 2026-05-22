@@ -25,7 +25,7 @@ CREATE TABLE restaurants (
     description_es      TEXT,
     description_en      TEXT,
     menu_price          NUMERIC(6, 2),
-    currency            CHAR(3) NOT NULL DEFAULT 'EUR',
+    currency            VARCHAR(3) NOT NULL DEFAULT 'EUR',
     price_includes_es   JSONB NOT NULL DEFAULT '[]'::jsonb,
     price_includes_en   JSONB NOT NULL DEFAULT '[]'::jsonb,
     weekday_hours       JSONB NOT NULL DEFAULT '{}'::jsonb,
