@@ -1,0 +1,22 @@
+# Local development stack — just the database.
+# The Spring Boot app runs from your IDE / Gradle.
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: menudeldia-db
+    environment:
+      POSTGRES_DB: menudeldia
+      POSTGRES_USER: menudeldia
+      POSTGRES_PASSWORD: changeme
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U menudeldia -d menudeldia" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

@@ -72,3 +72,10 @@ GoogleService-Info.plist
 *.hprof
 test-results/
 reports/
+
+# AI tools
+.claude
+.claude-flow
+.swarm
+ruvector.db
+.mcp.json
