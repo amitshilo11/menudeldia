@@ -2,6 +2,8 @@
 spring:
   jpa:
     show-sql: false
+    hibernate:
+      ddl-auto: none
   flyway:
     clean-disabled: true
 
