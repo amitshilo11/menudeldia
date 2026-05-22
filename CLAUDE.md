@@ -1,193 +1,144 @@
-# Ruflo — Claude Code Configuration
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this
+repository.
 
 ## Rules
 
 - Do what has been asked; nothing more, nothing less
 - NEVER create files unless absolutely necessary — prefer editing existing files
 - NEVER create documentation files unless explicitly requested
-- NEVER save working files or tests to root — use `/src`, `/tests`, `/docs`, `/config`, `/scripts`
 - ALWAYS read a file before editing it
-- NEVER commit secrets, credentials, or .env files
-- Keep files under 500 lines
-- Validate input at system boundaries
-
-## Code Quality & Architecture
-
-- Separate concerns strictly: domain logic, data access, and UI must not bleed into each other
-- No business logic in UI components — UI only renders, never decides
-- One responsibility per class or function — if you need "and" to describe it, split it
-- Prefer explicit over clever — readable beats brief
-- Name things for what they are, not how they're implemented
 - Keep files under 300 lines — split when they grow larger
-- No magic numbers or strings — use named constants
-- Avoid deeply nested code — extract functions, use early returns
-- For new features: use SPARC methodology (Specification → Pseudocode → Architecture → Refinement →
-  Completion)
+- Validate input at system boundaries only
 
-## Agent Comms (SendMessage-First Coordination)
+## Project Overview
 
-Named agents coordinate via `SendMessage`, not polling or shared state.
+**Menú del Día** — KMP + Compose Multiplatform map app for finding Barcelona fixed-price lunch
+restaurants. Three Gradle modules:
 
-```
-Lead (you) ←→ architect ←→ developer ←→ tester ←→ reviewer
-              (named agents message each other directly)
-```
+| Module       | Purpose                                                                            |
+|--------------|------------------------------------------------------------------------------------|
+| `shared`     | Domain models, use cases, repositories, Ktor networking — compiled for all targets |
+| `composeApp` | Compose Multiplatform UI (Android, iOS via iosApp, Web/Wasm)                       |
+| `backend`    | Spring Boot + Kotlin REST API (Java 21, PostgreSQL + PostGIS)                      |
 
-### Spawning a Coordinated Team
-
-```javascript
-// ALL agents in ONE message, each knows WHO to message next
-Agent({ prompt: "Research the codebase. SendMessage findings to 'architect'.",
-  subagent_type: "researcher", name: "researcher", run_in_background: true })
-Agent({ prompt: "Wait for 'researcher'. Design solution. SendMessage to 'coder'.",
-  subagent_type: "system-architect", name: "architect", run_in_background: true })
-Agent({ prompt: "Wait for 'architect'. Implement it. SendMessage to 'tester'.",
-  subagent_type: "coder", name: "coder", run_in_background: true })
-Agent({ prompt: "Wait for 'coder'. Write tests. SendMessage results to 'reviewer'.",
-  subagent_type: "tester", name: "tester", run_in_background: true })
-Agent({ prompt: "Wait for 'tester'. Review code quality and security.",
-  subagent_type: "reviewer", name: "reviewer", run_in_background: true })
-
-// Kick off the pipeline
-SendMessage({ to: "researcher", summary: "Start", message: "[task context]" })
-```
-
-### Patterns
-
-| Pattern        | Flow                  | Use When                                |
-|----------------|-----------------------|-----------------------------------------|
-| **Pipeline**   | A → B → C → D         | Sequential dependencies (feature dev)   |
-| **Fan-out**    | Lead → A, B, C → Lead | Independent parallel work (research)    |
-| **Supervisor** | Lead ↔ workers        | Ongoing coordination (complex refactor) |
-
-### Rules
-
-- ALWAYS name agents — `name: "role"` makes them addressable
-- ALWAYS include comms instructions in prompts — who to message, what to send
-- Spawn ALL agents in ONE message with `run_in_background: true`
-- After spawning: STOP, tell user what's running, wait for results
-- NEVER poll status — agents message back or complete automatically
-
-## Swarm & Routing
-
-### Config
-
-- **Topology**: hierarchical-mesh (anti-drift)
-- **Max Agents**: 15
-- **Memory**: hybrid
-- **HNSW**: Enabled
-- **Neural**: Enabled
+## Build Commands
 
 ```bash
-npx @claude-flow/cli@latest swarm init --topology hierarchical --max-agents 8 --strategy specialized
+# Android
+./gradlew :composeApp:assembleDebug
+
+# Web (Wasm — preferred for modern browsers)
+./gradlew :composeApp:wasmJsBrowserDevelopmentRun
+
+# Web (JS — broader compatibility)
+./gradlew :composeApp:jsBrowserDevelopmentRun
+
+# Backend
+./gradlew :backend:bootRun
+
+# Backend tests
+./gradlew :backend:test
+
+# Run a single test
+./gradlew :backend:test --tests "com.menudeldia.auth.JwtServiceTest"
+
+# iOS — open iosApp/ in Xcode and run
 ```
 
-### Agent Routing
+## Architecture
 
-| Task        | Agents                             | Topology     |
-|-------------|------------------------------------|--------------|
-| Bug Fix     | researcher, coder, tester          | hierarchical |
-| Feature     | architect, coder, tester, reviewer | hierarchical |
-| Refactor    | architect, coder, reviewer         | hierarchical |
-| Performance | perf-engineer, coder               | hierarchical |
-| Security    | security-architect, auditor        | hierarchical |
+### Shared module — clean layers
 
-### When to Swarm
-
-- **YES**: 3+ files, new features, cross-module refactoring, API changes, security, performance
-- **NO**: single file edits, 1-2 line fixes, docs updates, config changes, questions
-
-### 3-Tier Model Routing
-
-| Tier | Handler              | Use Cases                                       |
-|------|----------------------|-------------------------------------------------|
-| 1    | Agent Booster (WASM) | Simple transforms — skip LLM, use Edit directly |
-| 2    | Haiku                | Simple tasks, low complexity                    |
-| 3    | Sonnet/Opus          | Architecture, security, complex reasoning       |
-
-## Memory & Learning
-
-### Before Any Task
-
-```bash
-npx @claude-flow/cli@latest memory search --query "[task keywords]" --namespace patterns
-npx @claude-flow/cli@latest hooks route --task "[task description]"
+```
+domain/       ← pure Kotlin: Restaurant, Menu, OpeningHours models; repository interfaces; use cases
+data/remote/  ← Ktor DTOs + API services (RestaurantApiService, AuthApiService)
+data/local/   ← MockRestaurantRepository (dev fallback)
+data/auth/    ← SessionStore (multiplatform settings), AuthRepositoryImpl
+di/           ← Metro DI graph (AppGraph) — single @DependencyGraph interface
 ```
 
-### After Success
+**DI**: Zac Sweers' Metro library (`@DependencyGraph`, `@Provides`, `@SingleIn`). `AppGraph` is the
+single graph; everything is wired there.
 
-```bash
-npx @claude-flow/cli@latest memory store --namespace patterns --key "[name]" --value "[what worked]"
-npx @claude-flow/cli@latest hooks post-task --task-id "[id]" --success true --store-results true
-```
+**Networking**: Ktor client with `ContentNegotiation` (kotlinx.serialization), `Auth` plugin (bearer
+token from `SessionStore`), and per-platform `apiBaseUrl`:
 
-### MCP Tools (use `ToolSearch("keyword")` to discover)
+- Android: `http://10.0.2.2:8080` (emulator localhost)
+- iOS/JVM: `http://localhost:8080`
+- Wasm/JS: relative paths
 
-| Category      | Key Tools                                                  |
-|---------------|------------------------------------------------------------|
-| **Memory**    | `memory_store`, `memory_search`, `memory_search_unified`   |
-| **Bridge**    | `memory_import_claude`, `memory_bridge_status`             |
-| **Swarm**     | `swarm_init`, `swarm_status`, `swarm_health`               |
-| **Agents**    | `agent_spawn`, `agent_list`, `agent_status`                |
-| **Hooks**     | `hooks_route`, `hooks_post-task`, `hooks_worker-dispatch`  |
-| **Security**  | `aidefence_scan`, `aidefence_is_safe`, `aidefence_has_pii` |
-| **Hive-Mind** | `hive-mind_init`, `hive-mind_consensus`, `hive-mind_spawn` |
+### composeApp — UI layer
 
-### Background Workers
+Navigation uses `sealed class Screen` with Compose Navigation. Screens:
+`Login → Map → RestaurantDetail`, `Account`.
 
-| Worker     | When                   |
-|------------|------------------------|
-| `audit`    | After security changes |
-| `optimize` | After performance work |
-| `testgaps` | After adding features  |
-| `map`      | Every 5+ file changes  |
-| `document` | After API changes      |
+**Map**: `MapView` is an `expect` composable — each platform (`androidMain`, `iosMain`,
+`wasmJsMain`) provides an `actual` wrapping the native Google Maps SDK. Don't add platform logic to
+`commonMain`.
 
-```bash
-npx @claude-flow/cli@latest hooks worker dispatch --trigger audit
-```
+**Auth**: `AuthProvider` is `expect`/`actual`. Android uses Credential Manager (Google Sign-In). iOS
+uses Google Sign-In SDK via `GIDSignIn`. The common `AuthProviderHolder` bridges them to the shared
+`AuthRepository`.
 
-## Agents
+**Location**: `LocationState` is `expect`/`actual`. Use the common `UserLocation` data class.
 
-**Core**: `coder`, `reviewer`, `tester`, `planner`, `researcher`
-**Architecture**: `system-architect`, `backend-dev`, `mobile-dev`
-**Security**: `security-architect`, `security-auditor`
-**Performance**: `performance-engineer`, `perf-analyzer`
-**Coordination**: `hierarchical-coordinator`, `mesh-coordinator`, `adaptive-coordinator`
-**GitHub**: `pr-manager`, `code-review-swarm`, `issue-tracker`, `release-manager`
+### Backend — Spring Boot
 
-Any string works as a custom agent type.
+Package structure: `com.menudeldia.*`
 
-## Build & Test
+| Package      | Contents                                                                                  |
+|--------------|-------------------------------------------------------------------------------------------|
+| `restaurant` | JPA entity, repository, service, controller, mapper                                       |
+| `auth`       | JWT filter, Google/Apple token verifiers, `UserService`, `AuthController`, `MeController` |
+| `places`     | `GooglePlacesClient`, `PlacesEnrichmentService` (photo download + enrichment)             |
+| `admin`      | `AdminController` (admin-token protected, restaurant seeding/enrichment)                  |
+| `seed`       | `SeederService` — seeds from `seed.json` or CSV                                           |
+| `config`     | CORS, security, `AppProperties`, `AdminTokenAuthorizationManager`                         |
+| `geo`        | `GeoUtils` (distance math)                                                                |
 
-- ALWAYS run tests after code changes
-- ALWAYS verify build succeeds before committing
+**Database**: PostgreSQL + PostGIS. Flyway manages migrations —
+`backend/src/main/resources/db/migration/`. `hibernate.ddl-auto=validate` so the schema must match
+entity definitions exactly. Add new columns via a new `V<n>__description.sql` migration file.
 
-```bash
-npm run build && npm test
-```
+**Security**: Spring Security + JWT. All endpoints require a valid JWT except `/api/v1/auth/**` and
+`/actuator/health`. Admin endpoints additionally require `ADMIN_TOKEN` header. Rate limiting via
+Bucket4j (60 reads/min, 10 auth/min).
 
-## CLI Quick Reference
+**Configuration** (env vars / `.env` file in `backend/`):
 
-```bash
-npx @claude-flow/cli@latest init --wizard           # Setup
-npx @claude-flow/cli@latest swarm init --v3-mode     # Start swarm
-npx @claude-flow/cli@latest memory search --query "" # Vector search
-npx @claude-flow/cli@latest hooks route --task ""    # Route to agent
-npx @claude-flow/cli@latest doctor --fix             # Diagnostics
-npx @claude-flow/cli@latest security scan            # Security scan
-npx @claude-flow/cli@latest performance benchmark    # Benchmarks
-```
+- `GOOGLE_PLACES_API_KEY` — Google Places API
+- `GOOGLE_OAUTH_CLIENT_ID` — Google OAuth client
+- `JWT_SIGNING_KEY` — hex-encoded signing key (`openssl rand -hex 32`)
+- `DB_URL`, `DB_USER`, `DB_PASSWORD`
+- `PHOTOS_DIR` — local photo storage root (default `./var/photos`)
+- `ADMIN_TOKEN` — for admin endpoints
 
-26 commands, 140+ subcommands. Use `--help` on any command for details.
+Run dev profile with: `./gradlew :backend:bootRun -Pprofiles=dev`
 
-## Setup
+## API Endpoints
 
-```bash
-claude mcp add claude-flow -- npx -y @claude-flow/cli@latest
-npx @claude-flow/cli@latest daemon start
-npx @claude-flow/cli@latest doctor --fix
-```
+| Method | Path                                      | Auth        |
+|--------|-------------------------------------------|-------------|
+| `POST` | `/api/v1/auth/google`                     | none        |
+| `POST` | `/api/v1/auth/apple`                      | none        |
+| `GET`  | `/api/v1/me`                              | JWT         |
+| `GET`  | `/api/v1/restaurants?lat=&lng=&radius=`   | JWT         |
+| `GET`  | `/api/v1/restaurants/{id}`                | JWT         |
+| `GET`  | `/api/v1/restaurants/{id}/photos/{index}` | JWT         |
+| `POST` | `/api/v1/admin/seed`                      | ADMIN_TOKEN |
+| `POST` | `/api/v1/admin/enrich`                    | ADMIN_TOKEN |
+| `GET`  | `/actuator/health`                        | none        |
 
-**Agent tool** handles execution (agents, files, code, git). **MCP tools** handle coordination (
-swarm, memory, hooks). **CLI** is the same via Bash.
+## Key Patterns
+
+- **expect/actual** is used for: `MapView`, `AuthProvider`, `LocationState`, `UriLauncher`,
+  `apiBaseUrl`, `KmpLogger`. Add platform implementations to all source sets when adding a new
+  `expect`.
+- **Metro DI**: add new dependencies to `AppGraph.Companion` as `@Provides` functions. Use
+  `@SingleIn(AppScope::class)` for singletons.
+- **Flyway migrations**: never rename or edit existing migration files — always add a new `V<n>__`
+  file.
+- **RestaurantMapper** exists in both `shared` (DTO→domain) and `backend` (entity→DTO) — keep them
+  separate.
