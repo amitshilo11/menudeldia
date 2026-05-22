@@ -79,3 +79,6 @@ reports/
 .swarm
 ruvector.db
 .mcp.json
+
+# Backend storge
+backend/var/photos/*
