@@ -1,5 +1,4 @@
 # Production stack on a single VPS: Caddy (TLS) -> Spring Boot -> Postgres+PostGIS.
-# TODO: pin app image tag (e.g. ghcr.io/.../menudeldia-backend:0.1.0); replace `:latest`.
 services:
   db:
     image: postgis/postgis:16-3.4
@@ -16,7 +15,7 @@ services:
       retries: 5
 
   app:
-    image: ghcr.io/menudeldia/backend:latest
+    image: ghcr.io/amitshilo11/menudeldia:latest
     restart: unless-stopped
     depends_on:
       db:
