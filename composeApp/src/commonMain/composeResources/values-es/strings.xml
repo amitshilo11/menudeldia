@@ -52,4 +52,8 @@
     <string name="dish_seconds">Segundos</string>
     <string name="dish_desserts">Postres</string>
     <string name="no_menu_today_long">Sin menú del día hoy</string>
+    <string name="includes_dessert">Postre</string>
+    <string name="includes_drink">Bebida</string>
+    <string name="call_restaurant">Llamar</string>
+    <string name="more_info">Más info</string>
 </resources>

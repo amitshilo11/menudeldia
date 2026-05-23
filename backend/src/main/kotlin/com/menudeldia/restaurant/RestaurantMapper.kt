@@ -67,6 +67,13 @@ class RestaurantMapper {
             isOpenNow = isOpenNow(entity.weekdayHours, now),
             priceIncludesEs = entity.priceIncludesEs,
             priceIncludesEn = entity.priceIncludesEn,
+            includesDessert = entity.priceIncludesEn.any {
+                it.contains(
+                    "dessert",
+                    ignoreCase = true
+                )
+            },
+            includesDrink = entity.priceIncludesEn.any { it.contains("drink", ignoreCase = true) },
         )
     }
 

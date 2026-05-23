@@ -5,18 +5,22 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +31,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,12 +42,20 @@ import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
 import com.amitshilo.menudeldia.util.format
 import com.amitshilo.menudeldia.util.isCurrentlyOpen
+import com.amitshilo.menudeldia.util.rememberUriLauncher
+import com.amitshilo.menudeldia.util.walkingDirectionsUri
 import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.call_restaurant
 import menudeldia.composeapp.generated.resources.close
 import menudeldia.composeapp.generated.resources.closed_now
 import menudeldia.composeapp.generated.resources.daily_menu
+import menudeldia.composeapp.generated.resources.get_directions
+import menudeldia.composeapp.generated.resources.info
+import menudeldia.composeapp.generated.resources.more_info
+import menudeldia.composeapp.generated.resources.my_location
 import menudeldia.composeapp.generated.resources.no_menu_today_short
 import menudeldia.composeapp.generated.resources.open_now
+import menudeldia.composeapp.generated.resources.phone
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -60,18 +73,20 @@ fun RestaurantDetailCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
-            .clickable { onNavigateToDetail(restaurant.id) },
+            .padding(16.dp),
     ) {
         Column {
-            PhotoSection(restaurant = restaurant)
-            InfoSection(restaurant = restaurant, onDismiss = onDismiss)
+            PhotoSection(restaurant = restaurant, onDismiss = onDismiss)
+            InfoSection(
+                restaurant = restaurant,
+                onNavigateToDetail = onNavigateToDetail,
+            )
         }
     }
 }
 
 @Composable
-private fun PhotoSection(restaurant: Restaurant) {
+private fun PhotoSection(restaurant: Restaurant, onDismiss: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -120,8 +135,26 @@ private fun PhotoSection(restaurant: Restaurant) {
         OpenStatusBadge(
             isOpen = restaurant.isCurrentlyOpen(),
             hasMenuToday = restaurant.todayHasMenu,
-            modifier = Modifier.align(Alignment.TopEnd).padding(12.dp),
+            modifier = Modifier.align(Alignment.BottomStart).padding(12.dp),
         )
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(10.dp)
+                .size(34.dp)
+                .background(Color.Black.copy(alpha = 0.4f), CircleShape)
+                .clip(CircleShape)
+                .clickable { onDismiss() },
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.close),
+                contentDescription = stringResource(Res.string.close),
+                tint = Color.White,
+                modifier = Modifier.size(18.dp),
+            )
+        }
     }
 }
 
@@ -174,40 +207,54 @@ private fun OpenStatusBadge(isOpen: Boolean, hasMenuToday: Boolean, modifier: Mo
 }
 
 @Composable
-private fun InfoSection(restaurant: Restaurant, onDismiss: () -> Unit) {
-    Column(modifier = Modifier.padding(start = 16.dp, end = 4.dp, top = 12.dp, bottom = 12.dp)) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = restaurant.name,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                )
-                Text(
-                    text = restaurant.address,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                )
-            }
-            IconButton(onClick = onDismiss) {
-                Icon(
-                    painter = painterResource(Res.drawable.close),
-                    contentDescription = stringResource(Res.string.close),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+private fun InfoSection(restaurant: Restaurant, onNavigateToDetail: (String) -> Unit) {
+    val uriLauncher = rememberUriLauncher()
+
+    Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp)) {
+        Text(
+            text = restaurant.name,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+        )
+        Text(
+            text = restaurant.address,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+        )
+
+        Spacer(Modifier.height(8.dp))
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
+        Spacer(Modifier.height(6.dp))
+
+        // One combined row: "🥘 Catalana  ·  Starter  ·  Main  ·  Dessert  ·  Drink"
+        val infoLine = (
+                listOfNotNull(
+                    buildString {
+                        restaurant.cuisineEmoji?.let { append("$it ") }
+                        restaurant.cuisineType?.let { append(it) }
+                    }.trim().takeIf { it.isNotEmpty() }
+                ) + restaurant.menuIncludes
+                ).joinToString("  ·  ")
+
+        if (infoLine.isNotEmpty()) {
+            Text(
+                text = infoLine,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Spacer(Modifier.height(6.dp))
         }
 
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
         Spacer(Modifier.height(8.dp))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
+            modifier = Modifier.fillMaxWidth(),
         ) {
             restaurant.distanceMeters?.let { meters ->
                 Text(
@@ -222,9 +269,8 @@ private fun InfoSection(restaurant: Restaurant, onDismiss: () -> Unit) {
 
             val menuPrice = restaurant.menuPrice
             if (restaurant.todayHasMenu && menuPrice != null) {
-                val priceStr = menuPrice.format(2)
                 Text(
-                    text = "${stringResource(Res.string.daily_menu)}  €$priceStr",
+                    text = "${stringResource(Res.string.daily_menu)}  €${menuPrice.format(2)}",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold,
@@ -234,6 +280,78 @@ private fun InfoSection(restaurant: Restaurant, onDismiss: () -> Unit) {
                     text = stringResource(Res.string.no_menu_today_short),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+
+        Spacer(Modifier.height(10.dp))
+
+        // Navigate + Call + More Info buttons (uniform OutlinedButton style)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            OutlinedButton(
+                onClick = {
+                    uriLauncher.open(
+                        walkingDirectionsUri(
+                            restaurant.lat,
+                            restaurant.lng
+                        )
+                    )
+                },
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(12.dp),
+                contentPadding = PaddingValues(horizontal = 6.dp, vertical = 8.dp),
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.my_location),
+                    contentDescription = null,
+                    modifier = Modifier.size(14.dp),
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    text = stringResource(Res.string.get_directions),
+                    style = MaterialTheme.typography.labelSmall,
+                    maxLines = 1,
+                )
+            }
+            restaurant.phone?.let { ph ->
+                OutlinedButton(
+                    onClick = { uriLauncher.open("tel:$ph") },
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp),
+                    contentPadding = PaddingValues(horizontal = 6.dp, vertical = 8.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.phone),
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp),
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = stringResource(Res.string.call_restaurant),
+                        style = MaterialTheme.typography.labelSmall,
+                        maxLines = 1,
+                    )
+                }
+            }
+            OutlinedButton(
+                onClick = { onNavigateToDetail(restaurant.id) },
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(12.dp),
+                contentPadding = PaddingValues(horizontal = 6.dp, vertical = 8.dp),
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.info),
+                    contentDescription = null,
+                    modifier = Modifier.size(14.dp),
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    text = stringResource(Res.string.more_info),
+                    style = MaterialTheme.typography.labelSmall,
+                    maxLines = 1,
                 )
             }
         }

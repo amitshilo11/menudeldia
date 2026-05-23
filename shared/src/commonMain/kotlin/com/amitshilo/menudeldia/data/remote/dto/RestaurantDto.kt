@@ -35,6 +35,9 @@ data class RestaurantDto(
     val outdoorSeating: Boolean = false,
     val reservable: Boolean = false,
     val takeout: Boolean = false,
+    val includesDessert: Boolean = false,
+    val includesDrink: Boolean = false,
+    val priceIncludesEn: List<String> = emptyList(),
 )
 
 @Serializable

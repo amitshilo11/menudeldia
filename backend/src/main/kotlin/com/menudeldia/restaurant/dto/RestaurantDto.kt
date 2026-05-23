@@ -35,6 +35,8 @@ data class RestaurantDto(
     val isOpenNow: Boolean = false,
     val priceIncludesEs: List<String> = emptyList(),
     val priceIncludesEn: List<String> = emptyList(),
+    val includesDessert: Boolean = false,
+    val includesDrink: Boolean = false,
 )
 
 data class ReviewDto(

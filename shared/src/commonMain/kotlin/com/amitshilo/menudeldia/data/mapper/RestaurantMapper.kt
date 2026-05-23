@@ -49,6 +49,9 @@ fun RestaurantDto.toDomain(): Restaurant = Restaurant(
     outdoorSeating = outdoorSeating,
     reservable = reservable,
     takeout = takeout,
+    includesDessert = includesDessert,
+    includesDrink = includesDrink,
+    menuIncludes = priceIncludesEn,
 )
 
 fun OpeningHoursDto.toDomain(): OpeningHours = OpeningHours(

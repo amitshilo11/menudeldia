@@ -29,6 +29,9 @@ data class Restaurant(
     val reservable: Boolean = false,
     val takeout: Boolean = false,
     val isGlutenFreeFriendly: Boolean = false,
+    val includesDessert: Boolean = false,
+    val includesDrink: Boolean = false,
+    val menuIncludes: List<String> = emptyList(),
 )
 
 data class Review(
