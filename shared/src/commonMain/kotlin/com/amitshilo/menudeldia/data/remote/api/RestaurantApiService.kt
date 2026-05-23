@@ -5,6 +5,8 @@ import com.amitshilo.menudeldia.data.remote.dto.RestaurantDto
 import com.amitshilo.menudeldia.data.remote.dto.RestaurantListResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 
@@ -23,8 +25,13 @@ class RestaurantApiService(private val client: HttpClient) {
     suspend fun getRestaurantDetail(id: String): RestaurantDto =
         client.get("$BASE_PATH/restaurants/$id").body()
 
-    suspend fun getTodayMenu(restaurantId: String): MenuDto? =
+    suspend fun getTodayMenu(restaurantId: String): MenuDto? = try {
         client.get("$BASE_PATH/restaurants/$restaurantId/menu/today").body()
+    } catch (_: ClientRequestException) {
+        null
+    } catch (_: ServerResponseException) {
+        null
+    }
 
     companion object {
         private const val BASE_PATH = "/api/v1"

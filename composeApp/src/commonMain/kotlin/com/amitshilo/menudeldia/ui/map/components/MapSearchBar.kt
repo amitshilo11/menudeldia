@@ -1,4 +1,4 @@
-package com.amitshilo.menudeldia.ui.map
+package com.amitshilo.menudeldia.ui.map.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -149,7 +149,7 @@ fun MapSearchBar(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             stringResource(Res.string.filters),
-                            style = MaterialTheme.typography.labelMedium
+                            style = MaterialTheme.typography.labelMedium,
                         )
                         if (activeFilterCount > 0) {
                             Spacer(Modifier.width(4.dp))
@@ -161,7 +161,7 @@ fun MapSearchBar(
                     Icon(
                         painter = painterResource(Res.drawable.filter_list),
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(18.dp),
                     )
                 },
                 shape = RoundedCornerShape(24.dp),

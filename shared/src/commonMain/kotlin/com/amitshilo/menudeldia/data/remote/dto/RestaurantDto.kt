@@ -26,6 +26,28 @@ data class RestaurantDto(
     val cuisineType: String? = null,
     val openingHours: List<OpeningHoursDto> = emptyList(),
     val rating: Double? = null,
+    val userRatingCount: Int? = null,
+    val editorialSummary: String? = null,
+    val aiSummary: String? = null,
+    val reviews: List<ReviewDto> = emptyList(),
+    val servesLunch: Boolean = false,
+    val servesVegetarianFood: Boolean = false,
+    val outdoorSeating: Boolean = false,
+    val reservable: Boolean = false,
+    val takeout: Boolean = false,
+    val includesDessert: Boolean = false,
+    val includesDrink: Boolean = false,
+    val priceIncludesEn: List<String> = emptyList(),
+)
+
+@Serializable
+data class ReviewDto(
+    val authorName: String? = null,
+    val authorPhotoUri: String? = null,
+    val rating: Int? = null,
+    val text: String? = null,
+    val originalText: String? = null,
+    val relativeTime: String? = null,
 )
 
 @Serializable

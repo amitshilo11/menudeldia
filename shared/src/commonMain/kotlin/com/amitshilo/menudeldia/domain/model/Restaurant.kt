@@ -19,6 +19,26 @@ data class Restaurant(
     val cuisineType: String? = null,
     val distanceMeters: Double? = null,
     val rating: Double? = null,
-    val isVeganFriendly: Boolean = false,
+    val userRatingCount: Int? = null,
+    val editorialSummary: String? = null,
+    val aiSummary: String? = null,
+    val reviews: List<Review> = emptyList(),
+    val servesLunch: Boolean = false,
+    val servesVegetarianFood: Boolean = false,
+    val outdoorSeating: Boolean = false,
+    val reservable: Boolean = false,
+    val takeout: Boolean = false,
     val isGlutenFreeFriendly: Boolean = false,
+    val includesDessert: Boolean = false,
+    val includesDrink: Boolean = false,
+    val menuIncludes: List<String> = emptyList(),
+)
+
+data class Review(
+    val authorName: String?,
+    val authorPhotoUri: String?,
+    val rating: Int?,
+    val text: String?,
+    val originalText: String?,
+    val relativeTime: String?,
 )

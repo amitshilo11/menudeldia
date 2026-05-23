@@ -1,8 +1,6 @@
 package com.amitshilo.menudeldia.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -83,6 +81,8 @@ private val LightColors = lightColorScheme(
 )
 
 // ── Dark scheme ──────────────────────────────────────────────────────────────
+// TODO: re-enable dark theme in next phase
+/*
 private val DarkColors = darkColorScheme(
     primary = Orange80,
     onPrimary = Orange20,
@@ -117,15 +117,15 @@ private val DarkColors = darkColorScheme(
     inverseOnSurface = Neutral20,
     inversePrimary = Orange40,
 )
+*/
 
 // ── Theme entry point ─────────────────────────────────────────────────────────
 @Composable
 fun MenuTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
     MaterialTheme(
-        colorScheme = if (darkTheme) DarkColors else LightColors,
+        colorScheme = LightColors,
         content = content,
     )
 }

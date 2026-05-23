@@ -8,6 +8,7 @@ import com.amitshilo.menudeldia.domain.model.Dish
 import com.amitshilo.menudeldia.domain.model.Menu
 import com.amitshilo.menudeldia.domain.model.OpeningHours
 import com.amitshilo.menudeldia.domain.model.Restaurant
+import com.amitshilo.menudeldia.domain.model.Review
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -30,6 +31,27 @@ fun RestaurantDto.toDomain(): Restaurant = Restaurant(
     cuisineEmoji = cuisineEmoji,
     cuisineType = cuisineType,
     rating = rating,
+    userRatingCount = userRatingCount,
+    editorialSummary = editorialSummary,
+    aiSummary = aiSummary,
+    reviews = reviews.map { r ->
+        Review(
+            authorName = r.authorName,
+            authorPhotoUri = r.authorPhotoUri,
+            rating = r.rating,
+            text = r.text,
+            originalText = r.originalText,
+            relativeTime = r.relativeTime,
+        )
+    },
+    servesLunch = servesLunch,
+    servesVegetarianFood = servesVegetarianFood,
+    outdoorSeating = outdoorSeating,
+    reservable = reservable,
+    takeout = takeout,
+    includesDessert = includesDessert,
+    includesDrink = includesDrink,
+    menuIncludes = priceIncludesEn,
 )
 
 fun OpeningHoursDto.toDomain(): OpeningHours = OpeningHours(

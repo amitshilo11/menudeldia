@@ -1,5 +1,6 @@
 package com.menudeldia.restaurant
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -10,6 +11,16 @@ import org.locationtech.jts.geom.Point
 import java.math.BigDecimal
 import java.time.Instant
 import java.util.UUID
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class ReviewData(
+    val authorName: String? = null,
+    val authorPhotoUri: String? = null,
+    val rating: Int? = null,
+    val text: String? = null,
+    val originalText: String? = null,
+    val relativeTime: String? = null,
+)
 
 /**
  * Curated restaurant + cached Google Places enrichment.
@@ -78,8 +89,39 @@ class Restaurant(
     @Column(name = "opening_hours", columnDefinition = "jsonb")
     var openingHours: Map<String, Any> = emptyMap(),
 
-    @Column(name = "photo_count", nullable = false)
-    var photoCount: Int = 0,
+    var rating: Double? = null,
+
+    @Column(name = "user_rating_count")
+    var userRatingCount: Int? = null,
+
+    @Column(name = "editorial_summary", columnDefinition = "TEXT")
+    var editorialSummary: String? = null,
+
+    @Column(name = "ai_summary", columnDefinition = "TEXT")
+    var aiSummary: String? = null,
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "reviews", columnDefinition = "jsonb")
+    var reviews: List<ReviewData> = emptyList(),
+
+    @Column(name = "serves_lunch", nullable = false)
+    var servesLunch: Boolean = false,
+
+    @Column(name = "serves_vegetarian", nullable = false)
+    var servesVegetarian: Boolean = false,
+
+    @Column(name = "outdoor_seating", nullable = false)
+    var outdoorSeating: Boolean = false,
+
+    @Column(nullable = false)
+    var reservable: Boolean = false,
+
+    @Column(nullable = false)
+    var takeout: Boolean = false,
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "photo_names", columnDefinition = "jsonb")
+    var photoNames: List<String> = emptyList(),
 
     @Column(name = "places_fetched_at")
     var placesFetchedAt: Instant? = null,

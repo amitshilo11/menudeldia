@@ -3,8 +3,10 @@ package com.menudeldia.places
 import com.menudeldia.config.AppProperties
 import com.menudeldia.places.dto.PhotoMediaResponse
 import com.menudeldia.places.dto.PlaceDetailsResponse
+import com.menudeldia.places.dto.TextSearchResponse
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
 import org.slf4j.LoggerFactory
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
@@ -21,7 +23,9 @@ class GooglePlacesClient(private val props: AppProperties) {
 
     companion object {
         private const val FIELD_MASK =
-            "id,location,photos,regularOpeningHours,formattedAddress,internationalPhoneNumber,websiteUri,displayName"
+            "id,location,photos,regularOpeningHours,formattedAddress,internationalPhoneNumber,websiteUri," +
+                    "displayName,rating,userRatingCount,editorialSummary,generativeSummary,reviews," +
+                    "servesLunch,servesVegetarianFood,outdoorSeating,reservable,takeout"
     }
 
     @CircuitBreaker(name = "googlePlaces", fallbackMethod = "placeDetailsFallback")
@@ -92,6 +96,27 @@ class GooglePlacesClient(private val props: AppProperties) {
         }
     }
 
+    @CircuitBreaker(name = "googlePlaces", fallbackMethod = "searchTextFallback")
+    fun searchText(query: String): TextSearchResponse {
+        return try {
+            http.post()
+                .uri("/places:searchText")
+                .header("X-Goog-Api-Key", props.google.placesApiKey)
+                .header("X-Goog-FieldMask", "places.id,places.displayName,places.formattedAddress")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(mapOf("textQuery" to query))
+                .retrieve()
+                .body(TextSearchResponse::class.java)
+                ?: TextSearchResponse()
+        } catch (ex: HttpClientErrorException) {
+            log.warn("Google Places 4xx for text search '{}': {}", query, ex.statusCode)
+            throw PlacesException.ApiError("Client error ${ex.statusCode} for query '$query'", ex)
+        } catch (ex: HttpServerErrorException) {
+            log.warn("Google Places 5xx for text search '{}': {}", query, ex.statusCode)
+            throw PlacesException.ApiError("Server error ${ex.statusCode} for query '$query'", ex)
+        }
+    }
+
     @Suppress("UNUSED_PARAMETER")
     private fun placeDetailsFallback(placeId: String, ex: Throwable): PlaceDetailsResponse =
         throw PlacesException.Unavailable("Google Places unavailable for place $placeId", ex)
@@ -99,4 +124,8 @@ class GooglePlacesClient(private val props: AppProperties) {
     @Suppress("UNUSED_PARAMETER")
     private fun photoBytesFallback(photoName: String, maxHeightPx: Int, ex: Throwable): ByteArray =
         throw PlacesException.Unavailable("Google Places unavailable for photo $photoName", ex)
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun searchTextFallback(query: String, ex: Throwable): TextSearchResponse =
+        throw PlacesException.Unavailable("Google Places unavailable for text search '$query'", ex)
 }

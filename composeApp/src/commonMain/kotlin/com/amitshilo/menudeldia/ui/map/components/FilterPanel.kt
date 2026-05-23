@@ -1,4 +1,4 @@
-package com.amitshilo.menudeldia.ui.map
+package com.amitshilo.menudeldia.ui.map.components
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -196,7 +196,7 @@ private fun PriceOption(
         onClick = {
             onChange(
                 if (isSelected) state.copy(minPrice = null, maxPrice = null)
-                else state.copy(minPrice = min, maxPrice = max)
+                else state.copy(minPrice = min, maxPrice = max),
             )
         },
         label = { Text(label) },
@@ -217,7 +217,7 @@ private fun DistanceOption(
         onClick = {
             onChange(
                 if (isSelected) state.copy(maxDistanceMeters = null)
-                else state.copy(maxDistanceMeters = maxMeters)
+                else state.copy(maxDistanceMeters = maxMeters),
             )
         },
         label = { Text(label) },
@@ -234,7 +234,7 @@ private fun PreviewFilterPanelDefault() {
         FilterPanelContent(
             filterState = SearchFilterState(),
             cuisineTypes = previewRestaurants.mapNotNull { it.cuisineType }.distinct().sorted(),
-            onFilterChange = {}
+            onFilterChange = {},
         )
     }
 }
@@ -248,10 +248,10 @@ private fun PreviewFilterPanelActive() {
                 openNowOnly = true,
                 minPrice = 10.0,
                 maxPrice = 15.0,
-                cuisineType = "Catalana"
+                cuisineType = "Catalana",
             ),
             cuisineTypes = previewRestaurants.mapNotNull { it.cuisineType }.distinct().sorted(),
-            onFilterChange = {}
+            onFilterChange = {},
         )
     }
 }
