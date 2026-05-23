@@ -3,6 +3,7 @@ package com.menudeldia.restaurant
 import com.menudeldia.places.PlacesEnrichmentService
 import com.menudeldia.restaurant.dto.RestaurantDto
 import com.menudeldia.restaurant.dto.RestaurantQuery
+import com.menudeldia.restaurant.dto.RestaurantSummaryDto
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.util.UUID
@@ -14,7 +15,7 @@ class RestaurantService(
     private val enrichment: PlacesEnrichmentService,
 ) {
 
-    fun findNearby(query: RestaurantQuery): List<RestaurantDto> {
+    fun findNearby(query: RestaurantQuery): List<RestaurantSummaryDto> {
         var rows = repo.findNearby(query.lat, query.lng, query.radius)
 
         if (!query.q.isNullOrBlank()) {
@@ -38,7 +39,7 @@ class RestaurantService(
 
         enrichment.refreshIfStale(rows)
 
-        val dtos = rows.map { mapper.toDto(it, query.lat, query.lng) }
+        val dtos = rows.map { mapper.toSummaryDto(it, query.lat, query.lng) }
 
         return if (query.openNow) dtos.filter { it.isOpenNow } else dtos
     }

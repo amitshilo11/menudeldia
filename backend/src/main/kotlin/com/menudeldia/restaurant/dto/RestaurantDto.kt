@@ -39,6 +39,29 @@ data class RestaurantDto(
     val includesDrink: Boolean = false,
 )
 
+data class RestaurantSummaryDto(
+    val id: String,
+    val name: String,
+    val lat: Double,
+    val lng: Double,
+    val address: String,
+    val phone: String? = null,
+    val thumbnailUrl: String? = null,
+    val menuPrice: Double? = null,
+    val currency: String = "EUR",
+    val todayHasMenu: Boolean = false,
+    val cuisineEmoji: String? = null,
+    val cuisineType: String? = null,
+    val openingHours: List<OpeningHoursDto> = emptyList(),
+    val rating: Double? = null,
+    val servesVegetarianFood: Boolean = false,
+    val distanceMeters: Double? = null,
+    val isOpenNow: Boolean = false,
+    val priceIncludesEn: List<String> = emptyList(),
+    val includesDessert: Boolean = false,
+    val includesDrink: Boolean = false,
+)
+
 data class ReviewDto(
     val authorName: String? = null,
     val authorPhotoUri: String? = null,
