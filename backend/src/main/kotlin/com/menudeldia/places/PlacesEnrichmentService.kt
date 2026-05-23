@@ -6,6 +6,7 @@ import com.menudeldia.photo.PhotoStorageService
 import com.menudeldia.places.dto.PlaceDetailsResponse
 import com.menudeldia.restaurant.Restaurant
 import com.menudeldia.restaurant.RestaurantRepository
+import com.menudeldia.restaurant.ReviewData
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -78,6 +79,27 @@ class PlacesEnrichmentService(
                 row.openingHours = mapOf("weekdayDescriptions" to hours.weekdayDescriptions)
             }
         }
+        details.rating?.let { row.rating = it }
+        details.userRatingCount?.let { row.userRatingCount = it }
+        details.editorialSummary?.text?.let { row.editorialSummary = it }
+        details.generativeSummary?.overview?.text?.let { row.aiSummary = it }
+        if (details.reviews.isNotEmpty()) {
+            row.reviews = details.reviews.map { r ->
+                ReviewData(
+                    authorName = r.authorAttribution?.displayName,
+                    authorPhotoUri = r.authorAttribution?.photoUri,
+                    rating = r.rating,
+                    text = r.text?.text,
+                    originalText = r.originalText?.text,
+                    relativeTime = r.relativePublishTimeDescription,
+                )
+            }
+        }
+        details.servesLunch?.let { row.servesLunch = it }
+        details.servesVegetarianFood?.let { row.servesVegetarian = it }
+        details.outdoorSeating?.let { row.outdoorSeating = it }
+        details.reservable?.let { row.reservable = it }
+        details.takeout?.let { row.takeout = it }
     }
 
     private fun isStale(row: Restaurant, now: Instant): Boolean =
