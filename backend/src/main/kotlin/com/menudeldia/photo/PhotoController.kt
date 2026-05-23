@@ -4,6 +4,7 @@ import com.menudeldia.common.ApiPaths
 import com.menudeldia.places.GooglePlacesClient
 import com.menudeldia.places.PlacesException
 import com.menudeldia.restaurant.RestaurantRepository
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -20,6 +21,7 @@ class PhotoController(
     private val repo: RestaurantRepository,
     private val client: GooglePlacesClient,
 ) {
+    private val log = LoggerFactory.getLogger(javaClass)
 
     @GetMapping("/{id}/photos/{n}")
     fun get(@PathVariable id: UUID, @PathVariable n: Int): ResponseEntity<ByteArray> {
@@ -36,6 +38,13 @@ class PhotoController(
                 .eTag(etag)
                 .body(bytes)
         } catch (ex: PlacesException) {
+            log.warn(
+                "Photo proxy failed for restaurant {} index {} (name={}): {}",
+                id,
+                n,
+                name,
+                ex.message
+            )
             ResponseEntity.status(HttpStatus.BAD_GATEWAY).build()
         }
     }

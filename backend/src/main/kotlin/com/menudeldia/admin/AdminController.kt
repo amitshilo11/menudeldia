@@ -21,6 +21,14 @@ class AdminController(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
+    @PostMapping("/find-place-ids")
+    fun findPlaceIds(@RequestParam(defaultValue = "50") limit: Int): Map<String, Any> {
+        log.info("Admin: finding missing Google Place IDs for up to {} restaurants", limit)
+        val count = enrichment.findMissingPlaceIds(limit)
+        log.info("Admin: found and set {} place IDs", count)
+        return mapOf("found" to count)
+    }
+
     @PostMapping("/enrich")
     fun forceEnrich(@RequestParam(defaultValue = "50") limit: Int): Map<String, Any> {
         log.info("Admin: triggering enrichment for up to {} stale restaurants", limit)

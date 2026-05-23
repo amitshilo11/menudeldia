@@ -25,6 +25,34 @@ class PlacesEnrichmentService(
         .expireAfterWrite(60, TimeUnit.SECONDS)
         .build<UUID, Boolean>()
 
+    /**
+     * For every restaurant without a google_place_id, runs a text search to find and set it.
+     * Returns the number of IDs successfully found.
+     * After this, call [enrichAllStale] to pull photos/ratings for the newly linked restaurants.
+     */
+    fun findMissingPlaceIds(limit: Int = 50): Int {
+        val rows = repo.findWithoutPlaceId().take(limit)
+        var found = 0
+        rows.forEach { row ->
+            val query = "${row.name} Barcelona"
+            try {
+                val result = client.searchText(query)
+                val placeId = result.places.firstOrNull()?.id
+                if (placeId != null) {
+                    row.googlePlaceId = placeId
+                    repo.save(row)
+                    found++
+                    log.info("Found place ID {} for {} ({})", placeId, row.name, row.id)
+                } else {
+                    log.warn("No Google Place found for '{}' ({})", row.name, row.id)
+                }
+            } catch (ex: PlacesException) {
+                log.warn("Text search failed for {} ({}): {}", row.name, row.id, ex.message)
+            }
+        }
+        return found
+    }
+
     /** Fetches all stale rows (up to [limit]) and enriches them. Returns the count processed. */
     fun enrichAllStale(limit: Int = 50): Int {
         val cutoff = Instant.now().minus(props.google.placesCacheTtl)

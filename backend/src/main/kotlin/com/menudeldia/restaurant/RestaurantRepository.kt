@@ -47,4 +47,7 @@ interface RestaurantRepository : JpaRepository<Restaurant, UUID> {
         @Param("cutoff") cutoff: java.time.Instant,
         pageable: org.springframework.data.domain.Pageable
     ): List<Restaurant>
+
+    @Query("SELECT r FROM Restaurant r WHERE r.googlePlaceId IS NULL")
+    fun findWithoutPlaceId(): List<Restaurant>
 }
