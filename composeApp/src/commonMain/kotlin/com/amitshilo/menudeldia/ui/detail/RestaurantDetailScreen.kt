@@ -148,10 +148,10 @@ internal fun RestaurantDetailContent(
                 distanceMeters = restaurant.distanceMeters,
             )
 
-            if (restaurant.isVeganFriendly || restaurant.isGlutenFreeFriendly) {
+            if (restaurant.servesVegetarianFood || restaurant.isGlutenFreeFriendly) {
                 Spacer(Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    if (restaurant.isVeganFriendly) {
+                    if (restaurant.servesVegetarianFood) {
                         DietaryBadge(text = "Vegano", icon = "🌱")
                     }
                     if (restaurant.isGlutenFreeFriendly) {

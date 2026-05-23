@@ -119,8 +119,9 @@ class Restaurant(
     @Column(nullable = false)
     var takeout: Boolean = false,
 
-    @Column(name = "photo_count", nullable = false)
-    var photoCount: Int = 0,
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "photo_names", columnDefinition = "jsonb")
+    var photoNames: List<String> = emptyList(),
 
     @Column(name = "places_fetched_at")
     var placesFetchedAt: Instant? = null,

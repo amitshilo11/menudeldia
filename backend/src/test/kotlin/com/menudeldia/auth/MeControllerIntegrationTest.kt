@@ -40,7 +40,6 @@ import java.util.UUID
         "menudeldia.auth.jwt-signing-key=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "menudeldia.auth.jwt-ttl=P30D",
         "menudeldia.cors.allowed-origins=http://localhost:3000",
-        "menudeldia.photos.storage-root=./var",
         "menudeldia.rate-limit.read-rpm=60",
         "menudeldia.rate-limit.auth-rpm=10",
         "menudeldia.admin-token=",
@@ -113,7 +112,6 @@ class MeControllerIntegrationTest {
                     jwtTtl = Duration.ofMillis(1),
                 ),
                 cors = AppProperties.CorsProps(listOf("http://localhost:3000")),
-                photos = AppProperties.PhotoProps("./var"),
                 rateLimit = AppProperties.RateLimitProps(60, 10),
             )
         ).issue(userId)

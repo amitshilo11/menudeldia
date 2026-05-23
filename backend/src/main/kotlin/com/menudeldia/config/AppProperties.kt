@@ -12,7 +12,6 @@ data class AppProperties(
     val google: GoogleProps,
     val auth: AuthProps,
     val cors: CorsProps,
-    val photos: PhotoProps,
     val rateLimit: RateLimitProps,
     val adminToken: String = "",
 ) {
@@ -31,10 +30,6 @@ data class AppProperties(
 
     data class CorsProps(
         val allowedOrigins: List<String>,
-    )
-
-    data class PhotoProps(
-        val storageRoot: String,
     )
 
     data class RateLimitProps(
