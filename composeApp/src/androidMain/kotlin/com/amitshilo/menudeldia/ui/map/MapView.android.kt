@@ -42,6 +42,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.Projection
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
@@ -194,7 +195,12 @@ actual @Composable fun MapView(
     GoogleMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
-        properties = MapProperties(isMyLocationEnabled = isLocationEnabled),
+        properties = MapProperties(
+            isMyLocationEnabled = isLocationEnabled,
+            mapStyleOptions = MapStyleOptions(
+                """[{"featureType":"poi","stylers":[{"visibility":"off"}]},{"featureType":"transit","stylers":[{"visibility":"off"}]}]"""
+            ),
+        ),
         uiSettings = MapUiSettings(
             myLocationButtonEnabled = false,
             zoomControlsEnabled = false,
