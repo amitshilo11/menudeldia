@@ -93,7 +93,7 @@ fun RestaurantCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
-                    if (restaurant.isVeganFriendly) {
+                    if (restaurant.servesVegetarianFood) {
                         Spacer(Modifier.width(6.dp))
                         Text(text = "🌱", fontSize = 12.sp)
                     }

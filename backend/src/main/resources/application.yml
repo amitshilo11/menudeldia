@@ -43,8 +43,6 @@ menudeldia:
     jwt-ttl: P30D
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
-  photos:
-    storage-root: ${PHOTOS_DIR:./var/photos}
   rate-limit:
     read-rpm: 60
     auth-rpm: 10

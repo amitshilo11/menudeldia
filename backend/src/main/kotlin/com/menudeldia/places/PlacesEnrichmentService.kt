@@ -2,7 +2,6 @@ package com.menudeldia.places
 
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.menudeldia.config.AppProperties
-import com.menudeldia.photo.PhotoStorageService
 import com.menudeldia.places.dto.PlaceDetailsResponse
 import com.menudeldia.restaurant.Restaurant
 import com.menudeldia.restaurant.RestaurantRepository
@@ -17,7 +16,6 @@ import java.util.concurrent.TimeUnit
 @Service
 class PlacesEnrichmentService(
     private val client: GooglePlacesClient,
-    private val photos: PhotoStorageService,
     private val repo: RestaurantRepository,
     private val props: AppProperties,
 ) {
@@ -49,8 +47,7 @@ class PlacesEnrichmentService(
         try {
             val details = client.placeDetails(placeId)
             applyDetails(row, details)
-            val photoNames = details.photos.take(5).map { it.name }
-            row.photoCount = photos.downloadPhotos(row.id, photoNames)
+            row.photoNames = details.photos.take(5).map { it.name }
             row.placesFetchedAt = Instant.now()
             repo.save(row)
             log.info("Enriched restaurant {} ({})", row.name, row.id)

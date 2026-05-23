@@ -8,4 +8,7 @@ ALTER TABLE restaurants
     ADD COLUMN serves_vegetarian  BOOLEAN NOT NULL DEFAULT FALSE,
     ADD COLUMN outdoor_seating    BOOLEAN NOT NULL DEFAULT FALSE,
     ADD COLUMN reservable         BOOLEAN NOT NULL DEFAULT FALSE,
-    ADD COLUMN takeout            BOOLEAN NOT NULL DEFAULT FALSE;
+    ADD COLUMN takeout            BOOLEAN NOT NULL DEFAULT FALSE,
+    ADD COLUMN photo_names        JSONB NOT NULL DEFAULT '[]'::jsonb;
+
+ALTER TABLE restaurants DROP COLUMN photo_count;

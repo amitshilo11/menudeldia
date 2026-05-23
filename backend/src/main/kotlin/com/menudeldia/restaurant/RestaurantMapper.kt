@@ -22,7 +22,7 @@ class RestaurantMapper {
         originLng: Double? = null,
     ): RestaurantDto {
         val now = ZonedDateTime.now(madridZone)
-        val photos = (0 until entity.photoCount).map { n ->
+        val photos = entity.photoNames.indices.map { n ->
             "${ApiPaths.V1}/restaurants/${entity.id}/photos/$n"
         }
         return RestaurantDto(
