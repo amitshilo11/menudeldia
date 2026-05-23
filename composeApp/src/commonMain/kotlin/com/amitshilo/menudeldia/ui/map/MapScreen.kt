@@ -164,6 +164,7 @@ private fun MapContent(
                     recenterTrigger = recenterTrigger,
                     onRestaurantSelected = { onEvent(MapEvent.SelectRestaurant(it)) },
                     onMapTap = { onEvent(MapEvent.ClearSelection) },
+                    onMapIdle = { lat, lng, radius -> onEvent(MapEvent.MapIdle(lat, lng, radius)) },
                     modifier = Modifier.fillMaxSize(),
                     bottomPadding = mapBottomPadding,
                 )

@@ -16,7 +16,8 @@ class RestaurantService(
 ) {
 
     fun findNearby(query: RestaurantQuery): List<RestaurantSummaryDto> {
-        var rows = repo.findNearby(query.lat, query.lng, query.radius)
+        val radius = query.radius.coerceIn(50, 10_000)
+        var rows = repo.findNearby(query.lat, query.lng, radius)
 
         if (!query.q.isNullOrBlank()) {
             val q = query.q.lowercase()

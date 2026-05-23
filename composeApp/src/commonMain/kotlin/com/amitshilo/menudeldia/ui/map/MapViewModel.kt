@@ -8,7 +8,9 @@ import com.amitshilo.menudeldia.domain.model.SearchFilterState
 import com.amitshilo.menudeldia.domain.usecase.FilterRestaurantsUseCase
 import com.amitshilo.menudeldia.location.UserLocation
 import com.amitshilo.menudeldia.util.haversineMeters
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,7 +22,9 @@ import kotlinx.coroutines.launch
 
 private const val BARCELONA_CENTER_LAT = 41.3851
 private const val BARCELONA_CENTER_LNG = 2.1734
-private const val SEARCH_RADIUS_METERS = 5000
+private const val INITIAL_SEARCH_RADIUS_METERS = 3000.0
+private const val MAX_SEARCH_RADIUS_METERS = 10_000.0
+private const val MIN_SEARCH_RADIUS_METERS = 50.0
 
 class MapViewModel : ViewModel() {
 
@@ -32,20 +36,26 @@ class MapViewModel : ViewModel() {
     private val _filterState = MutableStateFlow(SearchFilterState())
     private val _loadError = MutableStateFlow<String?>(null)
     private val _isLoading = MutableStateFlow(true)
+    private val _isFirstLoad = MutableStateFlow(true)
     private val _userLocation = MutableStateFlow<UserLocation?>(null)
 
     private val _effects = Channel<MapEffect>(Channel.BUFFERED)
     val effects: Flow<MapEffect> = _effects.receiveAsFlow()
 
+    private var searchLat = BARCELONA_CENTER_LAT
+    private var searchLng = BARCELONA_CENTER_LNG
+    private var searchRadius = INITIAL_SEARCH_RADIUS_METERS
+    private var mapIdleJob: Job? = null
+
     val uiState: StateFlow<MapUiState> = combine(
-        _isLoading,
+        combine(_isLoading, _isFirstLoad) { loading, firstLoad -> loading && firstLoad },
         _loadError,
         _allRestaurants,
         _selectedRestaurant,
         _filterState,
-    ) { isLoading, error, all, selected, filter ->
+    ) { isInitialLoading, error, all, selected, filter ->
         when {
-            isLoading && all.isEmpty() -> MapUiState.Loading
+            isInitialLoading -> MapUiState.Loading
             error != null && all.isEmpty() -> MapUiState.Error(error)
             else -> MapUiState.Success(
                 restaurants = filterUseCase(all, filter),
@@ -69,13 +79,26 @@ class MapViewModel : ViewModel() {
             MapEvent.Refresh -> loadRestaurants()
             is MapEvent.LocationChanged -> updateLocation(event.location)
             MapEvent.RecenterRequested -> viewModelScope.launch { _effects.send(MapEffect.RecenterOnUser) }
+            is MapEvent.MapIdle -> onMapIdle(event.lat, event.lng, event.radiusMeters)
         }
     }
 
     private fun updateLocation(location: UserLocation?) {
         if (location == _userLocation.value) return
         _userLocation.value = location
-        loadRestaurants()
+    }
+
+    private fun onMapIdle(lat: Double, lng: Double, radiusMeters: Double) {
+        val clamped = radiusMeters.coerceIn(MIN_SEARCH_RADIUS_METERS, MAX_SEARCH_RADIUS_METERS)
+        if (searchLat == lat && searchLng == lng && searchRadius == clamped) return
+        searchLat = lat
+        searchLng = lng
+        searchRadius = clamped
+        mapIdleJob?.cancel()
+        mapIdleJob = viewModelScope.launch {
+            delay(300)
+            loadRestaurants()
+        }
     }
 
     private fun selectRestaurant(id: String) {
@@ -87,17 +110,28 @@ class MapViewModel : ViewModel() {
             _isLoading.value = true
             try {
                 val loc = _userLocation.value
-                val lat = loc?.lat ?: BARCELONA_CENTER_LAT
-                val lng = loc?.lng ?: BARCELONA_CENTER_LNG
-                val raw = useCase(lat = lat, lng = lng, radiusMeters = SEARCH_RADIUS_METERS)
+                val userLat = loc?.lat ?: searchLat
+                val userLng = loc?.lng ?: searchLng
+                val raw =
+                    useCase(lat = searchLat, lng = searchLng, radiusMeters = searchRadius.toInt())
                 _allRestaurants.value = raw
-                    .map { it.copy(distanceMeters = haversineMeters(lat, lng, it.lat, it.lng)) }
+                    .map {
+                        it.copy(
+                            distanceMeters = haversineMeters(
+                                userLat,
+                                userLng,
+                                it.lat,
+                                it.lng
+                            )
+                        )
+                    }
                     .sortedBy { it.distanceMeters }
                 _loadError.value = null
             } catch (e: Exception) {
                 _loadError.value = e.message ?: "Failed to load restaurants"
             } finally {
                 _isLoading.value = false
+                _isFirstLoad.value = false
             }
         }
     }
