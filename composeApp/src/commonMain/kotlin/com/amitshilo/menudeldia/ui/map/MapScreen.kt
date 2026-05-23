@@ -22,6 +22,7 @@ import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -102,6 +103,7 @@ private fun MapContent(
     var detailCardHeightPx by remember { mutableIntStateOf(0) }
 
     val isCardMode = state.selectedRestaurant != null
+    val peekHeightPx = with(density) { ListSheetPeekHeight.toPx() }
     val detailCardHeightDp = remember(detailCardHeightPx) {
         with(density) { if (detailCardHeightPx > 0) detailCardHeightPx.toDp() else 320.dp }
     }
@@ -125,6 +127,16 @@ private fun MapContent(
         val sheetMaxHeight = maxHeight * 0.8f
         val sheetPeekHeight = if (isCardMode) 0.dp else ListSheetPeekHeight
         val mapBottomPadding = if (isCardMode) detailCardHeightDp else sheetPeekHeight
+        val containerHeightPx = constraints.maxHeight.toFloat()
+        val isSheetAbovePeek by remember(containerHeightPx) {
+            derivedStateOf {
+                try {
+                    scaffoldState.bottomSheetState.requireOffset() < containerHeightPx - peekHeightPx - 1f
+                } catch (_: IllegalStateException) {
+                    false
+                }
+            }
+        }
 
         Box(Modifier.fillMaxSize()) {
             BottomSheetScaffold(
@@ -158,7 +170,7 @@ private fun MapContent(
             }
 
             AnimatedVisibility(
-                visible = !isCardMode,
+                visible = !isCardMode && !isSheetAbovePeek,
                 enter = slideInVertically { -it },
                 exit = slideOutVertically { -it },
                 modifier = Modifier
@@ -173,13 +185,16 @@ private fun MapContent(
                 )
             }
 
-            if (hasLocationPermission) {
+            AnimatedVisibility(
+                visible = hasLocationPermission && !isCardMode && !isSheetAbovePeek,
+                enter = slideInVertically { it },
+                exit = slideOutVertically { it },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = fabBottomPadding),
+            ) {
                 FloatingActionButton(
                     onClick = { onEvent(MapEvent.RecenterRequested) },
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .navigationBarsPadding()
-                        .padding(end = 16.dp, bottom = fabBottomPadding),
                     containerColor = MaterialTheme.colorScheme.surface,
                     contentColor = MaterialTheme.colorScheme.primary,
                 ) {
