@@ -8,10 +8,13 @@ import com.amitshilo.menudeldia.domain.model.SearchFilterState
 import com.amitshilo.menudeldia.domain.usecase.FilterRestaurantsUseCase
 import com.amitshilo.menudeldia.location.UserLocation
 import com.amitshilo.menudeldia.util.haversineMeters
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -30,6 +33,9 @@ class MapViewModel : ViewModel() {
     private val _loadError = MutableStateFlow<String?>(null)
     private val _isLoading = MutableStateFlow(true)
     private val _userLocation = MutableStateFlow<UserLocation?>(null)
+
+    private val _effects = Channel<MapEffect>(Channel.BUFFERED)
+    val effects: Flow<MapEffect> = _effects.receiveAsFlow()
 
     val uiState: StateFlow<MapUiState> = combine(
         _isLoading,
@@ -54,14 +60,26 @@ class MapViewModel : ViewModel() {
         loadRestaurants()
     }
 
-    fun onUserLocationChanged(location: UserLocation?) {
+    fun onEvent(event: MapEvent) {
+        when (event) {
+            is MapEvent.SelectRestaurant -> selectRestaurant(event.id)
+            MapEvent.ClearSelection -> _selectedRestaurant.value = null
+            is MapEvent.FilterChanged -> _filterState.value = event.filter
+            MapEvent.ClearFilters -> _filterState.value = SearchFilterState()
+            MapEvent.Refresh -> loadRestaurants()
+            is MapEvent.LocationChanged -> updateLocation(event.location)
+            MapEvent.RecenterRequested -> viewModelScope.launch { _effects.send(MapEffect.RecenterOnUser) }
+        }
+    }
+
+    private fun updateLocation(location: UserLocation?) {
         if (location == _userLocation.value) return
         _userLocation.value = location
         loadRestaurants()
     }
 
-    fun refresh() {
-        loadRestaurants()
+    private fun selectRestaurant(id: String) {
+        _selectedRestaurant.value = _allRestaurants.value.find { it.id == id }
     }
 
     private fun loadRestaurants() {
@@ -82,25 +100,5 @@ class MapViewModel : ViewModel() {
                 _isLoading.value = false
             }
         }
-    }
-
-    fun selectRestaurant(id: String) {
-        _selectedRestaurant.value = _allRestaurants.value.find { it.id == id }
-    }
-
-    fun clearSelection() {
-        _selectedRestaurant.value = null
-    }
-
-    fun onSearchQueryChange(query: String) {
-        _filterState.value = _filterState.value.copy(query = query)
-    }
-
-    fun onFilterChange(state: SearchFilterState) {
-        _filterState.value = state
-    }
-
-    fun clearFilters() {
-        _filterState.value = SearchFilterState()
     }
 }
