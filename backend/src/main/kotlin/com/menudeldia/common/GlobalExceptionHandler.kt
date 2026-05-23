@@ -8,6 +8,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
+import org.springframework.web.servlet.resource.NoResourceFoundException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -37,6 +38,11 @@ class GlobalExceptionHandler {
     fun onNotFound(ex: NoSuchElementException): ResponseEntity<ApiError> =
         ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(ApiError("not_found", ex.message ?: "not found", 404))
+
+    @ExceptionHandler(NoResourceFoundException::class)
+    fun onNoResource(ex: NoResourceFoundException): ResponseEntity<ApiError> =
+        ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ApiError("not_found", "Resource not found", 404))
 
     @ExceptionHandler(Exception::class)
     fun onUnexpected(ex: Exception): ResponseEntity<ApiError> {
