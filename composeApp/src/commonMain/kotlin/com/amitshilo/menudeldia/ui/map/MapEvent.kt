@@ -11,4 +11,5 @@ sealed class MapEvent {
     data object Refresh : MapEvent()
     data class LocationChanged(val location: UserLocation?) : MapEvent()
     data object RecenterRequested : MapEvent()
+    data class MapIdle(val lat: Double, val lng: Double, val radiusMeters: Double) : MapEvent()
 }

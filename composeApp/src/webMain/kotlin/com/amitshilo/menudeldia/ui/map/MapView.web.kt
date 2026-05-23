@@ -19,6 +19,8 @@ actual @Composable fun MapView(
     isLocationEnabled: Boolean,
     recenterTrigger: Int,
     onRestaurantSelected: (String) -> Unit,
+    onMapTap: () -> Unit,
+    onMapIdle: (lat: Double, lng: Double, radiusMeters: Double) -> Unit,
     modifier: Modifier,
     bottomPadding: Dp,
 ) {

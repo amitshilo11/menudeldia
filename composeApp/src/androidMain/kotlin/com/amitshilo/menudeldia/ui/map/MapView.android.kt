@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.location.UserLocation
+import com.amitshilo.menudeldia.util.haversineMeters
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.Projection
 import com.google.android.gms.maps.model.CameraPosition
@@ -127,6 +128,7 @@ actual @Composable fun MapView(
     recenterTrigger: Int,
     onRestaurantSelected: (String) -> Unit,
     onMapTap: () -> Unit,
+    onMapIdle: (lat: Double, lng: Double, radiusMeters: Double) -> Unit,
     modifier: Modifier,
     bottomPadding: Dp,
 ) {
@@ -139,6 +141,17 @@ actual @Composable fun MapView(
         px * px
     }
     var bubbleIds by remember { mutableStateOf<Set<String>>(emptySet()) }
+    var hasMovedToUser by remember { mutableStateOf(false) }
+
+    LaunchedEffect(userLocation) {
+        if (userLocation != null && !hasMovedToUser) {
+            hasMovedToUser = true
+            cameraPositionState.animate(
+                CameraUpdateFactory.newLatLngZoom(LatLng(userLocation.lat, userLocation.lng), 15f),
+                durationMs = 600,
+            )
+        }
+    }
 
     LaunchedEffect(selectedRestaurantId) {
         val selected = restaurants.find { it.id == selectedRestaurantId }
@@ -159,6 +172,17 @@ actual @Composable fun MapView(
                 durationMs = 400,
             )
         }
+    }
+
+    LaunchedEffect(cameraPositionState.isMoving) {
+        if (cameraPositionState.isMoving) return@LaunchedEffect
+        val projection = cameraPositionState.projection ?: return@LaunchedEffect
+        val bounds = projection.visibleRegion.latLngBounds
+        val center = bounds.center
+        val ne = bounds.northeast
+        val radiusMeters =
+            haversineMeters(center.latitude, center.longitude, ne.latitude, ne.longitude)
+        onMapIdle(center.latitude, center.longitude, radiusMeters)
     }
 
     LaunchedEffect(cameraPositionState.isMoving, restaurants, selectedRestaurantId) {
