@@ -4,6 +4,7 @@ import com.menudeldia.common.ApiPaths
 import com.menudeldia.geo.GeoUtils
 import com.menudeldia.restaurant.dto.OpeningHoursDto
 import com.menudeldia.restaurant.dto.RestaurantDto
+import com.menudeldia.restaurant.dto.ReviewDto
 import org.springframework.stereotype.Component
 import java.time.DayOfWeek
 import java.time.LocalTime
@@ -41,7 +42,25 @@ class RestaurantMapper {
             cuisineEmoji = entity.cuisineEmoji,
             cuisineType = entity.cuisineType,
             openingHours = buildOpeningHours(entity.weekdayHours),
-            rating = null,
+            rating = entity.rating,
+            userRatingCount = entity.userRatingCount,
+            editorialSummary = entity.editorialSummary,
+            aiSummary = entity.aiSummary,
+            reviews = entity.reviews.map { r ->
+                ReviewDto(
+                    authorName = r.authorName,
+                    authorPhotoUri = r.authorPhotoUri,
+                    rating = r.rating,
+                    text = r.text,
+                    originalText = r.originalText,
+                    relativeTime = r.relativeTime,
+                )
+            },
+            servesLunch = entity.servesLunch,
+            servesVegetarianFood = entity.servesVegetarian,
+            outdoorSeating = entity.outdoorSeating,
+            reservable = entity.reservable,
+            takeout = entity.takeout,
             distanceMeters = if (originLat != null && originLng != null) {
                 GeoUtils.haversineMeters(originLat, originLng, entity.lat, entity.lng)
             } else null,

@@ -21,7 +21,9 @@ class GooglePlacesClient(private val props: AppProperties) {
 
     companion object {
         private const val FIELD_MASK =
-            "id,location,photos,regularOpeningHours,formattedAddress,internationalPhoneNumber,websiteUri,displayName"
+            "id,location,photos,regularOpeningHours,formattedAddress,internationalPhoneNumber,websiteUri," +
+                    "displayName,rating,userRatingCount,editorialSummary,generativeSummary,reviews," +
+                    "servesLunch,servesVegetarianFood,outdoorSeating,reservable,takeout"
     }
 
     @CircuitBreaker(name = "googlePlaces", fallbackMethod = "placeDetailsFallback")
