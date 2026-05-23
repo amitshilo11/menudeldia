@@ -1,4 +1,4 @@
-package com.amitshilo.menudeldia.ui.map
+package com.amitshilo.menudeldia.ui.map.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -249,7 +249,8 @@ private fun PreviewDetailCardOpen() {
         RestaurantDetailCard(
             restaurant = previewRestaurant,
             onDismiss = {},
-            onNavigateToDetail = {})
+            onNavigateToDetail = {},
+        )
     }
 }
 
@@ -260,6 +261,7 @@ private fun PreviewDetailCardClosed() {
         RestaurantDetailCard(
             restaurant = previewRestaurantNoMenu,
             onDismiss = {},
-            onNavigateToDetail = {})
+            onNavigateToDetail = {},
+        )
     }
 }
