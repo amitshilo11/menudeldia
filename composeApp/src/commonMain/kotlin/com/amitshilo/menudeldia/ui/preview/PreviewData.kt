@@ -39,6 +39,9 @@ internal val previewRestaurant = Restaurant(
     cuisineEmoji = "🥘",
     distanceMeters = 850.0,
     rating = 4.3,
+    includesDessert = true,
+    includesDrink = true,
+    menuIncludes = listOf("Starter", "Main", "Dessert", "Drink"),
 )
 
 internal val previewRestaurantNoMenu = previewRestaurant.copy(
