@@ -39,7 +39,6 @@ import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.location.UserLocation
 import com.amitshilo.menudeldia.util.haversineMeters
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.Projection
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
@@ -50,7 +49,7 @@ import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 
-private val barcelonaCenter = LatLng(41.3851, 2.1734)
+private val barcelonaCenter = LatLng(MapDefaults.barcelonaCenterLat, MapDefaults.barcelonaCenterLng)
 
 private class BubblePinShape(
     private val cornerRadius: Dp,
@@ -91,36 +90,6 @@ private class BubblePinShape(
     }
 }
 
-private fun computeBubbleIds(
-    restaurants: List<Restaurant>,
-    projection: Projection,
-    selectedId: String?,
-    collisionPxSq: Float,
-): Set<String> {
-    val sorted = restaurants.sortedWith(
-        compareByDescending<Restaurant> { it.id == selectedId }
-            .thenByDescending { it.todayHasMenu }
-            .thenBy { it.id },
-    )
-    val claimed = mutableListOf<Pair<Float, Float>>()
-    val bubbleIds = mutableSetOf<String>()
-    for (r in sorted) {
-        val pt = projection.toScreenLocation(LatLng(r.lat, r.lng))
-        val x = pt.x.toFloat()
-        val y = pt.y.toFloat()
-        val overlaps = claimed.any { (bx, by) ->
-            val dx = x - bx
-            val dy = y - by
-            dx * dx + dy * dy < collisionPxSq
-        }
-        if (!overlaps) {
-            claimed += Pair(x, y)
-            bubbleIds += r.id
-        }
-    }
-    return bubbleIds
-}
-
 actual @Composable fun MapView(
     restaurants: List<Restaurant>,
     selectedRestaurantId: String?,
@@ -134,11 +103,11 @@ actual @Composable fun MapView(
     bottomPadding: Dp,
 ) {
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(barcelonaCenter, 14f)
+        position = CameraPosition.fromLatLngZoom(barcelonaCenter, MapDefaults.defaultZoom)
     }
     val density = LocalDensity.current
     val collisionPxSq = remember(density) {
-        val px = with(density) { 96.dp.toPx() }
+        val px = with(density) { MapDefaults.collisionRadiusDp.dp.toPx() }
         px * px
     }
     var bubbleIds by remember { mutableStateOf<Set<String>>(emptySet()) }
@@ -148,8 +117,11 @@ actual @Composable fun MapView(
         if (userLocation != null && !hasMovedToUser) {
             hasMovedToUser = true
             cameraPositionState.animate(
-                CameraUpdateFactory.newLatLngZoom(LatLng(userLocation.lat, userLocation.lng), 15f),
-                durationMs = 600,
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(userLocation.lat, userLocation.lng),
+                    MapDefaults.focusZoom
+                ),
+                durationMs = MapDefaults.userMoveAnimMs,
             )
         }
     }
@@ -158,8 +130,11 @@ actual @Composable fun MapView(
         val selected = restaurants.find { it.id == selectedRestaurantId }
         if (selected != null) {
             cameraPositionState.animate(
-                CameraUpdateFactory.newLatLngZoom(LatLng(selected.lat, selected.lng), 15f),
-                durationMs = 400,
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(selected.lat, selected.lng),
+                    MapDefaults.focusZoom
+                ),
+                durationMs = MapDefaults.selectionAnimMs,
             )
         }
     }
@@ -168,9 +143,9 @@ actual @Composable fun MapView(
         if (recenterTrigger > 0 && userLocation != null) {
             cameraPositionState.animate(
                 CameraUpdateFactory.newLatLngZoom(
-                    LatLng(userLocation.lat, userLocation.lng), 15f,
+                    LatLng(userLocation.lat, userLocation.lng), MapDefaults.focusZoom,
                 ),
-                durationMs = 400,
+                durationMs = MapDefaults.recenterAnimMs,
             )
         }
     }
@@ -189,7 +164,10 @@ actual @Composable fun MapView(
     LaunchedEffect(cameraPositionState.isMoving, restaurants, selectedRestaurantId) {
         if (cameraPositionState.isMoving) return@LaunchedEffect
         val projection = cameraPositionState.projection ?: return@LaunchedEffect
-        bubbleIds = computeBubbleIds(restaurants, projection, selectedRestaurantId, collisionPxSq)
+        bubbleIds = pickBubbleIds(restaurants, selectedRestaurantId, { r ->
+            val pt = projection.toScreenLocation(LatLng(r.lat, r.lng))
+            Pair(pt.x.toFloat(), pt.y.toFloat())
+        }, collisionPxSq)
     }
 
     GoogleMap(
