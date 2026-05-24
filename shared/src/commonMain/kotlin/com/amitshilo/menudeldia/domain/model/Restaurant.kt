@@ -28,7 +28,6 @@ data class Restaurant(
     val outdoorSeating: Boolean = false,
     val reservable: Boolean = false,
     val takeout: Boolean = false,
-    val isGlutenFreeFriendly: Boolean = false,
     val includesDessert: Boolean = false,
     val includesDrink: Boolean = false,
     val menuIncludes: List<String> = emptyList(),

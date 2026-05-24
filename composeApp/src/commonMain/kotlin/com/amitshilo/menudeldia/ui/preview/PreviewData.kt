@@ -4,6 +4,7 @@ import com.amitshilo.menudeldia.domain.model.Dish
 import com.amitshilo.menudeldia.domain.model.Menu
 import com.amitshilo.menudeldia.domain.model.OpeningHours
 import com.amitshilo.menudeldia.domain.model.Restaurant
+import com.amitshilo.menudeldia.domain.model.Review
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -39,9 +40,41 @@ internal val previewRestaurant = Restaurant(
     cuisineEmoji = "🥘",
     distanceMeters = 850.0,
     rating = 4.3,
+    userRatingCount = 124,
+    aiSummary = "A cozy neighborhood restaurant serving traditional Catalan market cuisine. The rotating daily menu is built around seasonal ingredients sourced fresh each morning — generous portions, fair price, and a warm atmosphere that keeps regulars coming back.",
+    editorialSummary = "Solid daily menu with Catalan classics.",
     includesDessert = true,
     includesDrink = true,
     menuIncludes = listOf("Starter", "Main", "Dessert", "Drink"),
+    outdoorSeating = true,
+    reservable = true,
+    takeout = false,
+    reviews = listOf(
+        Review(
+            authorName = "Maria García",
+            authorPhotoUri = null,
+            rating = 5,
+            text = "Excellent menú del día! The gazpacho was refreshing and the chicken perfectly seasoned. Great value for money.",
+            originalText = null,
+            relativeTime = "2 weeks ago",
+        ),
+        Review(
+            authorName = "James Wilson",
+            authorPhotoUri = null,
+            rating = 4,
+            text = "Nice place with good food. A bit crowded at peak lunch hours but the service was quick and friendly.",
+            originalText = null,
+            relativeTime = "1 month ago",
+        ),
+        Review(
+            authorName = "Anna Martínez",
+            authorPhotoUri = null,
+            rating = 4,
+            text = "The crema catalana was delicious! Menu changes daily which keeps it interesting. Would recommend.",
+            originalText = null,
+            relativeTime = "2 months ago",
+        ),
+    ),
 )
 
 internal val previewRestaurantNoMenu = previewRestaurant.copy(
