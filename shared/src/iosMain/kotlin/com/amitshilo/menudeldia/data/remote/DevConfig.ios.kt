@@ -1,3 +1,5 @@
+@file:OptIn(kotlin.experimental.ExperimentalNativeApi::class)
+
 package com.amitshilo.menudeldia.data.remote
 
 actual val apiBaseUrl: String =
