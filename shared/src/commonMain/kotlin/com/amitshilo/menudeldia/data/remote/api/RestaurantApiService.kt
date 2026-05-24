@@ -9,6 +9,7 @@ import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.http.isSuccess
 
 class RestaurantApiService(private val client: HttpClient) {
 
@@ -26,7 +27,8 @@ class RestaurantApiService(private val client: HttpClient) {
         client.get("$BASE_PATH/restaurants/$id").body()
 
     suspend fun getTodayMenu(restaurantId: String): MenuDto? = try {
-        client.get("$BASE_PATH/restaurants/$restaurantId/menu/today").body()
+        val response = client.get("$BASE_PATH/restaurants/$restaurantId/menu/today")
+        if (response.status.isSuccess()) response.body() else null
     } catch (_: ClientRequestException) {
         null
     } catch (_: ServerResponseException) {
