@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.metro)
+    alias(libs.plugins.googleServices)
 }
 
 kotlin {
@@ -136,4 +137,6 @@ android {
 
 dependencies {
     debugImplementation(libs.compose.uiTooling)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
 }
