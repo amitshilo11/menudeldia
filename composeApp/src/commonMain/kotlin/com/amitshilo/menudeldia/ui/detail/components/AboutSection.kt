@@ -2,9 +2,6 @@ package com.amitshilo.menudeldia.ui.detail.components
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.intl.Locale
@@ -26,10 +23,8 @@ fun AboutSection(restaurant: Restaurant, modifier: Modifier = Modifier) {
         ?: restaurant.editorialSummary?.takeIf { it.isNotBlank() }
         ?: return
 
-    Spacer(Modifier.height(20.dp))
-    HorizontalDivider()
-    Spacer(Modifier.height(12.dp))
-    Text(stringResource(Res.string.about_header), style = MaterialTheme.typography.titleMedium)
+    Spacer(Modifier.height(24.dp))
+    SectionHeader(stringResource(Res.string.about_header))
     Spacer(Modifier.height(6.dp))
     ExpandableText(text = about)
 }

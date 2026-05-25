@@ -17,7 +17,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ContactSection(phone: String, modifier: Modifier = Modifier) {
     val uriLauncher = rememberUriLauncher()
-    Text(stringResource(Res.string.phone_header), style = MaterialTheme.typography.titleMedium)
+    SectionHeader(stringResource(Res.string.phone_header))
     Spacer(Modifier.height(4.dp))
     Text(
         text = phone,

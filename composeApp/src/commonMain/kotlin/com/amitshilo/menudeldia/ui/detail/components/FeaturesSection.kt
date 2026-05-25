@@ -5,9 +5,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -31,10 +28,8 @@ fun FeaturesSection(restaurant: Restaurant, modifier: Modifier = Modifier) {
     }
     if (features.isEmpty()) return
 
-    Spacer(Modifier.height(20.dp))
-    HorizontalDivider()
-    Spacer(Modifier.height(12.dp))
-    Text(stringResource(Res.string.features_header), style = MaterialTheme.typography.titleMedium)
+    Spacer(Modifier.height(24.dp))
+    SectionHeader(stringResource(Res.string.features_header))
     Spacer(Modifier.height(8.dp))
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
