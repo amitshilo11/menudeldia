@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -59,7 +60,8 @@ import menudeldia.composeapp.generated.resources.phone
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-private val cardShape = RoundedCornerShape(20.dp)
+private val cardShape =
+    RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp, bottomStart = 20.dp, bottomEnd = 20.dp)
 
 @Composable
 fun RestaurantDetailCard(
@@ -70,7 +72,8 @@ fun RestaurantDetailCard(
 ) {
     Card(
         shape = cardShape,
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
@@ -225,7 +228,10 @@ private fun InfoSection(restaurant: Restaurant, onNavigateToDetail: (String) -> 
         )
 
         Spacer(Modifier.height(8.dp))
-        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f),
+            thickness = 1.dp
+        )
         Spacer(Modifier.height(6.dp))
 
         // One combined row: "🥘 Catalana  ·  Starter  ·  Main  ·  Dessert  ·  Drink"
@@ -249,7 +255,10 @@ private fun InfoSection(restaurant: Restaurant, onNavigateToDetail: (String) -> 
             Spacer(Modifier.height(6.dp))
         }
 
-        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 0.5.dp)
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f),
+            thickness = 1.dp
+        )
         Spacer(Modifier.height(8.dp))
 
         Row(
@@ -291,7 +300,7 @@ private fun InfoSection(restaurant: Restaurant, onNavigateToDetail: (String) -> 
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth(),
         ) {
-            OutlinedButton(
+            FilledTonalButton(
                 onClick = {
                     uriLauncher.open(
                         walkingDirectionsUri(

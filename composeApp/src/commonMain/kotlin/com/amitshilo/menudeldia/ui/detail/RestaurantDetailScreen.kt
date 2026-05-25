@@ -11,13 +11,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -79,6 +79,9 @@ fun RestaurantDetailScreen(restaurantId: String, navController: NavController) {
                         )
                     }
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                ),
             )
         },
     ) { innerPadding ->
@@ -142,19 +145,15 @@ internal fun RestaurantDetailContent(
             AboutSection(restaurant = restaurant)
             FeaturesSection(restaurant = restaurant)
             if (restaurant.reviews.isNotEmpty()) {
-                Spacer(Modifier.height(20.dp))
+                Spacer(Modifier.height(24.dp))
                 ReviewsSection(reviews = restaurant.reviews)
             }
             if (restaurant.openingHours.isNotEmpty()) {
-                Spacer(Modifier.height(20.dp))
-                HorizontalDivider()
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(24.dp))
                 HoursSection(restaurant = restaurant, now = now)
             }
             restaurant.phone?.let { phone ->
-                Spacer(Modifier.height(20.dp))
-                HorizontalDivider()
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(24.dp))
                 ContactSection(phone = phone)
             }
             Spacer(Modifier.height(32.dp))

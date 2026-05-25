@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -32,12 +31,7 @@ fun ReviewsSection(reviews: List<Review>, modifier: Modifier = Modifier) {
     var showAll by remember { mutableStateOf(false) }
     val visible = if (showAll) reviews else reviews.take(INITIAL_COUNT)
 
-    HorizontalDivider()
-    Spacer(Modifier.height(12.dp))
-    Text(
-        text = "${stringResource(Res.string.reviews_header)} (${reviews.size})",
-        style = MaterialTheme.typography.titleMedium,
-    )
+    SectionHeader("${stringResource(Res.string.reviews_header)} (${reviews.size})")
     Spacer(Modifier.height(12.dp))
     Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         visible.forEach { review ->

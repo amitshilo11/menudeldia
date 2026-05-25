@@ -25,7 +25,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HoursSection(restaurant: Restaurant, now: LocalDateTime, modifier: Modifier = Modifier) {
-    Text(stringResource(Res.string.hours_header), style = MaterialTheme.typography.titleMedium)
+    SectionHeader(stringResource(Res.string.hours_header))
     Spacer(Modifier.height(8.dp))
     restaurant.openingHours.filter { !it.isClosed }.forEach { hours ->
         val isToday = hours.dayOfWeek == now.dayOfWeek

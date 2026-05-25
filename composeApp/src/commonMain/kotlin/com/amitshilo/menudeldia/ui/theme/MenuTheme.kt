@@ -41,6 +41,11 @@ private val NeutralVar50 = Color(0xFF84746A)
 private val NeutralVar80 = Color(0xFFD6C3B7)
 private val NeutralVar90 = Color(0xFFF3DFD2)
 
+// Surface containers — warm cream tiers (prevents M3 from deriving lavender defaults)
+private val CreamCard = Color(0xFFFFF8EE)
+private val CreamSheet = Color(0xFFFBF3E8)
+private val CreamHighest = Color(0xFFF2E6D4)
+
 private val ErrorRed = Color(0xFFBA1A1A)
 private val ErrorRedContainer = Color(0xFFFFDAD6)
 
@@ -74,6 +79,12 @@ private val LightColors = lightColorScheme(
     onSurfaceVariant = NeutralVar30,
     outline = NeutralVar50,
     outlineVariant = NeutralVar80,
+    surfaceTint = Orange40,
+    surfaceContainerLowest = Neutral99,
+    surfaceContainerLow = CreamCard,
+    surfaceContainer = CreamSheet,
+    surfaceContainerHigh = Neutral95,
+    surfaceContainerHighest = CreamHighest,
 
     inverseSurface = Neutral20,
     inverseOnSurface = Neutral90,
