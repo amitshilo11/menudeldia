@@ -55,6 +55,8 @@ class PlacesEnrichmentService(
 
     /** Fetches all stale rows (up to [limit]) and enriches them. Returns the count processed. */
     fun enrichAllStale(limit: Int = 50): Int {
+        val resolved = findMissingPlaceIds(limit)
+        if (resolved > 0) log.info("Resolved {} missing place IDs before enrichment", resolved)
         val cutoff = Instant.now().minus(props.google.placesCacheTtl)
         val rows = repo.findStale(cutoff, PageRequest.of(0, limit))
         rows.forEach { refresh(it) }
@@ -70,7 +72,10 @@ class PlacesEnrichmentService(
     }
 
     private fun refresh(row: Restaurant) {
-        val placeId = row.googlePlaceId ?: return
+        val placeId = row.googlePlaceId ?: run {
+            log.warn("Skipping enrichment for {} ({}) — no google_place_id", row.name, row.id)
+            return
+        }
         inFlight.put(row.id, true)
         try {
             val details = client.placeDetails(placeId)
