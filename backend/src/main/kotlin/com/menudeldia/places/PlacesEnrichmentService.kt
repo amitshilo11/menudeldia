@@ -80,7 +80,12 @@ class PlacesEnrichmentService(
         try {
             val details = client.placeDetails(placeId)
             applyDetails(row, details)
-            row.photoNames = details.photos.take(5).map { it.name }
+            val allNames = details.photos.map { it.name }
+            row.availablePhotoNames = allNames
+            row.photoNames = when {
+                row.photoNames.isEmpty() -> allNames.take(5)
+                else -> row.photoNames.filter { it in allNames }
+            }
             row.placesFetchedAt = Instant.now()
             repo.save(row)
             log.info("Enriched restaurant {} ({})", row.name, row.id)

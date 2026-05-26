@@ -123,6 +123,10 @@ class Restaurant(
     @Column(name = "photo_names", columnDefinition = "jsonb")
     var photoNames: List<String> = emptyList(),
 
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "available_photo_names", columnDefinition = "jsonb")
+    var availablePhotoNames: List<String> = emptyList(),
+
     @Column(name = "places_fetched_at")
     var placesFetchedAt: Instant? = null,
 
