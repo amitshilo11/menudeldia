@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Photo Admin — Menú del Día</title>
+    <link href="/admin/admin.css" rel="stylesheet">
+</head>
+<body>
+<header>
+    <h1>Menú del Día · Photo Admin</h1>
+    <button hidden id="logout-btn">Logout</button>
+</header>
+<main>
+    <div id="login-section">
+        <form id="login-form">
+            <h2>Login</h2>
+            <label for="token-input">Admin token</label>
+            <input autocomplete="current-password" id="token-input" required type="password">
+            <button type="submit">Login</button>
+            <p class="error" hidden id="login-error"></p>
+        </form>
+    </div>
+
+    <div hidden id="list-section">
+        <div class="list-toolbar">
+            <input id="search-input" placeholder="Search restaurants…" type="search">
+        </div>
+        <table id="restaurant-table">
+            <thead>
+            <tr>
+                <th>Thumbnail</th>
+                <th>Name</th>
+                <th>Photos</th>
+            </tr>
+            </thead>
+            <tbody id="restaurant-tbody"></tbody>
+        </table>
+    </div>
+
+    <div hidden id="curation-section">
+        <div class="curation-header">
+            <button id="back-btn">← Back</button>
+            <h2 id="curation-title"></h2>
+        </div>
+        <div class="curation-zones">
+            <div class="zone">
+                <h3>Selected <span class="hint">(drag to reorder · position 1 is thumbnail)</span>
+                </h3>
+                <div id="selected-list"></div>
+            </div>
+            <div class="zone">
+                <h3>Available <span class="hint">(click to add)</span></h3>
+                <div id="available-grid"></div>
+            </div>
+        </div>
+        <div class="save-bar">
+            <button id="save-btn">Save</button>
+            <span id="save-status"></span>
+        </div>
+    </div>
+</main>
+<script src="/admin/admin.js"></script>
+</body>
+</html>

@@ -112,6 +112,7 @@ tasks.withType<org.springframework.boot.gradle.tasks.run.BootRun> {
     env["DB_USER"]?.let { environment("DB_USER", it) }
     env["DB_PASSWORD"]?.let { environment("DB_PASSWORD", it) }
     env["PHOTOS_DIR"]?.let { environment("PHOTOS_DIR", it) }
+    env["ADMIN_TOKEN"]?.let { environment("ADMIN_TOKEN", it) }
 }
 
 tasks.withType<Test> {
