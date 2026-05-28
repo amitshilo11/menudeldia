@@ -19,11 +19,12 @@ interface RestaurantRepository : JpaRepository<Restaurant, UUID> {
         value = """
             SELECT r.*
             FROM restaurants r
-            WHERE ST_DWithin(
-                r.geom,
-                ST_SetSRID(ST_MakePoint(:lng, :lat), 4326)::geography,
-                :radiusMeters
-            )
+            WHERE r.hidden = FALSE
+              AND ST_DWithin(
+                  r.geom,
+                  ST_SetSRID(ST_MakePoint(:lng, :lat), 4326)::geography,
+                  :radiusMeters
+              )
             ORDER BY r.geom <-> ST_SetSRID(ST_MakePoint(:lng, :lat), 4326)::geography
             LIMIT 200
         """,

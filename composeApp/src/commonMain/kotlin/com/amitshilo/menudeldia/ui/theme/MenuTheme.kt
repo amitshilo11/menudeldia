@@ -42,7 +42,7 @@ private val NeutralVar80 = Color(0xFFD6C3B7)
 private val NeutralVar90 = Color(0xFFF3DFD2)
 
 // Surface containers — warm cream tiers (prevents M3 from deriving lavender defaults)
-private val CreamCard = Color(0xFFFFF8EE)
+private val CreamCard = Color(0xFFFFF8EE) // surfaceContainerLow — list cards
 private val CreamSheet = Color(0xFFFBF3E8)
 private val CreamHighest = Color(0xFFF2E6D4)
 
