@@ -54,7 +54,7 @@ restaurants. Three Gradle modules:
 ```
 domain/       ← pure Kotlin: Restaurant, Menu, OpeningHours models; repository interfaces; use cases
 data/remote/  ← Ktor DTOs + API services (RestaurantApiService, AuthApiService)
-data/local/   ← MockRestaurantRepository (dev fallback)
+data/local/   ← (mock repository + fixtures live in commonTest, not in prod binaries)
 data/auth/    ← SessionStore (multiplatform settings), AuthRepositoryImpl
 di/           ← Metro DI graph (AppGraph) — single @DependencyGraph interface
 ```
