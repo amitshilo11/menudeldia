@@ -8,12 +8,14 @@ import io.github.bucket4j.Bucket
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.core.annotation.Order
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import java.time.Duration
 
 @Component
+@Order(-200)
 class RateLimitFilter(
     private val props: AppProperties,
     private val mapper: ObjectMapper,
@@ -27,6 +29,10 @@ class RateLimitFilter(
         .expireAfterAccess(Duration.ofMinutes(2))
         .build<String, Bucket> { newBucket(props.rateLimit.readRpm) }
 
+    private val adminBuckets = Caffeine.newBuilder()
+        .expireAfterAccess(Duration.ofMinutes(5))
+        .build<String, Bucket> { newBucket(props.rateLimit.adminRpm) }
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -37,6 +43,7 @@ class RateLimitFilter(
 
         val bucket: Bucket? = when {
             path.startsWith("${ApiPaths.V1}/auth/") -> authBuckets.get(ip)
+            path.startsWith("${ApiPaths.V1}/admin/") -> adminBuckets.get(ip)
             path.startsWith("${ApiPaths.V1}/restaurants") ||
                     path.startsWith("${ApiPaths.V1}/me") -> readBuckets.get(ip)
 

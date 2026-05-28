@@ -36,6 +36,7 @@ data class AppProperties(
     data class RateLimitProps(
         val readRpm: Int,
         val authRpm: Int,
+        val adminRpm: Int,
     )
 
     /**
