@@ -62,6 +62,9 @@ dependencies {
     // --- Rate limiting ---
     implementation("com.bucket4j:bucket4j_jdk17-core:8.14.0")
 
+    // --- CSV (admin portal round-trip with restaurants_db_ready.csv) ---
+    implementation("org.apache.commons:commons-csv:1.11.0")
+
     // --- Metrics ---
     implementation("io.micrometer:micrometer-registry-prometheus")
 
