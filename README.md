@@ -1,108 +1,121 @@
 # Menú del Día
 
-A mobile-first map app that helps locals (and later, tourists) in Barcelona find restaurants serving **menú del día** — the traditional Spanish fixed-price weekday lunch — near them, right now.
-
-> **MVP target:** ship to Barcelona users in 1–2 months, solo, with mock data, basic map, and the core map + bottom sheet + restaurant detail flow.
-
----
+A mobile-first map app that helps people in Barcelona find restaurants serving **menú del día** —
+the traditional Spanish fixed-price weekday lunch — near them, right now.
 
 ## What it does
 
-- Shows a map of Barcelona with pins for restaurants serving menú del día today
-- Clusters pins when zoomed out, expands on zoom
+- Map of Barcelona with custom price + cuisine-emoji pins, animated camera pan to selection
 - Bottom sheet surfaces nearby restaurants (peek → list → detail)
-- Tap a pin → restaurant detail: today's menu, price, opening hours, address, photo
-- User location with recenter button; falls back to Barcelona center if location denied
-
-## Differentiators
-
-1. **Map UX** — faster, smoother, more legible than competitors (menudia.app)
-2. **Menú del día-specific ratings (v2)** — rates portion size, freshness, value, dish variety — not generic restaurant stars
-
----
+- Search by name / cuisine and filters by open-now / price / cuisine
+- Restaurant detail: today's menu (what the price includes), full opening hours, address, phone,
+  description (ES/EN), photo gallery
+- "Get directions" deep-links to Google Maps / Apple Maps in walking mode
+- Sign in with Google or Apple; guest browsing also supported
 
 ## Stack
 
-| Layer | Choice |
-|---|---|
-| Mobile + Web UI | Kotlin Multiplatform + Compose Multiplatform (iOS, Android, Wasm) |
-| Backend | Spring Boot + Kotlin |
-| Database | PostgreSQL + PostGIS |
-| Map (mobile) | Google Maps SDK (Android + iOS via `expect`/`actual`) |
-| Map (web) | Google Maps JS API via Compose Web interop |
-| Networking | Ktor Client |
-| Serialization | kotlinx.serialization |
-| DI | Metro (Zac Sweers) |
+| Layer           | Choice                                                               |
+|-----------------|----------------------------------------------------------------------|
+| Mobile + Web UI | Kotlin Multiplatform + Compose Multiplatform (Android, iOS, JS+Wasm) |
+| Backend         | Spring Boot 3 + Kotlin (Java 21)                                     |
+| Database        | PostgreSQL 16 + PostGIS 3.4 (Flyway migrations)                      |
+| Map (mobile)    | Google Maps SDK — native on Android / iOS via `expect`/`actual`      |
+| Map (web)       | Google Maps JS API via Compose Web interop                           |
+| Auth            | Custom HS256 JWT; Google ID token + Apple identity token verifiers   |
+| Networking      | Ktor Client + kotlinx.serialization                                  |
+| DI              | Metro (Zac Sweers) — compile-time, KMP-native                        |
+| Image loading   | Coil 3                                                               |
 
----
-
-## Project structure
+## Modules
 
 ```
 menu-del-dia/
-├── composeApp/       # Compose Multiplatform UI (Android, iOS, Web)
+├── composeApp/   # Compose Multiplatform UI
 │   └── src/
-│       ├── commonMain/    # Shared UI, ViewModels, navigation
-│       ├── androidMain/   # Google Maps Android wrapper
-│       ├── iosMain/       # Google Maps iOS wrapper
-│       └── wasmJsMain/    # Google Maps JS wrapper
-├── shared/           # Domain models, repositories, networking (KMP)
-├── server/           # Spring Boot REST API
-└── iosApp/           # Xcode entry point
+│       ├── commonMain/    # Shared UI, ViewModels, navigation, search, filters, auth UI
+│       ├── androidMain/   # Google Maps Android wrapper + Credential Manager (Google Sign-In)
+│       ├── iosMain/       # Google Maps iOS wrapper + GIDSignIn / Sign in with Apple bridges
+│       └── webMain/       # Google Maps JS wrapper (shared by jsMain and wasmJsMain)
+├── shared/       # Domain models, use cases, repositories, Ktor remote layer (KMP)
+├── backend/      # Spring Boot REST API
+└── iosApp/       # Xcode entry point
 ```
-
----
-
-## Backend API
-
-| Method | Endpoint | Purpose |
-|---|---|---|
-| `GET` | `/api/v1/restaurants?lat=&lng=&radius=` | Nearby restaurants |
-| `GET` | `/api/v1/restaurants/{id}` | Restaurant detail + today's menu |
-| `GET` | `/api/v1/health` | Health check |
-
----
 
 ## Building & running
 
 ### Android
 
-```shell
+```bash
 ./gradlew :composeApp:assembleDebug
 ```
 
-### Web (Wasm — modern browsers)
+### Web (Wasm — preferred for modern browsers)
 
-```shell
+```bash
 ./gradlew :composeApp:wasmJsBrowserDevelopmentRun
 ```
 
 ### Web (JS — broader compatibility)
 
-```shell
+```bash
 ./gradlew :composeApp:jsBrowserDevelopmentRun
-```
-
-### Server
-
-```shell
-./gradlew :server:run
 ```
 
 ### iOS
 
-Open [`/iosApp`](./iosApp) in Xcode and run, or use the IDE run configuration.
+Open `iosApp/` in Xcode and run. (Requires a paid Apple Developer account for Sign in with Apple +
+TestFlight.)
 
----
+### Backend
 
-## MVP scope
+```bash
+# Local Postgres + PostGIS via Docker Compose
+docker compose -f backend/docker-compose.yml up -d db
 
-**In:** map with pins, user location, bottom sheet, restaurant detail, mock data (~20–30 restaurants), Spring Boot backend skeleton, iOS + Android + Web.
+# Boot the API (reads backend/.env)
+./gradlew :backend:bootRun -Pprofiles=dev
 
-**Out (v2+):** ratings, reviews, user accounts, filters, favorites, search, restaurant self-publish, push notifications, payments.
+# Tests
+./gradlew :backend:test
+```
 
----
+See [`backend/CLAUDE.md`](./backend/CLAUDE.md) for full backend architecture, schema, and config.
 
-## Status
+## Backend API (v1)
 
-Pre-development — MVP scoping complete. See [`overview.md`](./overview.md) for full product spec, architecture decisions, risk register, and task list.
+All routes under `/api/v1/`. JWT-protected unless marked otherwise.
+
+| Method | Path                                                                  | Auth        |
+|--------|-----------------------------------------------------------------------|-------------|
+| `GET`  | `/actuator/health`                                                    | public      |
+| `POST` | `/auth/google` · `/auth/apple`                                        | public      |
+| `GET`  | `/me`                                                                 | JWT         |
+| `GET`  | `/restaurants` (lat/lng/radius/q/openNow/cuisine[]/minPrice/maxPrice) | JWT         |
+| `GET`  | `/restaurants/{id}`                                                   | JWT         |
+| `GET`  | `/restaurants/{id}/photos/{n}`                                        | JWT         |
+| `POST` | `/admin/seed` · `/admin/enrich`                                       | admin token |
+
+## Configuration
+
+Backend env vars (see `backend/.env.example`):
+
+- `DB_URL` · `DB_USER` · `DB_PASSWORD`
+- `GOOGLE_PLACES_API_KEY` — Places API
+- `GOOGLE_OAUTH_CLIENT_ID` — audience for Google ID token verification
+- `APPLE_BUNDLE_ID` — audience for Apple ID token verification
+- `JWT_SIGNING_KEY` — HS256 key (`openssl rand -hex 32`)
+- `PHOTOS_DIR` — local photo storage root (default `./var/photos`)
+- `ADMIN_TOKEN` — required on `X-Admin-Token` header for admin endpoints
+
+Client side (`local.properties`):
+
+- Google Maps Android API key
+- `GOOGLE_WEB_CLIENT_ID` — used by Android Credential Manager for Google Sign-In
+
+iOS: `Config.xcconfig` sets `GID_CLIENT_ID` + `GID_REVERSED_CLIENT_ID` for the GIDSignIn SDK.
+
+## Project documentation
+
+- [`CLAUDE.md`](./CLAUDE.md) — root architecture overview + cross-module patterns
+- [`backend/CLAUDE.md`](./backend/CLAUDE.md) — backend stack, schema, request flows, security

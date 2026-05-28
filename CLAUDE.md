@@ -74,9 +74,9 @@ token from `SessionStore`), and per-platform `apiBaseUrl`:
 Navigation uses `sealed class Screen` with Compose Navigation. Screens:
 `Login → Map → RestaurantDetail`, `Account`.
 
-**Map**: `MapView` is an `expect` composable — each platform (`androidMain`, `iosMain`,
-`wasmJsMain`) provides an `actual` wrapping the native Google Maps SDK. Don't add platform logic to
-`commonMain`.
+**Map**: `MapView` is an `expect` composable — each platform (`androidMain`, `iosMain`, `webMain` —
+the latter shared by `jsMain` and `wasmJsMain`) provides an `actual` wrapping the native Google Maps
+SDK. Don't add platform logic to `commonMain`.
 
 **Auth**: `AuthProvider` is `expect`/`actual`. Android uses Credential Manager (Google Sign-In). iOS
 uses Google Sign-In SDK via `GIDSignIn`. The common `AuthProviderHolder` bridges them to the shared
@@ -93,6 +93,7 @@ Package structure: `com.menudeldia.*`
 | `restaurant` | JPA entity, repository, service, controller, mapper                                       |
 | `auth`       | JWT filter, Google/Apple token verifiers, `UserService`, `AuthController`, `MeController` |
 | `places`     | `GooglePlacesClient`, `PlacesEnrichmentService` (photo download + enrichment)             |
+| `photo`      | `PhotoController` — serves stored restaurant photos                                       |
 | `admin`      | `AdminController` (admin-token protected, restaurant seeding/enrichment)                  |
 | `seed`       | `SeederService` — seeds from `seed.json` or CSV                                           |
 | `config`     | CORS, security, `AppProperties`, `AdminTokenAuthorizationManager`                         |
@@ -135,7 +136,8 @@ Run dev profile with: `./gradlew :backend:bootRun -Pprofiles=dev`
 
 - **expect/actual** is used for: `MapView`, `AuthProvider`, `LocationState`, `UriLauncher`,
   `apiBaseUrl`, `KmpLogger`. Add platform implementations to all source sets when adding a new
-  `expect`.
+  `expect` — web `actual`s live in `webMain` (shared by `jsMain` and `wasmJsMain`), not in
+  `wasmJsMain` directly.
 - **Metro DI**: add new dependencies to `AppGraph.Companion` as `@Provides` functions. Use
   `@SingleIn(AppScope::class)` for singletons.
 - **Flyway migrations**: never rename or edit existing migration files — always add a new `V<n>__`
