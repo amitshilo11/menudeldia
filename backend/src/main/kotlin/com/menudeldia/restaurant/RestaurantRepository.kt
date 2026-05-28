@@ -61,4 +61,6 @@ interface RestaurantRepository : JpaRepository<Restaurant, UUID> {
 
     @Query("SELECT r FROM Restaurant r WHERE r.googlePlaceId IS NULL")
     fun findWithoutPlaceId(): List<Restaurant>
+
+    fun existsByGooglePlaceIdAndIdNot(googlePlaceId: String, id: UUID): Boolean
 }

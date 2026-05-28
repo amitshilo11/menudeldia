@@ -8,6 +8,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
+import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.servlet.resource.NoResourceFoundException
 
 @RestControllerAdvice
@@ -43,6 +44,13 @@ class GlobalExceptionHandler {
     fun onNoResource(ex: NoResourceFoundException): ResponseEntity<ApiError> =
         ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(ApiError("not_found", "Resource not found", 404))
+
+    @ExceptionHandler(ResponseStatusException::class)
+    fun onResponseStatus(ex: ResponseStatusException): ResponseEntity<ApiError> {
+        val status = HttpStatus.valueOf(ex.statusCode.value())
+        return ResponseEntity.status(status)
+            .body(ApiError(status.name.lowercase(), ex.reason ?: ex.message, status.value()))
+    }
 
     @ExceptionHandler(Exception::class)
     fun onUnexpected(ex: Exception): ResponseEntity<ApiError> {

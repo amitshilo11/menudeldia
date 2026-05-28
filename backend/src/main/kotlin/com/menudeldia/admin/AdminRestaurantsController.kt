@@ -60,6 +60,15 @@ class AdminRestaurantsController(
         @RequestBody body: AdminRestaurantUpdate,
     ): AdminRestaurantDto {
         val row = repo.findById(id).orElse(null) ?: throw notFound(id)
+        val newPlaceId = body.googlePlaceId?.trim()?.ifEmpty { null }
+        if (newPlaceId != null && newPlaceId != row.googlePlaceId &&
+            repo.existsByGooglePlaceIdAndIdNot(newPlaceId, id)
+        ) {
+            throw ResponseStatusException(
+                HttpStatus.CONFLICT,
+                "Google Place ID '$newPlaceId' is already assigned to another restaurant",
+            )
+        }
         val before = row.csvSignature()
         row.applyAdminUpdate(body)
         val saved = repo.save(row)
