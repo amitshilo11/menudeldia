@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 private val Orange10 = Color(0xFF3E0E00)
 private val Orange20 = Color(0xFF601A00)
 private val Orange30 = Color(0xFF872900)
-private val Orange40 = Color(0xFFE65100)   // Primary Light (Vibrant)
+private val Orange40 = Color(0xFFD46642)   // Primary Light (Vibrant)
 private val Orange80 = Color(0xFFFFB74D)   // Primary Dark (Soft Glow)
 private val Orange90 = Color(0xFFFFDCC0)
 private val Orange95 = Color(0xFFFFEDDE)
