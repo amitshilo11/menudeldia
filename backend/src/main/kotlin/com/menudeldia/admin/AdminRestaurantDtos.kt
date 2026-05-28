@@ -40,6 +40,7 @@ data class AdminRestaurantDto(
     val takeout: Boolean,
     val reviews: List<ReviewData>,
     val placesFetchedAt: String?,
+    val updatedAt: String,
     // -- Photos ---------------------------------------------------------------
     val photoNames: List<String>,
     val availablePhotoNames: List<String>,

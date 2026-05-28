@@ -88,6 +88,7 @@ class PlacesEnrichmentService(
                 else -> row.photoNames.filter { it in allNames }
             }
             row.placesFetchedAt = Instant.now()
+            row.updatedAt = Instant.now()
             repo.save(row)
             log.info("Enriched restaurant {} ({})", row.name, row.id)
         } catch (ex: PlacesException) {
