@@ -256,7 +256,7 @@ println("Reading $xlsxPath ...")
 val workbook = XSSFWorkbook(FileInputStream(File(xlsxPath)))
 val sheet = workbook.getSheetAt(0)
 
-// Column indices (0-based). Based on xlsx layout described in PLAN.md:
+// Column indices (0-based) for the curated `resturant-list.xlsx`:
 // 0=Record#, 1=Name, 2=CuisineType(HE), 3=MenuDetails(HE),
 // 4=alt price (skip), 5=normal price, 6=Hours(HE), 7=GoogleMapsLink, 8=PlaceID, 9=web, 10=Phone
 val COL_NAME = 1
