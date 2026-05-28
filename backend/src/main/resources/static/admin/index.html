@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Photo Admin — Menú del Día</title>
+    <title>Admin — Menú del Día</title>
     <link href="/admin/admin.css" rel="stylesheet">
 </head>
 <body>
 <header>
-    <h1>Menú del Día · Photo Admin</h1>
+    <h1>Menú del Día · Admin</h1>
     <button hidden id="logout-btn">Logout</button>
 </header>
 <main>
@@ -25,38 +25,180 @@
     <div hidden id="list-section">
         <div class="list-toolbar">
             <input id="search-input" placeholder="Search restaurants…" type="search">
+            <button class="primary" id="add-btn">+ Add restaurant</button>
         </div>
         <table id="restaurant-table">
             <thead>
             <tr>
                 <th>Thumbnail</th>
                 <th>Name</th>
+                <th>Cuisine</th>
+                <th>Price</th>
                 <th>Photos</th>
+                <th>Status</th>
             </tr>
             </thead>
             <tbody id="restaurant-tbody"></tbody>
         </table>
     </div>
 
-    <div hidden id="curation-section">
-        <div class="curation-header">
+    <div hidden id="detail-section">
+        <div class="detail-header">
             <button id="back-btn">← Back</button>
-            <h2 id="curation-title"></h2>
+            <h2 id="detail-title"></h2>
+            <span class="status-badge" hidden id="hidden-badge">Hidden</span>
         </div>
-        <div class="curation-zones">
-            <div class="zone">
-                <h3>Selected <span class="hint">(drag to reorder · position 1 is thumbnail)</span>
-                </h3>
-                <div id="selected-list"></div>
+
+        <section class="panel">
+            <h3>Details <span class="hint">(editable · stored in DB + CSV)</span></h3>
+            <div class="form-grid" id="editable-grid">
+                <label for="f-name">Name</label>
+                <input id="f-name" type="text">
+
+                <label for="f-cuisine_type">Cuisine type</label>
+                <input id="f-cuisine_type" type="text">
+
+                <label for="f-cuisine_emoji">Cuisine emoji</label>
+                <input id="f-cuisine_emoji" maxlength="4" type="text">
+
+                <label for="f-menu_price">Price (normal)</label>
+                <input id="f-menu_price" min="0" step="0.01" type="number">
+
+                <label for="f-price_alt">Price (alt)</label>
+                <input id="f-price_alt" type="text">
+
+                <label for="f-menu_details">Menu details</label>
+                <input id="f-menu_details" placeholder="Starter + Main + Dessert + Drink"
+                       type="text">
+
+                <label class="check-label"><input id="f-includes_dessert" type="checkbox"> Includes
+                    dessert</label>
+                <label class="check-label"><input id="f-includes_drink" type="checkbox"> Includes
+                    drink</label>
+
+                <label for="f-days_from">Days from</label>
+                <select id="f-days_from">
+                    <option value=""></option>
+                </select>
+
+                <label for="f-days_to">Days to</label>
+                <select id="f-days_to">
+                    <option value=""></option>
+                </select>
+
+                <label for="f-excluded_day">Excluded day</label>
+                <select id="f-excluded_day">
+                    <option value=""></option>
+                </select>
+
+                <label for="f-open_time">Open time</label>
+                <input id="f-open_time" type="time">
+
+                <label for="f-close_time">Close time</label>
+                <input id="f-close_time" type="time">
+
+                <label for="f-phone">Phone</label>
+                <input id="f-phone" type="text">
+
+                <label for="f-website">Website</label>
+                <input id="f-website" type="url">
+
+                <label for="f-google_maps_url">Google Maps URL</label>
+                <input id="f-google_maps_url" type="url">
+
+                <label for="f-google_place_id">Google Place ID</label>
+                <input id="f-google_place_id" type="text">
             </div>
-            <div class="zone">
-                <h3>Available <span class="hint">(click to add)</span></h3>
-                <div id="available-grid"></div>
+        </section>
+
+        <section class="panel">
+            <h3>Visibility options</h3>
+            <div class="form-grid">
+                <label class="check-label"><input id="f-hidden" type="checkbox"> Hidden — exclude
+                    this restaurant from the public app</label>
             </div>
+        </section>
+
+        <section class="panel">
+            <h3>Google data <span class="hint">(read-only · refreshed by enrichment)</span></h3>
+            <div class="form-grid" id="google-grid">
+                <label>Address</label>
+                <input disabled id="g-address" type="text">
+
+                <label>Latitude</label>
+                <input disabled id="g-lat" type="text">
+
+                <label>Longitude</label>
+                <input disabled id="g-lng" type="text">
+
+                <label>Rating</label>
+                <input disabled id="g-rating" type="text">
+
+                <label>User rating count</label>
+                <input disabled id="g-userRatingCount" type="text">
+
+                <label>Editorial summary</label>
+                <textarea disabled id="g-editorial" rows="2"></textarea>
+
+                <label>AI summary</label>
+                <textarea disabled id="g-aiSummary" rows="2"></textarea>
+
+                <label>Opening hours</label>
+                <textarea disabled id="g-openingHours" rows="4"></textarea>
+
+                <label>Reviews</label>
+                <textarea disabled id="g-reviews" rows="4"></textarea>
+
+                <label>Attributes</label>
+                <input disabled id="g-attributes" type="text">
+
+                <label>Places fetched at</label>
+                <input disabled id="g-placesFetchedAt" type="text">
+            </div>
+        </section>
+
+        <section class="panel">
+            <h3>Photos <span class="hint">(drag to reorder · position 1 is thumbnail)</span></h3>
+            <div class="curation-zones">
+                <div class="zone">
+                    <h4>Selected</h4>
+                    <div id="selected-list"></div>
+                </div>
+                <div class="zone">
+                    <h4>Available <span class="hint">(click to add)</span></h4>
+                    <div id="available-grid"></div>
+                </div>
+            </div>
+            <div class="save-bar">
+                <button id="photos-save-btn">Save photos</button>
+                <span id="photos-save-status"></span>
+            </div>
+        </section>
+
+        <div class="action-bar">
+            <div class="action-bar-left">
+                <button class="primary" id="save-detail-btn">Save changes</button>
+                <span id="detail-status"></span>
+            </div>
+            <button class="danger" id="delete-btn">Delete restaurant</button>
         </div>
-        <div class="save-bar">
-            <button id="save-btn">Save</button>
-            <span id="save-status"></span>
+    </div>
+
+    <div class="modal-backdrop" hidden id="add-modal">
+        <div class="modal">
+            <h3>Add restaurant</h3>
+            <form id="add-form">
+                <label for="add-name">Name *</label>
+                <input id="add-name" required type="text">
+                <label for="add-place-id">Google Place ID *</label>
+                <input id="add-place-id" placeholder="ChIJ..." required type="text">
+                <p class="hint">Enrichment will fill address, coordinates and photos after save.</p>
+                <div class="modal-buttons">
+                    <button id="add-cancel" type="button">Cancel</button>
+                    <button class="primary" type="submit">Create</button>
+                </div>
+                <p class="error" hidden id="add-error"></p>
+            </form>
         </div>
     </div>
 </main>

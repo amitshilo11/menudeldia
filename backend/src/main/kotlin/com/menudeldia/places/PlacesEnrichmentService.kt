@@ -71,7 +71,8 @@ class PlacesEnrichmentService(
             .forEach { refresh(it) }
     }
 
-    private fun refresh(row: Restaurant) {
+    /** Synchronous enrichment of a single restaurant. Safe to call from admin endpoints after save. */
+    fun refresh(row: Restaurant) {
         val placeId = row.googlePlaceId ?: run {
             log.warn("Skipping enrichment for {} ({}) — no google_place_id", row.name, row.id)
             return
@@ -102,13 +103,17 @@ class PlacesEnrichmentService(
     }
 
     private fun applyDetails(row: Restaurant, details: PlaceDetailsResponse) {
-        details.location?.let {
-            row.lat = it.latitude
-            row.lng = it.longitude
+        // Admin-editable CSV fields: fill-when-empty only, so manual edits in the admin
+        // portal are never silently overwritten by a refresh.
+        if (row.lat == BARCELONA_PLACEHOLDER_LAT && row.lng == BARCELONA_PLACEHOLDER_LNG) {
+            details.location?.let {
+                row.lat = it.latitude
+                row.lng = it.longitude
+            }
         }
-        details.formattedAddress?.let { row.address = it }
-        details.internationalPhoneNumber?.let { row.phone = it }
-        details.websiteUri?.let { row.website = it }
+        if (row.address.isNullOrBlank()) details.formattedAddress?.let { row.address = it }
+        if (row.phone.isNullOrBlank()) details.internationalPhoneNumber?.let { row.phone = it }
+        if (row.website.isNullOrBlank()) details.websiteUri?.let { row.website = it }
         details.regularOpeningHours?.let { hours ->
             if (hours.weekdayDescriptions.isNotEmpty()) {
                 row.openingHours = mapOf("weekdayDescriptions" to hours.weekdayDescriptions)
@@ -140,4 +145,10 @@ class PlacesEnrichmentService(
     private fun isStale(row: Restaurant, now: Instant): Boolean =
         row.placesFetchedAt == null ||
                 row.placesFetchedAt!! < now.minus(props.google.placesCacheTtl)
+
+    companion object {
+        // Matches SeederService — placeholder used before the first Google enrichment fills real coords.
+        const val BARCELONA_PLACEHOLDER_LAT = 41.3851
+        const val BARCELONA_PLACEHOLDER_LNG = 2.1734
+    }
 }
