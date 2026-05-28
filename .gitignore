@@ -80,5 +80,8 @@ reports/
 ruvector.db
 .mcp.json
 
-# Backend storge
+# Backend storage
 backend/var/photos/*
+
+# Local data files (not for version control)
+backend/data/
