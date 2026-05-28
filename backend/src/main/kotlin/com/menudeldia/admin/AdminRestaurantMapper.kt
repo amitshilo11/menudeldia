@@ -38,6 +38,7 @@ internal fun Restaurant.toAdminDto() = AdminRestaurantDto(
     takeout = takeout,
     reviews = reviews,
     placesFetchedAt = placesFetchedAt?.toString(),
+    updatedAt = updatedAt.toString(),
     photoNames = photoNames,
     availablePhotoNames = availablePhotoNames,
 )

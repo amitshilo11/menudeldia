@@ -71,8 +71,14 @@ class AdminRestaurantsController(
             saved.id,
             csvChanged
         )
-        enrichInBackground(saved.id)
         return saved.toAdminDto()
+    }
+
+    @PostMapping("/{id}/enrich")
+    fun enrich(@PathVariable id: UUID): ResponseEntity<Void> {
+        repo.findById(id).orElse(null) ?: throw notFound(id)
+        enrichInBackground(id)
+        return ResponseEntity.accepted().build()
     }
 
     @DeleteMapping("/{id}")

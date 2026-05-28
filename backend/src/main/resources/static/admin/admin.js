@@ -45,8 +45,8 @@ function bindEvents() {
   $('add-cancel').addEventListener('click', closeAddModal);
   $('add-form').addEventListener('submit', onCreateSubmit);
   $('save-detail-btn').addEventListener('click', onSaveDetail);
+  $('enrich-btn').addEventListener('click', onEnrich);
   $('delete-btn').addEventListener('click', onDelete);
-  $('photos-save-btn').addEventListener('click', onSavePhotos);
 }
 
 async function init() {
@@ -99,8 +99,9 @@ function renderTable(filter) {
   for (const r of rows) {
     const tr = document.createElement('tr');
     if (r.hidden) tr.classList.add('hidden-row');
+    const thumbV = encodeURIComponent(r.updatedAt || r.id);
     const thumb = (r.photoNames && r.photoNames.length > 0)
-      ? `<img class="thumb" src="/api/v1/restaurants/${r.id}/photos/0" alt="">`
+      ? `<img class="thumb" src="/api/v1/restaurants/${r.id}/photos/0?v=${thumbV}" alt="">`
       : `<div class="thumb"></div>`;
     const statusPill = r.hidden
       ? `<span class="status-pill hidden">Hidden</span>`
@@ -171,23 +172,100 @@ function readEditableForm() {
 
 async function onSaveDetail() {
   if (!current) return;
+  const btn = $('save-detail-btn');
+
+  btn.disabled = true;
+  btn.classList.add('loading');
   setDetailStatus('Saving…', 'ok');
+
   const payload = readEditableForm();
   const resp = await apiFetch(`/api/v1/admin/restaurants/${current.id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
+
   if (!resp.ok) {
+    btn.disabled = false;
+    btn.classList.remove('loading');
     setDetailStatus('Save failed: ' + resp.status, 'err');
     return;
   }
+
   current = await resp.json();
-  // Refresh the list cache so name/cuisine/price changes show on Back.
-  const idx = restaurants.findIndex(r => r.id === current.id);
-  if (idx >= 0) restaurants[idx] = current;
+  const listIdx = restaurants.findIndex(r => r.id === current.id);
+  if (listIdx >= 0) restaurants[listIdx] = current;
+
+  const photoResp = await apiFetch(`/api/v1/admin/restaurants/${current.id}/photos`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ photoNames: selectedPhotos }),
+  });
+  if (photoResp.ok) {
+    current = await photoResp.json();
+    if (listIdx >= 0) restaurants[listIdx] = current;
+  }
+
   hydrateDetailForm(current);
-  setDetailStatus('Saved — enrichment refreshing in background', 'ok');
+  btn.disabled = false;
+  btn.classList.remove('loading');
+  setDetailStatus('Saved!', 'ok');
+  setTimeout(() => setDetailStatus('', ''), 3000);
+}
+
+async function onEnrich() {
+  if (!current) return;
+  const btn = $('enrich-btn');
+  const savedUpdatedAt = current.updatedAt;
+  const listIdx = restaurants.findIndex(r => r.id === current.id);
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+  setDetailStatus('Enriching…', 'ok');
+
+  const resp = await apiFetch(`/api/v1/admin/restaurants/${current.id}/enrich`, { method: 'POST' });
+  if (!resp.ok) {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    setDetailStatus('Enrich failed: ' + resp.status, 'err');
+    return;
+  }
+
+  pollEnrichment(current.id, savedUpdatedAt, listIdx, btn);
+}
+
+function pollEnrichment(id, savedUpdatedAt, listIdx, btn) {
+  const MAX_WAIT = 30_000;
+  const INTERVAL = 2_000;
+  const start = Date.now();
+
+  const tick = async () => {
+    if (Date.now() - start > MAX_WAIT) {
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      setDetailStatus('Saved — enrichment running in background', 'ok');
+      return;
+    }
+    const pr = await apiFetch(`/api/v1/admin/restaurants/${id}`, { cache: 'no-store' });
+    if (pr.ok) {
+      const fresh = await pr.json();
+      if (fresh.updatedAt !== savedUpdatedAt) {
+        current = fresh;
+        if (listIdx >= 0) restaurants[listIdx] = current;
+        selectedPhotos = [...(current.photoNames || [])];
+        hydrateDetailForm(current);
+        renderPhotos();
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        setDetailStatus('Enriched!', 'ok');
+        setTimeout(() => setDetailStatus('', ''), 3000);
+        return;
+      }
+    }
+    setTimeout(tick, INTERVAL);
+  };
+
+  setTimeout(tick, INTERVAL);
 }
 
 async function onDelete() {
@@ -331,24 +409,6 @@ function setupDrag() {
   });
 }
 
-async function onSavePhotos() {
-  if (!current) return;
-  $('photos-save-status').textContent = 'Saving…';
-  const resp = await apiFetch(`/api/v1/admin/restaurants/${current.id}/photos`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ photoNames: selectedPhotos }),
-  });
-  if (resp.ok) {
-    current = await resp.json();
-    const idx = restaurants.findIndex(r => r.id === current.id);
-    if (idx >= 0) restaurants[idx] = current;
-    $('photos-save-status').textContent = 'Saved!';
-    setTimeout(() => { $('photos-save-status').textContent = ''; }, 2000);
-  } else {
-    $('photos-save-status').textContent = 'Error saving.';
-  }
-}
 
 async function loadBlob(img, name, restaurantId, availIdx) {
   const url = await fetchBlob(name, restaurantId, availIdx);
