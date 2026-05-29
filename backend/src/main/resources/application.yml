@@ -49,7 +49,7 @@ menudeldia:
     admin-rpm: 10
   admin-token: ${ADMIN_TOKEN:}
   csv:
-    path: ${CSV_PATH:./restaurants_db_ready.csv}
+    path: ${CSV_PATH:./data/restaurants_db_ready.csv}
 
 resilience4j:
   circuitbreaker:

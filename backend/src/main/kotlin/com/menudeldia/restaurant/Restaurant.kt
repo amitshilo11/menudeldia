@@ -68,19 +68,15 @@ class Restaurant(
     @Column(name = "menu_price")
     var menuPrice: BigDecimal? = null,
 
-    /** Optional alternate price from CSV (e.g. weekend / premium); usually blank. */
-    @Column(name = "price_alt", length = 64)
-    var priceAlt: String? = null,
-
     /** Original `menu_details` text from CSV — e.g. "Starter + Main + Dessert + Drink". */
     @Column(name = "menu_details_raw", columnDefinition = "TEXT")
     var menuDetailsRaw: String? = null,
 
-    @Column(name = "includes_dessert", nullable = false)
-    var includesDessert: Boolean = false,
+    @Column(name = "vegetarian_options", nullable = false)
+    var vegetarianOptions: Boolean = false,
 
-    @Column(name = "includes_drink", nullable = false)
-    var includesDrink: Boolean = false,
+    @Column(name = "gluten_free_options", nullable = false)
+    var glutenFreeOptions: Boolean = false,
 
     @Column(name = "days_from", length = 8)
     var daysFrom: String? = null,

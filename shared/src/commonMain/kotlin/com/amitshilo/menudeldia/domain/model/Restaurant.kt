@@ -25,6 +25,7 @@ data class Restaurant(
     val reviews: List<Review> = emptyList(),
     val servesLunch: Boolean = false,
     val servesVegetarianFood: Boolean = false,
+    val servesGlutenFree: Boolean = false,
     val outdoorSeating: Boolean = false,
     val reservable: Boolean = false,
     val takeout: Boolean = false,

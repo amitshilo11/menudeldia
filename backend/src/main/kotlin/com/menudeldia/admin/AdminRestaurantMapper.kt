@@ -9,10 +9,9 @@ internal fun Restaurant.toAdminDto() = AdminRestaurantDto(
     cuisineType = cuisineType,
     cuisineEmoji = cuisineEmoji,
     menuPrice = menuPrice,
-    priceAlt = priceAlt,
     menuDetailsRaw = menuDetailsRaw,
-    includesDessert = includesDessert,
-    includesDrink = includesDrink,
+    vegetarianOptions = vegetarianOptions,
+    glutenFreeOptions = glutenFreeOptions,
     daysFrom = daysFrom,
     daysTo = daysTo,
     excludedDay = excludedDay,
@@ -48,10 +47,9 @@ internal fun Restaurant.applyAdminUpdate(body: AdminRestaurantUpdate) {
     cuisineType = body.cuisineType?.blankToNull()
     cuisineEmoji = body.cuisineEmoji?.blankToNull()
     menuPrice = body.menuPrice
-    priceAlt = body.priceAlt?.blankToNull()
     menuDetailsRaw = body.menuDetailsRaw?.blankToNull()
-    includesDessert = body.includesDessert
-    includesDrink = body.includesDrink
+    vegetarianOptions = body.vegetarianOptions
+    glutenFreeOptions = body.glutenFreeOptions
     daysFrom = body.daysFrom?.blankToNull()
     daysTo = body.daysTo?.blankToNull()
     excludedDay = body.excludedDay?.blankToNull()
@@ -67,8 +65,8 @@ internal fun Restaurant.applyAdminUpdate(body: AdminRestaurantUpdate) {
 
 /** Tuple of every CSV-mapped field — equality means CSV doesn't need to be rewritten. */
 internal fun Restaurant.csvSignature() = listOf(
-    name, cuisineType, menuPrice, priceAlt, menuDetailsRaw,
-    includesDessert, includesDrink, daysFrom, daysTo, excludedDay,
+    name, cuisineType, menuPrice, menuDetailsRaw,
+    vegetarianOptions, glutenFreeOptions, daysFrom, daysTo, excludedDay,
     openTime, closeTime, phone, website, googleMapsUrl, googlePlaceId,
 )
 

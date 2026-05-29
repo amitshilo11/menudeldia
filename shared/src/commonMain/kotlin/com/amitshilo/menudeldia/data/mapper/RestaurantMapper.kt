@@ -46,6 +46,7 @@ fun RestaurantDto.toDomain(): Restaurant = Restaurant(
     },
     servesLunch = servesLunch,
     servesVegetarianFood = servesVegetarianFood,
+    servesGlutenFree = servesGlutenFree,
     outdoorSeating = outdoorSeating,
     reservable = reservable,
     takeout = takeout,

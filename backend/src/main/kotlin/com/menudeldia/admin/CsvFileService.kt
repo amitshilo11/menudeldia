@@ -62,11 +62,9 @@ class CsvFileService(
         r.name,
         r.cuisineType.orEmpty(),
         r.menuPrice?.toPlainString().orEmpty(),
-        r.priceAlt.orEmpty(),
         r.menuDetailsRaw.orEmpty(),
-        r.includesDessert.toCsvBool(),
-        r.includesDrink.toCsvBool(),
-        buildScheduleText(r),
+        r.vegetarianOptions.toYesNo(),
+        r.glutenFreeOptions.toYesNo(),
         r.daysFrom.orEmpty(),
         r.daysTo.orEmpty(),
         r.excludedDay.orEmpty(),
@@ -78,22 +76,7 @@ class CsvFileService(
         r.googlePlaceId.orEmpty(),
     )
 
-    /**
-     * Reconstructs the human-readable schedule text from the structured columns —
-     * matches the format used in the original CSV (e.g. "Mon–Fri 13:00–16:00",
-     * "Mon–Fri (excl. Wed) 13:00–16:00").
-     */
-    private fun buildScheduleText(r: Restaurant): String {
-        val from = r.daysFrom?.takeIf { it.isNotBlank() } ?: return ""
-        val to = r.daysTo?.takeIf { it.isNotBlank() } ?: return ""
-        val open = r.openTime?.takeIf { it.isNotBlank() } ?: return ""
-        val close = r.closeTime?.takeIf { it.isNotBlank() } ?: return ""
-        val excl = r.excludedDay?.takeIf { it.isNotBlank() }
-        val rangeText = "$from–$to" + if (excl != null) " (excl. $excl)" else ""
-        return "$rangeText $open–$close"
-    }
-
-    private fun Boolean.toCsvBool(): String = if (this) "True" else "False"
+    private fun Boolean.toYesNo(): String = if (this) "Yes" else "No"
 
     companion object {
         /** CSV column headers. Order is the wire contract with `restaurants_db_ready.csv`. */
@@ -102,11 +85,9 @@ class CsvFileService(
             "name",
             "cuisine_type",
             "price_normal",
-            "price_alt",
             "menu_details",
-            "includes_dessert",
-            "includes_drink",
-            "schedule",
+            "Vegeterian options",
+            "Gluten free options",
             "days_from",
             "days_to",
             "excluded_day",

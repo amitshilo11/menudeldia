@@ -51,5 +51,7 @@ class SeederService(
         priceIncludesEs = priceIncludesEs,
         priceIncludesEn = priceIncludesEn,
         weekdayHours = weekdayHours,
+        vegetarianOptions = vegetarianOptions,
+        glutenFreeOptions = glutenFreeOptions,
     )
 }
