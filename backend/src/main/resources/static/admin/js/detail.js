@@ -6,17 +6,17 @@ export let current = null;
 export function setCurrent(r) { current = r; }
 
 const EDITABLE_FIELDS = [
-  'name', 'cuisineType', 'cuisineEmoji', 'menuPrice', 'priceAlt',
-  'menuDetailsRaw', 'includesDessert', 'includesDrink',
+  'name', 'cuisineType', 'cuisineEmoji', 'menuPrice',
+  'menuDetailsRaw', 'vegetarianOptions', 'glutenFreeOptions',
   'daysFrom', 'daysTo', 'excludedDay', 'openTime', 'closeTime',
   'phone', 'website', 'googleMapsUrl', 'googlePlaceId', 'hidden',
 ];
-const BOOLEAN_FIELDS = new Set(['includesDessert', 'includesDrink', 'hidden']);
+const BOOLEAN_FIELDS = new Set(['vegetarianOptions', 'glutenFreeOptions', 'hidden']);
 const NUMERIC_FIELDS = new Set(['menuPrice']);
 const FORM_ID = {
   name: 'f-name', cuisineType: 'f-cuisine_type', cuisineEmoji: 'f-cuisine_emoji',
-  menuPrice: 'f-menu_price', priceAlt: 'f-price_alt', menuDetailsRaw: 'f-menu_details',
-  includesDessert: 'f-includes_dessert', includesDrink: 'f-includes_drink',
+  menuPrice: 'f-menu_price', menuDetailsRaw: 'f-menu_details',
+  vegetarianOptions: 'f-vegetarian_options', glutenFreeOptions: 'f-gluten_free_options',
   daysFrom: 'f-days_from', daysTo: 'f-days_to', excludedDay: 'f-excluded_day',
   openTime: 'f-open_time', closeTime: 'f-close_time',
   phone: 'f-phone', website: 'f-website', googleMapsUrl: 'f-google_maps_url',

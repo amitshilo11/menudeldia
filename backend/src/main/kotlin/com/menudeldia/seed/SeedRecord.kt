@@ -19,6 +19,8 @@ data class SeedRecord(
     val priceIncludesEs: List<String>,
     val priceIncludesEn: List<String>,
     val weekdayHours: Map<String, String>,
+    val vegetarianOptions: Boolean = false,
+    val glutenFreeOptions: Boolean = false,
     /** Optional Hebrew-source notes preserved for traceability. */
     val sourceNotesHe: String? = null,
 )

@@ -10,7 +10,7 @@ import json
 import sys
 from pathlib import Path
 
-CSV = Path(__file__).parent.parent.parent / "restaurants_db_ready.csv"
+CSV = Path(__file__).parent.parent / "data" / "restaurants_db_ready.csv"
 OUT = Path(__file__).parent.parent / "src/main/resources/seed.json"
 
 # ---------------------------------------------------------------------------
@@ -51,6 +51,14 @@ CUISINE_MAP = {
     "Vegetarian":              "MEDITERRANEAN",
     "Oyster Restaurant":       "MEDITERRANEAN",
     "French-Catalan, Bistro":  "MEDITERRANEAN",
+    "Argentinian":             "OTHER",
+    "Brunch":                  "OTHER",
+    "Burgers":                 "OTHER",
+    "Colombian":               "OTHER",
+    "Ecuadorian":              "OTHER",
+    "Peruvian":                "OTHER",
+    "Venezuelan":              "OTHER",
+    "Gluten-Free":             "OTHER",
 }
 
 CUISINE_EMOJI = {
@@ -166,17 +174,22 @@ with open(str(CSV), newline="", encoding="utf-8") as f:
         website  = row["website"].strip() or None
         phone    = row["phone"].strip() or None
 
+        vegetarian_options = row.get("Vegeterian options", "").strip().lower() == "yes"
+        gluten_free_options = row.get("Gluten free options", "").strip().lower() == "yes"
+
         record = {
-            "name":            name,
-            "googlePlaceId":   place_id,
-            "phone":           phone,
-            "website":         website,
-            "menuPrice":       menu_price,
-            "cuisineType":     cuisine,
-            "cuisineEmoji":    emoji,
-            "priceIncludesEs": es_list,
-            "priceIncludesEn": en_list,
-            "weekdayHours":    weekday_hours,
+            "name":               name,
+            "googlePlaceId":      place_id,
+            "phone":              phone,
+            "website":            website,
+            "menuPrice":          menu_price,
+            "cuisineType":        cuisine,
+            "cuisineEmoji":       emoji,
+            "priceIncludesEs":    es_list,
+            "priceIncludesEn":    en_list,
+            "weekdayHours":       weekday_hours,
+            "vegetarianOptions":  vegetarian_options,
+            "glutenFreeOptions":  gluten_free_options,
         }
         records.append(record)
         print(f"  [{len(records):3d}] {name:42s}  {cuisine:15s}  {menu_price}€")

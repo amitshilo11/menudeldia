@@ -45,6 +45,6 @@ data class AppProperties(
      * when the backend is launched from the project root (which `./gradlew :backend:bootRun` does).
      */
     data class CsvProps(
-        val path: String = "./restaurants_db_ready.csv",
+        val path: String = "./data/restaurants_db_ready.csv",
     )
 }

@@ -20,7 +20,7 @@ class JwtServiceTest {
                     jwtTtl = ttl,
                 ),
                 cors = AppProperties.CorsProps(listOf("http://localhost:3000")),
-                rateLimit = AppProperties.RateLimitProps(60, 10),
+                rateLimit = AppProperties.RateLimitProps(60, 10, 10),
             )
         )
 

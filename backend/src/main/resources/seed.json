@@ -23,7 +23,9 @@
       "wed": "12:30-16:00",
       "thu": "12:30-16:00",
       "fri": "12:30-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Lady babka",
@@ -51,7 +53,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Vabowl",
@@ -81,7 +85,9 @@
       "wed": "12:30-16:00",
       "thu": "12:30-16:00",
       "fri": "12:30-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Kobe",
@@ -111,7 +117,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Via granados",
@@ -139,7 +147,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "La Martina",
@@ -167,7 +177,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Oishii Remen",
@@ -194,35 +206,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
-  },
-  {
-    "name": "Pho Ha Noi",
-    "googlePlaceId": "ChIJ65tSeIyipBIRmnRniTpTLO0",
-    "phone": "+34930101092",
-    "website": "http://phohanoibarcelona.com/",
-    "menuPrice": 13.9,
-    "cuisineType": "ASIAN",
-    "cuisineEmoji": "🥢",
-    "priceIncludesEs": [
-      "Primero",
-      "Principal",
-      "Postre",
-      "Bebida"
-    ],
-    "priceIncludesEn": [
-      "Starter",
-      "Main",
-      "Dessert",
-      "Drink"
-    ],
-    "weekdayHours": {
-      "mon": "13:00-16:00",
-      "tue": "13:00-16:00",
-      "wed": "13:00-16:00",
-      "thu": "13:00-16:00",
-      "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Royal Nepal",
@@ -249,7 +235,9 @@
       "tue": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Mi Tierra",
@@ -275,7 +263,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": false
   },
   {
     "name": "Mi Tierra",
@@ -301,7 +291,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": false
   },
   {
     "name": "Can Tresó",
@@ -329,7 +321,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Balthazar",
@@ -357,7 +351,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Viet Kitchen",
@@ -385,7 +381,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Pho Viet",
@@ -413,7 +411,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Patron Restaurant and Lounge",
@@ -441,7 +441,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": false
   },
   {
     "name": "Cuina Panda",
@@ -469,7 +471,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "El Glop Gaudí",
@@ -497,7 +501,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Restaurante L'Encant Vegetarià",
@@ -523,7 +529,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Last Monkey",
@@ -545,7 +553,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Bar Casi",
@@ -573,7 +583,9 @@
       "wed": "12:00-15:30",
       "thu": "12:00-15:30",
       "fri": "12:00-15:30"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "El Glop Plaça Catalunya",
@@ -601,7 +613,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "MOSCADA",
@@ -629,7 +643,9 @@
       "wed": "12:30-16:00",
       "thu": "12:30-16:00",
       "fri": "12:30-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Casa Jaime",
@@ -657,7 +673,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "DosManos",
@@ -683,7 +701,9 @@
       "wed": "12:30-16:00",
       "thu": "12:30-16:00",
       "fri": "12:30-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": false
   },
   {
     "name": "kawamura",
@@ -710,7 +730,9 @@
       "tue": "13:30-16:00",
       "wed": "13:30-16:00",
       "fri": "13:30-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": false
   },
   {
     "name": "Hanoi Restaurant",
@@ -738,7 +760,9 @@
       "wed": "12:30-16:00",
       "thu": "12:30-16:00",
       "fri": "12:30-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "El Provisional",
@@ -766,7 +790,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Taller de Tapas | Rambla Catalunya",
@@ -794,7 +820,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Asian Ways",
@@ -822,7 +850,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Asian Ways",
@@ -849,7 +879,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Asian Ways",
@@ -877,7 +909,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Asian Ways",
@@ -905,7 +939,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Hanoi Umami",
@@ -933,7 +969,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Kayi Sushi",
@@ -959,7 +997,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Messié Sin Gluten Muntaner",
@@ -987,7 +1027,9 @@
       "wed": "12:00-16:00",
       "thu": "12:00-16:00",
       "fri": "12:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Le Romane",
@@ -1014,7 +1056,9 @@
       "tue": "13:00-15:30",
       "wed": "13:00-15:30",
       "thu": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Bodega Borràs",
@@ -1041,7 +1085,9 @@
       "tue": "13:00-15:30",
       "wed": "13:00-15:30",
       "thu": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Pampa Grill Asador Argentino",
@@ -1071,7 +1117,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Florida Grill",
@@ -1099,7 +1147,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": false
   },
   {
     "name": "Sol Argentini",
@@ -1125,7 +1175,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Shanti Restaurant",
@@ -1153,7 +1205,9 @@
       "wed": "13:00-15:00",
       "thu": "13:00-15:00",
       "fri": "13:00-15:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Collonut | Gelabert",
@@ -1180,7 +1234,9 @@
       "tue": "13:00-16:00",
       "wed": "13:00-16:00",
       "thu": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "El Casal Café Bar",
@@ -1208,7 +1264,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Elisabets",
@@ -1236,7 +1294,9 @@
       "wed": "13:00-15:45",
       "thu": "13:00-15:45",
       "fri": "13:00-15:45"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "El Sentit",
@@ -1263,7 +1323,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Brasas el Pera",
@@ -1290,7 +1352,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Perú En Tu Mesa",
@@ -1318,7 +1382,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Donde Siempre Restaurantes",
@@ -1345,7 +1411,9 @@
       "wed": "12:00-16:00",
       "thu": "12:00-16:00",
       "fri": "12:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "La Nova Farga",
@@ -1373,7 +1441,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": false
   },
   {
     "name": "Corea Street Food",
@@ -1399,7 +1469,9 @@
       "wed": "13:30-17:00",
       "thu": "13:30-17:00",
       "fri": "13:30-17:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Can Coca",
@@ -1427,7 +1499,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "La Piazzetta GranVia",
@@ -1455,7 +1529,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": false
   },
   {
     "name": "El Farolito L'H",
@@ -1483,7 +1559,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "A fuego lento",
@@ -1511,7 +1589,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Ristorante Meraviglioso",
@@ -1539,7 +1619,9 @@
       "wed": "13:00-15:15",
       "thu": "13:00-15:15",
       "fri": "13:00-15:15"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": false
   },
   {
     "name": "Le Bistrot Restaurant",
@@ -1567,7 +1649,9 @@
       "wed": "12:30-15:30",
       "thu": "12:30-15:30",
       "fri": "12:30-15:30"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Hakone Eixample",
@@ -1595,7 +1679,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "True burgers",
@@ -1621,7 +1707,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Cal ninot by rosi",
@@ -1650,7 +1738,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": true
   },
   {
     "name": "Fonda Can Portell",
@@ -1678,7 +1768,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Mannà",
@@ -1706,7 +1798,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Cuadro",
@@ -1732,7 +1826,9 @@
       "wed": "12:00-16:00",
       "thu": "12:00-16:00",
       "fri": "12:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Bistro Marina",
@@ -1760,7 +1856,9 @@
       "wed": "12:00-16:00",
       "thu": "12:00-16:00",
       "fri": "12:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Norai Raval",
@@ -1788,7 +1886,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "La Pau",
@@ -1815,7 +1915,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "La Pubilla",
@@ -1842,7 +1944,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Salero",
@@ -1870,7 +1974,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Ramen Shin",
@@ -1897,7 +2003,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Casa López",
@@ -1924,7 +2032,9 @@
       "wed": "13:15-15:45",
       "thu": "13:15-15:45",
       "fri": "13:15-15:45"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "En Ville | Gluten Free",
@@ -1952,7 +2062,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "La Cachapera",
@@ -1978,7 +2090,9 @@
       "wed": "12:30-16:00",
       "thu": "12:30-16:00",
       "fri": "12:30-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "La Cachapera villarroel",
@@ -2004,7 +2118,9 @@
       "wed": "12:30-16:00",
       "thu": "12:30-16:00",
       "fri": "12:30-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "La Cachapera",
@@ -2030,7 +2146,9 @@
       "wed": "12:30-16:00",
       "thu": "12:30-16:00",
       "fri": "12:30-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Guixot",
@@ -2058,7 +2176,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "UMAMI ASIATICO",
@@ -2086,7 +2206,9 @@
       "wed": "12:30-16:30",
       "thu": "12:30-16:30",
       "fri": "12:30-16:30"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Alegoria",
@@ -2114,7 +2236,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Marinada Restaurant",
@@ -2142,7 +2266,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "La Pedreta",
@@ -2170,7 +2296,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "H83",
@@ -2196,7 +2324,9 @@
       "wed": "12:30-16:30",
       "thu": "12:30-16:30",
       "fri": "12:30-16:30"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Cierzo Restaurant",
@@ -2224,7 +2354,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "SUSHI SUN",
@@ -2250,7 +2382,9 @@
       "wed": "12:00-16:00",
       "thu": "12:00-16:00",
       "fri": "12:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Murivecchi",
@@ -2278,7 +2412,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Ramen master",
@@ -2304,7 +2440,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": false
   },
   {
     "name": "Kserol",
@@ -2332,7 +2470,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Tortuga Restaurante",
@@ -2358,7 +2498,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "El Tros de La Rambla",
@@ -2386,7 +2528,9 @@
       "wed": "12:00-16:00",
       "thu": "12:00-16:00",
       "fri": "12:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Cumpanamá",
@@ -2414,7 +2558,9 @@
       "wed": "13:00-17:00",
       "thu": "13:00-17:00",
       "fri": "13:00-17:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "La vietnamita - gracia",
@@ -2438,7 +2584,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "El manaba - aribau",
@@ -2466,7 +2614,9 @@
       "wed": "12:00-17:00",
       "thu": "12:00-17:00",
       "fri": "12:00-17:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": true
   },
   {
     "name": "El manaba",
@@ -2494,7 +2644,9 @@
       "wed": "12:00-17:00",
       "thu": "12:00-17:00",
       "fri": "12:00-17:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": true
   },
   {
     "name": "Noble barcelona",
@@ -2521,7 +2673,9 @@
       "wed": "13:00-15:00",
       "thu": "13:00-15:00",
       "fri": "13:00-15:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Labalabusta",
@@ -2549,7 +2703,9 @@
       "wed": "13:00-15:45",
       "thu": "13:00-15:45",
       "fri": "13:00-15:45"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Can culleretes",
@@ -2576,7 +2732,9 @@
       "wed": "13:00-15:00",
       "thu": "13:00-15:00",
       "fri": "13:00-15:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Inti&Chaska",
@@ -2604,7 +2762,9 @@
       "wed": "13:00-15:45",
       "thu": "13:00-15:45",
       "fri": "13:00-15:45"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Inti&Chaska",
@@ -2632,7 +2792,9 @@
       "wed": "13:00-15:45",
       "thu": "13:00-15:45",
       "fri": "13:00-15:45"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "petit muu",
@@ -2660,7 +2822,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Flamant",
@@ -2688,7 +2852,9 @@
       "wed": "13:00-15:45",
       "thu": "13:00-15:45",
       "fri": "13:00-15:45"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Market Cuina Fresca",
@@ -2716,7 +2882,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Pueblo libre",
@@ -2742,7 +2910,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Hosomaki Sants",
@@ -2768,7 +2938,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Algrano Bistro | Tamarit",
@@ -2795,7 +2967,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Motomaki & sushi",
@@ -2819,7 +2993,9 @@
       "wed": "12:15-16:00",
       "thu": "12:15-16:00",
       "fri": "12:15-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Lamalva",
@@ -2847,7 +3023,9 @@
       "wed": "13:00-17:00",
       "thu": "13:00-17:00",
       "fri": "13:00-17:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "GYOJASANG Korean BBQ & Bar",
@@ -2871,35 +3049,9 @@
       "wed": "13:00-15:30",
       "thu": "13:00-15:30",
       "fri": "13:00-15:30"
-    }
-  },
-  {
-    "name": "Riko's",
-    "googlePlaceId": "ChIJXTdhPjujpBIRcAYGcOvM9iU",
-    "phone": "+34933657587",
-    "website": "https://pollosrikos.com/",
-    "menuPrice": 14.9,
-    "cuisineType": "OTHER",
-    "cuisineEmoji": "🍽️",
-    "priceIncludesEs": [
-      "Primero",
-      "Principal",
-      "Postre",
-      "Bebida"
-    ],
-    "priceIncludesEn": [
-      "Starter",
-      "Main",
-      "Dessert",
-      "Drink"
-    ],
-    "weekdayHours": {
-      "mon": "13:00-17:00",
-      "tue": "13:00-17:00",
-      "wed": "13:00-17:00",
-      "thu": "13:00-17:00",
-      "fri": "13:00-17:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "ÁNDELE Gràcia",
@@ -2927,7 +3079,9 @@
       "wed": "12:30-16:00",
       "thu": "12:30-16:00",
       "fri": "12:30-16:00"
-    }
+    },
+    "vegetarianOptions": false,
+    "glutenFreeOptions": false
   },
   {
     "name": "Alsur Café | Llúria",
@@ -2953,7 +3107,9 @@
       "wed": "13:00-15:00",
       "thu": "13:00-15:00",
       "fri": "13:00-15:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": false
   },
   {
     "name": "Más Que Sushi",
@@ -2975,7 +3131,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Más Que Sushi | Ronda Universitat",
@@ -2997,7 +3155,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Más Que Sushi Viladomat",
@@ -3019,7 +3179,9 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   },
   {
     "name": "Más Que Sushi - St. Gervasi",
@@ -3041,6 +3203,8 @@
       "wed": "13:00-16:00",
       "thu": "13:00-16:00",
       "fri": "13:00-16:00"
-    }
+    },
+    "vegetarianOptions": true,
+    "glutenFreeOptions": true
   }
 ]

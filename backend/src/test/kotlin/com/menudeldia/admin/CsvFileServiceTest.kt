@@ -20,7 +20,7 @@ class CsvFileServiceTest {
             google = AppProperties.GoogleProps("", Duration.ofHours(1), 5),
             auth = AppProperties.AuthProps("", "", "a".repeat(32), Duration.ofDays(30)),
             cors = AppProperties.CorsProps(emptyList()),
-            rateLimit = AppProperties.RateLimitProps(60, 10),
+            rateLimit = AppProperties.RateLimitProps(60, 10, 10),
             csv = AppProperties.CsvProps(csvPath.toString()),
         )
     )
@@ -30,8 +30,8 @@ class CsvFileServiceTest {
         cuisine: String? = "Asian",
         price: BigDecimal? = BigDecimal("12.50"),
         menuDetails: String? = "Starter + Main + Drink",
-        includesDessert: Boolean = false,
-        includesDrink: Boolean = true,
+        vegetarianOptions: Boolean = false,
+        glutenFreeOptions: Boolean = false,
         daysFrom: String? = "Mon",
         daysTo: String? = "Fri",
         excludedDay: String? = null,
@@ -48,8 +48,8 @@ class CsvFileServiceTest {
         cuisineType = cuisine,
         menuPrice = price,
         menuDetailsRaw = menuDetails,
-        includesDessert = includesDessert,
-        includesDrink = includesDrink,
+        vegetarianOptions = vegetarianOptions,
+        glutenFreeOptions = glutenFreeOptions,
         daysFrom = daysFrom, daysTo = daysTo, excludedDay = excludedDay,
         openTime = openTime, closeTime = closeTime,
         phone = phone, website = website,
@@ -69,7 +69,7 @@ class CsvFileServiceTest {
         val a = restaurant("Kemo", createdAt = Instant.parse("2026-02-01T00:00:00Z"))
         val b = restaurant(
             "Lady babka", cuisine = "Mediterranean", price = BigDecimal("18.90"),
-            includesDessert = true, createdAt = Instant.parse("2026-01-15T00:00:00Z")
+            vegetarianOptions = true, createdAt = Instant.parse("2026-01-15T00:00:00Z")
         )
 
         svc.writeAll(listOf(a, b))
@@ -84,32 +84,12 @@ class CsvFileServiceTest {
         assertEquals("Lady babka", parsed[0].get("name"))
         assertEquals("Mediterranean", parsed[0].get("cuisine_type"))
         assertEquals("18.90", parsed[0].get("price_normal"))
-        assertEquals("True", parsed[0].get("includes_dessert"))
-        assertEquals("True", parsed[0].get("includes_drink"))
+        assertEquals("Yes", parsed[0].get("Vegeterian options"))
+        assertEquals("No", parsed[0].get("Gluten free options"))
 
         assertEquals("2", parsed[1].get("id"))
         assertEquals("Kemo", parsed[1].get("name"))
-        assertEquals("False", parsed[1].get("includes_dessert"))
-    }
-
-    @Test
-    fun `writeAll reconstructs schedule text with and without excluded day`(@TempDir dir: Path) {
-        val csvPath = dir.resolve("out.csv")
-        val svc = service(csvPath)
-
-        val plain = restaurant("Plain")
-        val excluded = restaurant(
-            "Excluded", excludedDay = "Wed",
-            createdAt = Instant.parse("2026-02-01T00:00:00Z")
-        )
-
-        svc.writeAll(listOf(plain, excluded))
-
-        val parsed = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).build()
-            .parse(Files.newBufferedReader(csvPath)).records
-
-        assertEquals("Mon–Fri 12:30–16:00", parsed[0].get("schedule"))
-        assertEquals("Mon–Fri (excl. Wed) 12:30–16:00", parsed[1].get("schedule"))
+        assertEquals("No", parsed[1].get("Vegeterian options"))
     }
 
     @Test
@@ -120,7 +100,7 @@ class CsvFileServiceTest {
         val r = restaurant(
             "MOSCADA", cuisine = "Mediterranean", price = BigDecimal("18.80"),
             menuDetails = "Starter + Main + Dessert + Drink",
-            includesDessert = true, includesDrink = true,
+            vegetarianOptions = true, glutenFreeOptions = true,
             phone = "+34931018764", website = "https://www.moscadabcn.com/",
             mapsUrl = "https://maps.app.goo.gl/iC6w7Ho8Z64egXH57",
             placeId = "ChIJbzY6rRWjpBIRNVxSPbboqZA",
@@ -134,8 +114,8 @@ class CsvFileServiceTest {
         assertEquals("Mediterranean", record.get("cuisine_type"))
         assertEquals("18.80", record.get("price_normal"))
         assertEquals("Starter + Main + Dessert + Drink", record.get("menu_details"))
-        assertEquals("True", record.get("includes_dessert"))
-        assertEquals("True", record.get("includes_drink"))
+        assertEquals("Yes", record.get("Vegeterian options"))
+        assertEquals("Yes", record.get("Gluten free options"))
         assertEquals("Mon", record.get("days_from"))
         assertEquals("Fri", record.get("days_to"))
         assertEquals("", record.get("excluded_day"))

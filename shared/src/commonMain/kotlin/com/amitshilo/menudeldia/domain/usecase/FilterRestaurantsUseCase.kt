@@ -15,6 +15,7 @@ class FilterRestaurantsUseCase {
         }
         if (state.openNowOnly) result = result.filter { it.todayHasMenu }
         if (state.isVegan) result = result.filter { it.servesVegetarianFood }
+        if (state.isGlutenFree) result = result.filter { it.servesGlutenFree }
         state.minPrice?.let { min ->
             result = result.filter { it.menuPrice != null && it.menuPrice >= min }
         }
