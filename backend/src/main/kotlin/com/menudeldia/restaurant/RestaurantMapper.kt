@@ -58,7 +58,8 @@ class RestaurantMapper {
                 )
             },
             servesLunch = entity.servesLunch,
-            servesVegetarianFood = entity.servesVegetarian,
+            servesVegetarianFood = entity.vegetarianOptions || entity.servesVegetarian,
+            servesGlutenFree = entity.glutenFreeOptions,
             outdoorSeating = entity.outdoorSeating,
             reservable = entity.reservable,
             takeout = entity.takeout,
@@ -101,7 +102,8 @@ class RestaurantMapper {
             cuisineType = entity.cuisineType,
             openingHours = buildOpeningHours(entity.weekdayHours),
             rating = entity.rating,
-            servesVegetarianFood = entity.servesVegetarian,
+            servesVegetarianFood = entity.vegetarianOptions || entity.servesVegetarian,
+            servesGlutenFree = entity.glutenFreeOptions,
             distanceMeters = if (originLat != null && originLng != null)
                 GeoUtils.haversineMeters(originLat, originLng, entity.lat, entity.lng) else null,
             isOpenNow = isOpenNow(entity.weekdayHours, now),

@@ -1,11 +1,13 @@
 package com.amitshilo.menudeldia.ui.map.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -50,15 +52,24 @@ fun RestaurantCard(
             .fillMaxWidth()
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer
-            else MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 4.dp else 1.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 2.dp else 0.dp),
+        border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.outlineVariant),
     ) {
-        Row(
-            modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (isSelected) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(4.dp)
+                        .background(MaterialTheme.colorScheme.primary),
+                )
+            }
+            Row(
+                modifier = Modifier.padding(12.dp).weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
             Thumbnail(
                 thumbnailUrl = restaurant.thumbnailUrl,
                 contentDescription = restaurant.name,
@@ -97,10 +108,6 @@ fun RestaurantCard(
                         Spacer(Modifier.width(6.dp))
                         Text(text = "🌱", fontSize = 12.sp)
                     }
-                    if (restaurant.isGlutenFreeFriendly) {
-                        Spacer(Modifier.width(6.dp))
-                        Text(text = "🌾", fontSize = 12.sp)
-                    }
                     restaurant.distanceMeters?.let { dist ->
                         Spacer(Modifier.width(6.dp))
                         Text(
@@ -129,6 +136,7 @@ fun RestaurantCard(
                         )
                     }
                 }
+            }
             }
         }
     }

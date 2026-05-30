@@ -4,14 +4,17 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,6 +54,16 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 private val ListSheetPeekHeight = 160.dp
+
+@Composable
+private fun SheetDragHandle() {
+    Box(
+        modifier = Modifier
+            .padding(vertical = 10.dp)
+            .size(width = 36.dp, height = 4.dp)
+            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.6f), CircleShape),
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -142,7 +155,10 @@ private fun MapContent(
             BottomSheetScaffold(
                 scaffoldState = scaffoldState,
                 sheetPeekHeight = sheetPeekHeight,
-                sheetDragHandle = { BottomSheetDefaults.DragHandle() },
+                sheetContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                sheetShape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+                sheetShadowElevation = 8.dp,
+                sheetDragHandle = { SheetDragHandle() },
                 sheetContent = {
                     RestaurantListSheet(
                         restaurants = state.restaurants,
@@ -164,6 +180,7 @@ private fun MapContent(
                     recenterTrigger = recenterTrigger,
                     onRestaurantSelected = { onEvent(MapEvent.SelectRestaurant(it)) },
                     onMapTap = { onEvent(MapEvent.ClearSelection) },
+                    onMapIdle = { lat, lng, radius -> onEvent(MapEvent.MapIdle(lat, lng, radius)) },
                     modifier = Modifier.fillMaxSize(),
                     bottomPadding = mapBottomPadding,
                 )

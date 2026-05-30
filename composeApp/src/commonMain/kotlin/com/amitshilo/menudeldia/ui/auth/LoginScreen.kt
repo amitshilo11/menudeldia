@@ -26,9 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.amitshilo.menudeldia.getPlatform
+import com.amitshilo.menudeldia.ui.theme.MenuTheme
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.login_apple
 import menudeldia.composeapp.generated.resources.login_google
@@ -50,6 +52,25 @@ fun LoginScreen(vm: LoginViewModel = viewModel { LoginViewModel() }) {
         }
     }
 
+    LoginContent(
+        isLoading = isLoading,
+        showAppleButton = getPlatform().name.contains("ios", ignoreCase = true),
+        snackbarHost = snackbarHost,
+        onGoogleSignIn = vm::signInWithGoogle,
+        onAppleSignIn = vm::signInWithApple,
+        onContinueAsGuest = vm::continueAsGuest,
+    )
+}
+
+@Composable
+private fun LoginContent(
+    isLoading: Boolean,
+    showAppleButton: Boolean,
+    snackbarHost: SnackbarHostState,
+    onGoogleSignIn: () -> Unit,
+    onAppleSignIn: () -> Unit,
+    onContinueAsGuest: () -> Unit,
+) {
     Scaffold(snackbarHost = { SnackbarHost(snackbarHost) }) { padding ->
         Column(
             modifier = Modifier
@@ -84,25 +105,57 @@ fun LoginScreen(vm: LoginViewModel = viewModel { LoginViewModel() }) {
                 CircularProgressIndicator(modifier = Modifier.size(48.dp))
             } else {
                 Button(
-                    onClick = vm::signInWithGoogle,
+                    onClick = onGoogleSignIn,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(stringResource(Res.string.login_google))
                 }
-                if (getPlatform().name.contains("ios", ignoreCase = true)) {
+                if (showAppleButton) {
                     Spacer(Modifier.height(12.dp))
                     OutlinedButton(
-                        onClick = vm::signInWithApple,
+                        onClick = onAppleSignIn,
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         Text(stringResource(Res.string.login_apple))
                     }
                 }
                 Spacer(Modifier.height(24.dp))
-                TextButton(onClick = vm::continueAsGuest) {
+                TextButton(onClick = onContinueAsGuest) {
                     Text(stringResource(Res.string.login_guest))
                 }
             }
         }
+    }
+}
+
+// ── Previews ────────────────────────────────────────────────────────────────
+
+@PreviewLightDark
+@Composable
+private fun PreviewLoginIdle() {
+    MenuTheme {
+        LoginContent(
+            isLoading = false,
+            showAppleButton = false,
+            snackbarHost = SnackbarHostState(),
+            onGoogleSignIn = {},
+            onAppleSignIn = {},
+            onContinueAsGuest = {},
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewLoginLoading() {
+    MenuTheme {
+        LoginContent(
+            isLoading = true,
+            showAppleButton = false,
+            snackbarHost = SnackbarHostState(),
+            onGoogleSignIn = {},
+            onAppleSignIn = {},
+            onContinueAsGuest = {},
+        )
     }
 }

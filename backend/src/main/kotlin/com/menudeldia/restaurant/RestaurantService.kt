@@ -1,7 +1,7 @@
 package com.menudeldia.restaurant
 
 import com.menudeldia.places.PlacesEnrichmentService
-import com.menudeldia.restaurant.dto.RestaurantDto
+import com.menudeldia.restaurant.dto.RestaurantDetailResult
 import com.menudeldia.restaurant.dto.RestaurantQuery
 import com.menudeldia.restaurant.dto.RestaurantSummaryDto
 import org.springframework.stereotype.Service
@@ -16,38 +16,35 @@ class RestaurantService(
 ) {
 
     fun findNearby(query: RestaurantQuery): List<RestaurantSummaryDto> {
-        var rows = repo.findNearby(query.lat, query.lng, query.radius)
+        val radius = query.radius.coerceIn(50, 10_000)
+        val qLower = query.q?.takeIf { it.isNotBlank() }?.lowercase()
 
-        if (!query.q.isNullOrBlank()) {
-            val q = query.q.lowercase()
-            rows = rows.filter {
-                it.name.lowercase().contains(q) ||
-                        it.cuisineType?.lowercase()?.contains(q) == true
-            }
-        }
-        if (query.cuisine.isNotEmpty()) {
-            rows = rows.filter { it.cuisineType in query.cuisine }
-        }
-        if (query.minPrice != null) {
-            val min = BigDecimal.valueOf(query.minPrice)
-            rows = rows.filter { r -> r.menuPrice == null || r.menuPrice!! >= min }
-        }
-        if (query.maxPrice != null) {
-            val max = BigDecimal.valueOf(query.maxPrice)
-            rows = rows.filter { r -> r.menuPrice == null || r.menuPrice!! <= max }
-        }
+        val rows = repo.findNearby(
+            lat = query.lat,
+            lng = query.lng,
+            radiusMeters = radius,
+            qPattern = qLower?.let { "%$it%" },
+            minPrice = query.minPrice?.let(BigDecimal::valueOf),
+            maxPrice = query.maxPrice?.let(BigDecimal::valueOf),
+        )
 
         enrichment.refreshIfStale(rows)
 
         val dtos = rows.map { mapper.toSummaryDto(it, query.lat, query.lng) }
-
+            .let { list ->
+                if (query.cuisine.isNotEmpty()) list.filter { it.cuisineType in query.cuisine } else list
+            }
         return if (query.openNow) dtos.filter { it.isOpenNow } else dtos
     }
 
-    fun byId(id: UUID): RestaurantDto {
+    fun byId(id: UUID): RestaurantDetailResult {
         val entity =
             repo.findById(id).orElseThrow { NoSuchElementException("Restaurant not found: $id") }
         enrichment.refreshIfStale(listOf(entity))
-        return mapper.toDto(entity)
+        val version = (entity.placesFetchedAt ?: entity.updatedAt).toEpochMilli()
+        return RestaurantDetailResult(
+            dto = mapper.toDto(entity),
+            etag = "\"$version-${entity.updatedAt.toEpochMilli()}\"",
+        )
     }
 }

@@ -68,6 +68,38 @@ class Restaurant(
     @Column(name = "menu_price")
     var menuPrice: BigDecimal? = null,
 
+    /** Original `menu_details` text from CSV — e.g. "Starter + Main + Dessert + Drink". */
+    @Column(name = "menu_details_raw", columnDefinition = "TEXT")
+    var menuDetailsRaw: String? = null,
+
+    @Column(name = "vegetarian_options", nullable = false)
+    var vegetarianOptions: Boolean = false,
+
+    @Column(name = "gluten_free_options", nullable = false)
+    var glutenFreeOptions: Boolean = false,
+
+    @Column(name = "days_from", length = 8)
+    var daysFrom: String? = null,
+
+    @Column(name = "days_to", length = 8)
+    var daysTo: String? = null,
+
+    @Column(name = "excluded_day", length = 8)
+    var excludedDay: String? = null,
+
+    @Column(name = "open_time", length = 5)
+    var openTime: String? = null,
+
+    @Column(name = "close_time", length = 5)
+    var closeTime: String? = null,
+
+    @Column(name = "google_maps_url", length = 512)
+    var googleMapsUrl: String? = null,
+
+    /** Admin-toggled visibility flag. Hidden rows are excluded from the public feed. */
+    @Column(nullable = false)
+    var hidden: Boolean = false,
+
     @Column(nullable = false)
     var currency: String = "EUR",
 
@@ -122,6 +154,10 @@ class Restaurant(
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "photo_names", columnDefinition = "jsonb")
     var photoNames: List<String> = emptyList(),
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "available_photo_names", columnDefinition = "jsonb")
+    var availablePhotoNames: List<String> = emptyList(),
 
     @Column(name = "places_fetched_at")
     var placesFetchedAt: Instant? = null,
