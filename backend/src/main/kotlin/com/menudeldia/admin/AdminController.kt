@@ -28,11 +28,21 @@ class AdminController(
     }
 
     @PostMapping("/enrich")
-    fun forceEnrich(@RequestParam(defaultValue = "50") limit: Int): Map<String, Any> {
+    fun forceEnrich(@RequestParam(defaultValue = "50") limit: Int): Map<String, Any?> {
         log.info("Admin: triggering enrichment for up to {} stale restaurants", limit)
-        val count = enrichment.enrichAllStale(limit)
-        log.info("Admin: enrichment triggered for {} restaurants", count)
-        return mapOf("enriched" to count)
+        val stats = enrichment.enrichAllStale(limit)
+        log.info(
+            "Admin: enrichment done — attempted={} succeeded={} failed={}",
+            stats.attempted,
+            stats.succeeded,
+            stats.failed
+        )
+        return mapOf(
+            "attempted" to stats.attempted,
+            "succeeded" to stats.succeeded,
+            "failed" to stats.failed,
+            "failureReason" to stats.failureReason,
+        )
     }
 
     @GetMapping("/circuit-breakers")
