@@ -6,7 +6,8 @@ import androidx.compose.ui.unit.Dp
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.location.UserLocation
 
-expect @Composable fun MapView(
+@Composable
+expect fun MapView(
     restaurants: List<Restaurant>,
     selectedRestaurantId: String?,
     userLocation: UserLocation?,
