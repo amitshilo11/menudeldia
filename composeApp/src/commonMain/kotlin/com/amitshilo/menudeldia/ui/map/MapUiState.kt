@@ -10,6 +10,7 @@ sealed class MapUiState {
         val allRestaurants: List<Restaurant>,
         val selectedRestaurant: Restaurant? = null,
         val filterState: SearchFilterState = SearchFilterState(),
+        val isLoading: Boolean = false,
     ) : MapUiState()
     data class Error(val message: String) : MapUiState()
 }
