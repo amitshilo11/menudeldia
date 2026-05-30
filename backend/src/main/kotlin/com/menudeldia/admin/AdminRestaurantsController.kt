@@ -50,7 +50,13 @@ class AdminRestaurantsController(
         val saved = repo.save(newRow)
         log.info("Admin created restaurant {} ({})", saved.name, saved.id)
         csv.writeAll(repo.findAll())
-        enrichInBackground(saved.id)
+        Thread({
+            try {
+                repo.findById(saved.id).ifPresent { enrichment.refresh(it) }
+            } catch (ex: Exception) {
+                log.warn("Background enrich failed for {}: {}", saved.id, ex.message)
+            }
+        }, "admin-enrich-${saved.id}").apply { isDaemon = true }.start()
         return saved.toAdminDto()
     }
 
@@ -84,10 +90,14 @@ class AdminRestaurantsController(
     }
 
     @PostMapping("/{id}/enrich")
-    fun enrich(@PathVariable id: UUID): ResponseEntity<Void> {
-        repo.findById(id).orElse(null) ?: throw notFound(id)
-        enrichInBackground(id)
-        return ResponseEntity.accepted().build()
+    fun enrich(@PathVariable id: UUID): Map<String, Any?> {
+        val row = repo.findById(id).orElse(null) ?: throw notFound(id)
+        val error = enrichment.refresh(row)
+        return if (error == null) {
+            mapOf("ok" to true, "message" to null)
+        } else {
+            mapOf("ok" to false, "message" to error)
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -102,19 +112,4 @@ class AdminRestaurantsController(
 
     private fun notFound(id: UUID): ResponseStatusException =
         ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found: $id")
-
-    /**
-     * Fire-and-forget enrichment refresh on a daemon thread. Photo curation is preserved by
-     * [PlacesEnrichmentService.refresh]. Errors are logged, not surfaced — the save itself
-     * already succeeded.
-     */
-    private fun enrichInBackground(id: UUID) {
-        Thread({
-            try {
-                repo.findById(id).ifPresent { enrichment.refresh(it) }
-            } catch (ex: Exception) {
-                log.warn("Background enrich failed for {}: {}", id, ex.message)
-            }
-        }, "admin-enrich-$id").apply { isDaemon = true }.start()
-    }
 }

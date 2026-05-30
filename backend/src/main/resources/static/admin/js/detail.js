@@ -109,44 +109,29 @@ export async function onSaveDetail() {
 export async function onEnrich() {
   if (!current) return;
   const btn = $('enrich-btn');
-  const savedAt = current.updatedAt;
   btn.disabled = true; btn.classList.add('loading');
+  toast('Enriching…', 'info');
 
   const resp = await apiFetch(`/api/v1/admin/restaurants/${current.id}/enrich`, { method: 'POST' });
+  btn.disabled = false; btn.classList.remove('loading');
   if (!resp.ok) {
-    btn.disabled = false; btn.classList.remove('loading');
     toast('Enrich failed: ' + resp.status, 'err');
     return;
   }
-  toast('Enriching…', 'info');
-  _pollEnrichment(current.id, savedAt, btn);
-}
-
-function _pollEnrichment(id, savedAt, btn) {
-  const MAX = 30_000, TICK = 2_000, start = Date.now();
-  const tick = async () => {
-    if (Date.now() - start > MAX) {
-      btn.disabled = false; btn.classList.remove('loading');
-      toast('Enrichment running in background', 'info');
-      return;
-    }
-    const pr = await apiFetch(`/api/v1/admin/restaurants/${id}`, { cache: 'no-store' });
-    if (pr.ok) {
-      const fresh = await pr.json();
-      if (fresh.updatedAt !== savedAt) {
-        current = fresh;
-        window.dispatchEvent(new CustomEvent('restaurant-saved', { detail: current }));
-        setSelectedPhotos([...(current.photoNames || [])]);
-        hydrateDetailForm(current);
-        renderPhotos(current);
-        btn.disabled = false; btn.classList.remove('loading');
-        toast('Enriched!', 'ok');
-        return;
-      }
-    }
-    setTimeout(tick, TICK);
-  };
-  setTimeout(tick, TICK);
+  const result = await resp.json();
+  if (!result.ok) {
+    toast('Enrich failed: ' + result.message, 'err');
+    return;
+  }
+  const pr = await apiFetch(`/api/v1/admin/restaurants/${current.id}`, { cache: 'no-store' });
+  if (pr.ok) {
+    current = await pr.json();
+    window.dispatchEvent(new CustomEvent('restaurant-saved', { detail: current }));
+    setSelectedPhotos([...(current.photoNames || [])]);
+    hydrateDetailForm(current);
+    renderPhotos(current);
+  }
+  toast('Enriched!', 'ok');
 }
 
 export async function onDelete() {
