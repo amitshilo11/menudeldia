@@ -36,7 +36,6 @@ class MapViewModel : ViewModel() {
     private val _filterState = MutableStateFlow(SearchFilterState())
     private val _loadError = MutableStateFlow<String?>(null)
     private val _isLoading = MutableStateFlow(true)
-    private val _isFirstLoad = MutableStateFlow(true)
     private val _userLocation = MutableStateFlow<UserLocation?>(null)
 
     private val _effects = Channel<MapEffect>(Channel.BUFFERED)
@@ -48,20 +47,23 @@ class MapViewModel : ViewModel() {
     private var mapIdleJob: Job? = null
 
     val uiState: StateFlow<MapUiState> = combine(
-        combine(_isLoading, _isFirstLoad) { loading, firstLoad -> loading && firstLoad },
+        _isLoading,
         _loadError,
         _allRestaurants,
         _selectedRestaurant,
         _filterState,
-    ) { isInitialLoading, error, all, selected, filter ->
+    ) { loading, error, all, selected, filter ->
         when {
-            isInitialLoading -> MapUiState.Loading
+            // Only block the whole screen with an error if we have nothing to show.
             error != null && all.isEmpty() -> MapUiState.Error(error)
+            // Otherwise render the map immediately — markers/list fill in as data
+            // arrives, and `isLoading` drives a lightweight inline indicator.
             else -> MapUiState.Success(
                 restaurants = filterUseCase(all, filter),
                 allRestaurants = all,
                 selectedRestaurant = selected,
                 filterState = filter,
+                isLoading = loading,
             )
         }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, MapUiState.Loading)
@@ -131,7 +133,6 @@ class MapViewModel : ViewModel() {
                 _loadError.value = e.message ?: "Failed to load restaurants"
             } finally {
                 _isLoading.value = false
-                _isFirstLoad.value = false
             }
         }
     }

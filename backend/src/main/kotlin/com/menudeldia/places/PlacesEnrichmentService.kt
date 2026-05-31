@@ -53,32 +53,48 @@ class PlacesEnrichmentService(
         return found
     }
 
-    /** Fetches all stale rows (up to [limit]) and enriches them. Returns the count processed. */
-    fun enrichAllStale(limit: Int = 50): Int {
+    data class EnrichmentStats(
+        val attempted: Int,
+        val succeeded: Int,
+        val failed: Int,
+        val failureReason: String? = null,
+    )
+
+    /** Fetches all stale rows (up to [limit]) and enriches them. Returns stats including failures. */
+    fun enrichAllStale(limit: Int = 50): EnrichmentStats {
         val resolved = findMissingPlaceIds(limit)
         if (resolved > 0) log.info("Resolved {} missing place IDs before enrichment", resolved)
         val cutoff = Instant.now().minus(props.google.placesCacheTtl)
         val rows = repo.findStale(cutoff, PageRequest.of(0, limit))
-        rows.forEach { refresh(it) }
-        return rows.size
+        var succeeded = 0
+        var failed = 0
+        var lastFailReason: String? = null
+        rows.forEach { row ->
+            val err = refresh(row)
+            if (err == null) succeeded++ else {
+                failed++; lastFailReason = err
+            }
+        }
+        return EnrichmentStats(
+            attempted = rows.size,
+            succeeded = succeeded,
+            failed = failed,
+            failureReason = lastFailReason
+        )
     }
 
-    fun refreshIfStale(rows: List<Restaurant>) {
-        val now = Instant.now()
-        rows.filter { isStale(it, now) && inFlight.getIfPresent(it.id) == null }
-            .sortedBy { it.placesFetchedAt ?: Instant.EPOCH }
-            .take(props.google.placesRefreshBatchSize)
-            .forEach { refresh(it) }
-    }
-
-    /** Synchronous enrichment of a single restaurant. Safe to call from admin endpoints after save. */
-    fun refresh(row: Restaurant) {
+    /**
+     * Synchronous enrichment of a single restaurant.
+     * Returns null on success, or an error message on failure.
+     */
+    fun refresh(row: Restaurant): String? {
         val placeId = row.googlePlaceId ?: run {
-            log.warn("Skipping enrichment for {} ({}) — no google_place_id", row.name, row.id)
-            return
+            val msg = "No google_place_id set"
+            log.warn("Skipping enrichment for {} ({}) — {}", row.name, row.id, msg)
+            return msg
         }
         inFlight.put(row.id, true)
-        try {
+        return try {
             val details = client.placeDetails(placeId)
             applyDetails(row, details)
             val allNames = details.photos.map { it.name }
@@ -91,15 +107,18 @@ class PlacesEnrichmentService(
             row.updatedAt = Instant.now()
             repo.save(row)
             log.info("Enriched restaurant {} ({})", row.name, row.id)
+            null
         } catch (ex: PlacesException) {
             val rootCause = generateSequence(ex as Throwable) { it.cause }.last()
+            val msg = rootCause.message ?: ex.message ?: "Unknown Places error"
             log.warn(
                 "Enrichment failed for {} ({}): {} | root: {}",
                 row.name,
                 row.id,
                 ex.message,
-                rootCause.message
+                msg
             )
+            msg
         }
     }
 
@@ -142,10 +161,6 @@ class PlacesEnrichmentService(
         details.reservable?.let { row.reservable = it }
         details.takeout?.let { row.takeout = it }
     }
-
-    private fun isStale(row: Restaurant, now: Instant): Boolean =
-        row.placesFetchedAt == null ||
-                row.placesFetchedAt!! < now.minus(props.google.placesCacheTtl)
 
     companion object {
         // Matches SeederService — placeholder used before the first Google enrichment fills real coords.

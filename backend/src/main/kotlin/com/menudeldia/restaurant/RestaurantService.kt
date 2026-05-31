@@ -1,6 +1,5 @@
 package com.menudeldia.restaurant
 
-import com.menudeldia.places.PlacesEnrichmentService
 import com.menudeldia.restaurant.dto.RestaurantDetailResult
 import com.menudeldia.restaurant.dto.RestaurantQuery
 import com.menudeldia.restaurant.dto.RestaurantSummaryDto
@@ -12,7 +11,6 @@ import java.util.UUID
 class RestaurantService(
     private val repo: RestaurantRepository,
     private val mapper: RestaurantMapper,
-    private val enrichment: PlacesEnrichmentService,
 ) {
 
     fun findNearby(query: RestaurantQuery): List<RestaurantSummaryDto> {
@@ -28,8 +26,6 @@ class RestaurantService(
             maxPrice = query.maxPrice?.let(BigDecimal::valueOf),
         )
 
-        enrichment.refreshIfStale(rows)
-
         val dtos = rows.map { mapper.toSummaryDto(it, query.lat, query.lng) }
             .let { list ->
                 if (query.cuisine.isNotEmpty()) list.filter { it.cuisineType in query.cuisine } else list
@@ -40,7 +36,6 @@ class RestaurantService(
     fun byId(id: UUID): RestaurantDetailResult {
         val entity =
             repo.findById(id).orElseThrow { NoSuchElementException("Restaurant not found: $id") }
-        enrichment.refreshIfStale(listOf(entity))
         val version = (entity.placesFetchedAt ?: entity.updatedAt).toEpochMilli()
         return RestaurantDetailResult(
             dto = mapper.toDto(entity),
