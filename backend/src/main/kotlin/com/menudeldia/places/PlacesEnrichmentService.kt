@@ -83,14 +83,6 @@ class PlacesEnrichmentService(
         )
     }
 
-    fun refreshIfStale(rows: List<Restaurant>) {
-        val now = Instant.now()
-        rows.filter { isStale(it, now) && inFlight.getIfPresent(it.id) == null }
-            .sortedBy { it.placesFetchedAt ?: Instant.EPOCH }
-            .take(props.google.placesRefreshBatchSize)
-            .forEach { refresh(it) }
-    }
-
     /**
      * Synchronous enrichment of a single restaurant.
      * Returns null on success, or an error message on failure.
@@ -169,10 +161,6 @@ class PlacesEnrichmentService(
         details.reservable?.let { row.reservable = it }
         details.takeout?.let { row.takeout = it }
     }
-
-    private fun isStale(row: Restaurant, now: Instant): Boolean =
-        row.placesFetchedAt == null ||
-                row.placesFetchedAt!! < now.minus(props.google.placesCacheTtl)
 
     companion object {
         // Matches SeederService — placeholder used before the first Google enrichment fills real coords.
