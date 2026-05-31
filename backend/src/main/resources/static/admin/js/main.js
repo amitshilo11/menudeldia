@@ -6,6 +6,10 @@ import {
   onSaveDetail, onEnrich, onDelete,
   openAddModal, closeAddModal, onCreateSubmit,
 } from './detail.js';
+import {
+  openSettings, onEnrichAll, onFindPlaceIds,
+  loadCircuitBreakers, onResetCircuitBreakers,
+} from './settings.js';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const $ = id => document.getElementById(id);
@@ -20,6 +24,12 @@ function _bindEvents() {
   $('login-form').addEventListener('submit', _onLoginSubmit);
   $('logout-btn').addEventListener('click', _onLogout);
   $('back-btn').addEventListener('click', () => { showSection('list-section'); renderTable(); });
+  $('settings-btn').addEventListener('click', openSettings);
+  $('settings-back-btn').addEventListener('click', () => { showSection('list-section'); renderTable(); });
+  $('enrich-all-btn').addEventListener('click', onEnrichAll);
+  $('find-place-ids-btn').addEventListener('click', onFindPlaceIds);
+  $('cb-refresh-btn').addEventListener('click', loadCircuitBreakers);
+  $('cb-reset-btn').addEventListener('click', onResetCircuitBreakers);
   $('add-btn').addEventListener('click', openAddModal);
   $('add-cancel').addEventListener('click', closeAddModal);
   $('add-form').addEventListener('submit', onCreateSubmit);

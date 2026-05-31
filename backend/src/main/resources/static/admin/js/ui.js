@@ -31,7 +31,7 @@ export function toast(msg, type = 'info') {
 }
 
 export function showSection(id) {
-  for (const s of ['login-section', 'list-section', 'detail-section']) {
+  for (const s of ['login-section', 'list-section', 'detail-section', 'settings-section']) {
     const el = $(s);
     if (el) el.hidden = s !== id;
   }

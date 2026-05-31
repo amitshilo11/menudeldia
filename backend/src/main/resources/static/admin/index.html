@@ -55,6 +55,7 @@
       </div>
       <div class="toolbar-right">
         <span class="result-count" id="result-count"></span>
+        <button id="settings-btn">⚙ Settings</button>
         <button class="primary" id="add-btn">+ Add</button>
       </div>
     </div>
@@ -208,6 +209,43 @@
       </div>
       <button class="danger" id="delete-btn">Delete</button>
     </div>
+  </div>
+
+  <!-- ── Admin settings ── -->
+  <div hidden id="settings-section">
+    <div class="detail-header">
+      <button id="settings-back-btn">← Back</button>
+      <h2>Admin Settings</h2>
+    </div>
+
+    <section class="panel">
+      <h4 class="group-label">Enrichment</h4>
+      <p class="hint">Pull fresh Google Places data for restaurants enriched longest ago (or never).
+        Runs oldest-first.</p>
+      <div class="action-bar-left">
+        <button class="primary" id="enrich-all-btn">Enrich restaurants</button>
+        <span class="hint" id="enrich-all-result"></span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h4 class="group-label">Place IDs</h4>
+      <p class="hint">Find and set a Google Place ID for restaurants that don't have one yet.</p>
+      <div class="action-bar-left">
+        <button id="find-place-ids-btn">Find missing Place IDs</button>
+        <span class="hint" id="find-place-ids-result"></span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h4 class="group-label">Circuit breakers</h4>
+      <p class="hint">Google Places resilience status.</p>
+      <div class="action-bar-left">
+        <button id="cb-refresh-btn">Refresh</button>
+        <button class="danger" id="cb-reset-btn">Reset all</button>
+      </div>
+      <pre id="cb-status" style="margin-top:12px;font-size:12px;overflow:auto"></pre>
+    </section>
   </div>
 
   <!-- ── Add modal ── -->
