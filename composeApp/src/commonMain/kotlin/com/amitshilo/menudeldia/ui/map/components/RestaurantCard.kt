@@ -1,21 +1,25 @@
 package com.amitshilo.menudeldia.ui.map.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,9 +38,11 @@ import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
 import com.amitshilo.menudeldia.util.format
 import com.amitshilo.menudeldia.util.isCurrentlyOpen
+import com.amitshilo.menudeldia.util.todayHours
+import kotlinx.datetime.LocalTime
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.closed_now
-import menudeldia.composeapp.generated.resources.daily_menu
+import menudeldia.composeapp.generated.resources.no_menu_today_short
 import menudeldia.composeapp.generated.resources.open_now
 import org.jetbrains.compose.resources.stringResource
 
@@ -47,96 +53,181 @@ fun RestaurantCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val isOpen = restaurant.isCurrentlyOpen()
+    val closeTime = todayHours(restaurant.openingHours)?.closeTime
+
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 2.dp else 0.dp),
-        border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.outlineVariant),
+        modifier = modifier.fillMaxWidth().clickable(onClick = onClick),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+        elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 3.dp else 1.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            if (isSelected) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(4.dp)
-                        .background(MaterialTheme.colorScheme.primary),
-                )
-            }
-            Row(
-                modifier = Modifier.padding(12.dp).weight(1f),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-            Thumbnail(
-                thumbnailUrl = restaurant.thumbnailUrl,
-                contentDescription = restaurant.name,
+        Row(modifier = Modifier.height(IntrinsicSize.Min)) {
+            Box(
                 modifier = Modifier
-                    .size(64.dp)
-                    .clip(RoundedCornerShape(8.dp)),
+                    .fillMaxHeight()
+                    .width(4.dp)
+                    .background(
+                        if (restaurant.todayHasMenu) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.surfaceContainerHighest,
+                    ),
             )
-            Spacer(Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
+            Column(modifier = Modifier.padding(12.dp).weight(1f)) {
+                Row(
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Thumbnail(
+                        thumbnailUrl = restaurant.thumbnailUrl,
+                        contentDescription = restaurant.name,
+                        modifier = Modifier.size(76.dp).clip(RoundedCornerShape(12.dp)),
+                    )
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Text(
+                                text = restaurant.name,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f).padding(end = 8.dp),
+                            )
+                            if (restaurant.todayHasMenu) {
+                                restaurant.menuPrice?.let { price -> CardPriceBadge(price) }
+                            } else {
+                                NoMenuBadge()
+                            }
+                        }
+                        Spacer(Modifier.height(4.dp))
+                        InfoRow(restaurant, isOpen, closeTime)
+                        Spacer(Modifier.height(6.dp))
+                        CardChipsRow(restaurant)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CardPriceBadge(price: Double) {
+    Surface(
+        shape = RoundedCornerShape(999.dp),
+        color = MaterialTheme.colorScheme.primary,
+    ) {
+        Text(
+            text = "€${price.format(2)}",
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+        )
+    }
+}
+
+@Composable
+private fun NoMenuBadge() {
+    Surface(
+        shape = RoundedCornerShape(999.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+    ) {
+        Text(
+            text = stringResource(Res.string.no_menu_today_short),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+        )
+    }
+}
+
+@Composable
+private fun InfoRow(restaurant: Restaurant, isOpen: Boolean, closeTime: LocalTime?) {
+    val statusText = when {
+        isOpen && closeTime != null ->
+            "Open · ${closeTime.hour.toString().padStart(2, '0')}:${
+                closeTime.minute.toString().padStart(2, '0')
+            }"
+
+        isOpen -> stringResource(Res.string.open_now)
+        else -> stringResource(Res.string.closed_now)
+    }
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        restaurant.rating?.let { rating ->
+            Text(
+                "★",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = " ${rating.format(1)}",
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            restaurant.userRatingCount?.let { count ->
                 Text(
-                    text = restaurant.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Text(
-                    text = restaurant.address,
+                    text = " ($count)",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
                 )
-                Spacer(Modifier.padding(top = 4.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    OpenBadge(isOpen = restaurant.isCurrentlyOpen())
-                    restaurant.cuisineType?.let { cuisine ->
-                        Spacer(Modifier.width(6.dp))
-                        Text(
-                            text = cuisine,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                    if (restaurant.servesVegetarianFood) {
-                        Spacer(Modifier.width(6.dp))
-                        Text(text = "🌱", fontSize = 12.sp)
-                    }
-                    restaurant.distanceMeters?.let { dist ->
-                        Spacer(Modifier.width(6.dp))
-                        Text(
-                            text = "·  " + if (dist < 1000) "${dist.toInt()}m"
-                            else "${(dist / 1000.0).format(1)}km",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                }
-                val menuPrice = restaurant.menuPrice
-                if (restaurant.todayHasMenu && menuPrice != null) {
-                    Spacer(Modifier.padding(top = 4.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = stringResource(Res.string.daily_menu),
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.onSurface,
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = "€${menuPrice.format(2)}",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
-                }
             }
+            Text(
+                " · ",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.outlineVariant
+            )
+        }
+        restaurant.distanceMeters?.let { meters ->
+            Text(
+                text = "${(meters / 1000.0).format(1)} km",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+                " · ",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.outlineVariant
+            )
+        }
+        Box(
+            modifier = Modifier
+                .size(7.dp)
+                .background(
+                    color = if (isOpen) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outlineVariant,
+                    shape = CircleShape,
+                ),
+        )
+        Spacer(Modifier.width(4.dp))
+        Text(
+            text = statusText,
+            style = MaterialTheme.typography.bodySmall,
+            color = if (isOpen) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@Composable
+private fun CardChipsRow(restaurant: Restaurant) {
+    val chips = buildList {
+        restaurant.cuisineType?.let { add("${restaurant.cuisineEmoji ?: "🍽"} $it") }
+        if (restaurant.servesVegetarianFood) add("🌱 Vegan")
+    }
+    if (chips.isEmpty()) return
+    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        chips.forEach { label ->
+            Surface(
+                shape = RoundedCornerShape(999.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant,
+            ) {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                )
             }
         }
     }
@@ -160,29 +251,8 @@ private fun Thumbnail(
             modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer),
             contentAlignment = Alignment.Center,
         ) {
-            Text(text = "🍽", fontSize = 24.sp)
+            Text(text = "🍽", fontSize = 28.sp)
         }
-    }
-}
-
-@Composable
-private fun OpenBadge(isOpen: Boolean) {
-    val bg = if (isOpen) MaterialTheme.colorScheme.tertiaryContainer
-    else MaterialTheme.colorScheme.surfaceVariant
-    val fg = if (isOpen) MaterialTheme.colorScheme.onTertiaryContainer
-    else MaterialTheme.colorScheme.onSurfaceVariant
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(bg)
-            .padding(horizontal = 8.dp, vertical = 2.dp),
-    ) {
-        Text(
-            text = stringResource(if (isOpen) Res.string.open_now else Res.string.closed_now),
-            style = MaterialTheme.typography.labelSmall,
-            color = fg,
-            fontWeight = FontWeight.SemiBold,
-        )
     }
 }
 
@@ -204,6 +274,9 @@ private fun PreviewRestaurantCardDefault() {
 @Composable
 private fun PreviewRestaurantCardNoMenu() {
     MenuTheme {
-        RestaurantCard(restaurant = previewRestaurantNoMenu, isSelected = false, onClick = {})
+        RestaurantCard(
+            restaurant = previewRestaurantNoMenu,
+            isSelected = false,
+            onClick = {})
     }
 }

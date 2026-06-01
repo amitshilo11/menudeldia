@@ -52,7 +52,7 @@ internal fun DetailCardInfoSection(
 ) {
     val uriLauncher = rememberUriLauncher()
 
-    Column(modifier = Modifier.padding(start = 8.dp, end = 16.dp, top = 12.dp, bottom = 16.dp)) {
+    Column(modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)) {
         NameDistanceRow(restaurant)
         Spacer(Modifier.height(4.dp))
         StarRatingRow(restaurant)
