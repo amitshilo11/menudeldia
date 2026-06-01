@@ -90,15 +90,14 @@ private fun LoginContent(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
             )
-            Spacer(Modifier.height(12.dp))
             Text(
                 text = stringResource(Res.string.login_subtitle),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 8.dp),
             )
-            Spacer(Modifier.height(48.dp))
+            Spacer(Modifier.height(82.dp))
 
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.size(48.dp))
@@ -118,7 +117,6 @@ private fun LoginContent(
                         Text(stringResource(Res.string.login_apple))
                     }
                 }
-                Spacer(Modifier.height(24.dp))
                 TextButton(onClick = onContinueAsGuest) {
                     Text(stringResource(Res.string.login_guest))
                 }
