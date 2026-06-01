@@ -1,7 +1,6 @@
 package com.amitshilo.menudeldia.ui.map.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -9,10 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -21,11 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.domain.model.SearchFilterState
 import com.amitshilo.menudeldia.ui.preview.previewRestaurant
@@ -38,9 +34,11 @@ import menudeldia.composeapp.generated.resources.empty_filtered
 import menudeldia.composeapp.generated.resources.empty_filtered_sub
 import menudeldia.composeapp.generated.resources.empty_no_menus
 import menudeldia.composeapp.generated.resources.empty_no_menus_sub
+import menudeldia.composeapp.generated.resources.placeholder_no_result_found
 import menudeldia.composeapp.generated.resources.recenter
 import menudeldia.composeapp.generated.resources.restaurants_nearby
 import menudeldia.composeapp.generated.resources.restaurants_of_total
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -106,15 +104,15 @@ private fun EmptySheetState(
             .padding(horizontal = 24.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Box(
+        Image(
+            painter = painterResource(Res.drawable.placeholder_no_result_found),
+            contentDescription = null,
+            contentScale = ContentScale.Fit,
             modifier = Modifier
-                .size(72.dp)
-                .clip(RoundedCornerShape(36.dp))
-                .background(MaterialTheme.colorScheme.primaryContainer),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(text = "🍽", fontSize = 36.sp)
-        }
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .height(160.dp),
+        )
         Spacer(Modifier.height(16.dp))
         Text(
             text = stringResource(if (isFiltered) Res.string.empty_filtered else Res.string.empty_no_menus),
