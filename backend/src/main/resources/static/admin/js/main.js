@@ -47,6 +47,14 @@ function _bindEvents() {
     });
   });
 
+  window.addEventListener('admin-token-rejected', () => {
+    localStorage.removeItem(TOKEN_KEY);
+    clearToken();
+    $('logout-btn').hidden = true;
+    showSection('login-section');
+    toast('Session expired — please log in again', 'err');
+  });
+
   window.addEventListener('restaurant-saved', e => {
     const arr = [...restaurants];
     const idx = arr.findIndex(r => r.id === e.detail.id);

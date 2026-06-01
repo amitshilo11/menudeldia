@@ -43,6 +43,9 @@ class RateLimitFilter(
 
         val bucket: Bucket? = when {
             path.startsWith("${ApiPaths.V1}/auth/") -> authBuckets.get(ip)
+            path.startsWith("${ApiPaths.V1}/admin/") && path.contains("/available-photos/") -> readBuckets.get(
+                ip
+            )
             path.startsWith("${ApiPaths.V1}/admin/") -> adminBuckets.get(ip)
             path.startsWith("${ApiPaths.V1}/restaurants") ||
                     path.startsWith("${ApiPaths.V1}/me") -> readBuckets.get(ip)

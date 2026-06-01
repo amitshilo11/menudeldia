@@ -107,6 +107,28 @@ class PlacesEnrichmentService(
             row.updatedAt = Instant.now()
             repo.save(row)
             log.info("Enriched restaurant {} ({})", row.name, row.id)
+            val ratings = row.userRatingCount ?: 0
+            if (ratings > 0 && allNames.isEmpty())
+                log.warn(
+                    "PLACES_CONTENT_MISSING photos — {} ratings but Google returned 0 photos for {} ({}). Check API key entitlements in Google Cloud Console.",
+                    ratings,
+                    row.name,
+                    row.id
+                )
+            if (ratings > 0 && details.reviews.isEmpty())
+                log.warn(
+                    "PLACES_CONTENT_MISSING reviews — {} ratings but Google returned 0 reviews for {} ({}). Check API key entitlements in Google Cloud Console.",
+                    ratings,
+                    row.name,
+                    row.id
+                )
+            if (ratings > 0 && details.editorialSummary == null && details.generativeSummary == null)
+                log.warn(
+                    "PLACES_CONTENT_MISSING summaries — {} ratings but Google returned no editorial/AI summary for {} ({}). Check API key entitlements in Google Cloud Console.",
+                    ratings,
+                    row.name,
+                    row.id
+                )
             null
         } catch (ex: PlacesException) {
             val rootCause = generateSequence(ex as Throwable) { it.cause }.last()

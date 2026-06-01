@@ -101,9 +101,29 @@ function _setupDrag() {
   });
 }
 
-async function _loadBlob(img, name, restaurantId, availIdx) {
-  const url = await _fetchBlob(name, restaurantId, availIdx);
-  if (url) img.src = url;
+let _inflight = 0;
+const _photoQueue = [];
+
+function _drainQueue() {
+  while (_inflight < 3 && _photoQueue.length > 0) {
+    const { img, name, restaurantId, availIdx } = _photoQueue.shift();
+    _inflight++;
+    _fetchBlob(name, restaurantId, availIdx).then(url => {
+      if (url) img.src = url;
+      _inflight--;
+      _drainQueue();
+    });
+  }
+}
+
+function _loadBlob(img, name, restaurantId, availIdx) {
+  if (blobCache.has(name)) {
+    const url = blobCache.get(name);
+    if (url) img.src = url;
+    return;
+  }
+  _photoQueue.push({ img, name, restaurantId, availIdx });
+  _drainQueue();
 }
 
 async function _fetchBlob(name, restaurantId, availIdx) {

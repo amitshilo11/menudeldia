@@ -62,7 +62,7 @@ class GooglePlacesClient(private val props: AppProperties) {
         }
     }
 
-    @CircuitBreaker(name = "googlePlaces", fallbackMethod = "photoBytesFallback")
+    @CircuitBreaker(name = "googlePhotos", fallbackMethod = "photoBytesFallback")
     fun photoBytes(photoName: String, maxHeightPx: Int): ByteArray {
         return try {
             val mediaResponse = http.get()

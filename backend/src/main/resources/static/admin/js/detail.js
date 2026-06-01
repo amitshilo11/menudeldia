@@ -1,5 +1,5 @@
 import { apiFetch } from './api.js';
-import { toast, confirmDialog, showSection } from './ui.js';
+import { toast, confirmDialog, alertDialog, showSection } from './ui.js';
 import { selectedPhotos, setSelectedPhotos, renderPhotos } from './photos.js';
 
 export let current = null;
@@ -115,12 +115,12 @@ export async function onEnrich() {
   const resp = await apiFetch(`/api/v1/admin/restaurants/${current.id}/enrich`, { method: 'POST' });
   btn.disabled = false; btn.classList.remove('loading');
   if (!resp.ok) {
-    toast('Enrich failed: ' + resp.status, 'err');
+    alertDialog(`Enrichment failed (HTTP ${resp.status}).\n\nThe Google Places data was not updated.`);
     return;
   }
   const result = await resp.json();
   if (!result.ok) {
-    toast('Enrich failed: ' + result.message, 'err');
+    alertDialog(`Enrichment failed:\n\n${result.message}\n\nThe Google Places data was not updated.`);
     return;
   }
   const pr = await apiFetch(`/api/v1/admin/restaurants/${current.id}`, { cache: 'no-store' });
