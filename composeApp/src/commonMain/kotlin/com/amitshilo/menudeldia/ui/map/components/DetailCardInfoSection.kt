@@ -15,7 +15,6 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -46,10 +45,10 @@ internal fun DetailCardInfoSection(
 ) {
     val uriLauncher = rememberUriLauncher()
 
-    Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp)) {
+    Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 14.dp)) {
         Text(
             text = restaurant.name,
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             maxLines = 1,
         )
@@ -156,7 +155,7 @@ private fun ActionButtonRow(
     onCall: (String) -> Unit,
     onMoreInfo: () -> Unit,
 ) {
-    val buttonShape = RoundedCornerShape(12.dp)
+    val buttonShape = RoundedCornerShape(16.dp)
     val buttonPadding = PaddingValues(horizontal = 6.dp, vertical = 8.dp)
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -171,7 +170,7 @@ private fun ActionButtonRow(
             ActionButtonContent(Res.drawable.my_location, Res.string.get_directions)
         }
         restaurant.phone?.let { ph ->
-            OutlinedButton(
+            FilledTonalButton(
                 onClick = { onCall(ph) },
                 modifier = Modifier.weight(1f),
                 shape = buttonShape,
@@ -180,7 +179,7 @@ private fun ActionButtonRow(
                 ActionButtonContent(Res.drawable.phone, Res.string.call_restaurant)
             }
         }
-        OutlinedButton(
+        FilledTonalButton(
             onClick = onMoreInfo,
             modifier = Modifier.weight(1f),
             shape = buttonShape,

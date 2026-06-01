@@ -41,14 +41,13 @@ import org.jetbrains.compose.resources.stringResource
 internal fun DetailCardPhotoSection(
     restaurant: Restaurant,
     onDismiss: () -> Unit,
-    shape: RoundedCornerShape,
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(220.dp)
             .padding(12.dp)
-            .clip(shape),
+            .clip(RoundedCornerShape(20.dp)),
     ) {
         if (restaurant.thumbnailUrl != null) {
             AsyncImage(
@@ -84,7 +83,6 @@ internal fun DetailCardPhotoSection(
         restaurant.rating?.let { rating ->
             RatingBadge(
                 rating = rating,
-                shape = shape,
                 modifier = Modifier.align(Alignment.TopStart).padding(12.dp),
             )
         }
@@ -92,7 +90,6 @@ internal fun DetailCardPhotoSection(
         OpenStatusBadge(
             isOpen = restaurant.isCurrentlyOpen(),
             hasMenuToday = restaurant.todayHasMenu,
-            shape = shape,
             modifier = Modifier.align(Alignment.BottomStart).padding(12.dp),
         )
 
@@ -117,8 +114,8 @@ internal fun DetailCardPhotoSection(
 }
 
 @Composable
-private fun RatingBadge(rating: Double, shape: RoundedCornerShape, modifier: Modifier = Modifier) {
-    Surface(shape = shape, color = MaterialTheme.colorScheme.surface, modifier = modifier) {
+private fun RatingBadge(rating: Double, modifier: Modifier = Modifier) {
+    Surface(shape = RoundedCornerShape(24.dp), color = MaterialTheme.colorScheme.surface, modifier = modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -139,7 +136,6 @@ private fun RatingBadge(rating: Double, shape: RoundedCornerShape, modifier: Mod
 private fun OpenStatusBadge(
     isOpen: Boolean,
     hasMenuToday: Boolean,
-    shape: RoundedCornerShape,
     modifier: Modifier = Modifier,
 ) {
     val label = when {
@@ -151,7 +147,7 @@ private fun OpenStatusBadge(
         if (isOpen) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.surfaceVariant
     val textColor =
         if (isOpen) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onSurfaceVariant
-    Surface(shape = shape, color = bgColor, modifier = modifier) {
+    Surface(shape = RoundedCornerShape(24.dp), color = bgColor, modifier = modifier) {
         Text(
             text = label,
             style = MaterialTheme.typography.labelMedium,

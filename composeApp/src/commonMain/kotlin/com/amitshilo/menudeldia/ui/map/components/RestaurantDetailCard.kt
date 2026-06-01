@@ -17,7 +17,7 @@ import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
 
 private val cardShape =
-    RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp, bottomStart = 20.dp, bottomEnd = 20.dp)
+    RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp, bottomStart = 20.dp, bottomEnd = 20.dp)
 
 @Composable
 fun RestaurantDetailCard(
@@ -38,7 +38,6 @@ fun RestaurantDetailCard(
             DetailCardPhotoSection(
                 restaurant = restaurant,
                 onDismiss = onDismiss,
-                shape = cardShape,
             )
             DetailCardInfoSection(
                 restaurant = restaurant,

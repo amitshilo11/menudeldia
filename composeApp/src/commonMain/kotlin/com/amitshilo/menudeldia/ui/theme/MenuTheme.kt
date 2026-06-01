@@ -6,28 +6,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 // ── Palette ──────────────────────────────────────────────────────────────────
-// Primary  — Vibrant Saffron Orange (Appetising, high-energy)
-private val Orange10 = Color(0xFF3E0E00)
-private val Orange20 = Color(0xFF601A00)
-private val Orange30 = Color(0xFF872900)
-private val Orange40 = Color(0xFFD46642)   // Primary Light (Vibrant)
-private val Orange80 = Color(0xFFFFB74D)   // Primary Dark (Soft Glow)
-private val Orange90 = Color(0xFFFFDCC0)
-private val Orange95 = Color(0xFFFFEDDE)
+// Source of truth: menudiz-design/colors_and_type.css
+
+// Primary — Terracotta (Warm, Mediterranean, appetising)
+private val Orange10 = Color(0xFF361509)
+private val Orange20 = Color(0xFF5A2615)
+private val Orange30 = Color(0xFF8A3D24)
+private val Orange40 = Color(0xFFD46642)   // primary
+private val Orange80 = Color(0xFFF0A582)   // inversePrimary / dark-mode primary
+private val Orange90 = Color(0xFFF8D4BF)   // primaryContainer
+private val Orange95 = Color(0xFFFCEBE0)
 
 // Secondary — Mocha Brown (Indulgent, warm)
 private val Brown10 = Color(0xFF2D1600)
 private val Brown20 = Color(0xFF4D2700)
 private val Brown30 = Color(0xFF6F3B00)
-private val Brown40 = Color(0xFF6D4C41)   // Secondary Light
+private val Brown40 = Color(0xFF6D4C41)   // secondary
 private val Brown80 = Color(0xFFD7CCC8)
-private val Brown90 = Color(0xFFEFEBE9)
+private val Brown90 = Color(0xFFEFEBE9)   // secondaryContainer
 
-// Tertiary — Fresh Basil Green (Freshness, healthy)
+// Tertiary — Basil Green (Freshness, healthy)
 private val Green10 = Color(0xFF002107)
-private val Green40 = Color(0xFF388E3C)   // Tertiary Light
+private val Green40 = Color(0xFF388E3C)   // tertiary — "open now" badge
 private val Green80 = Color(0xFFA5D6A7)
-private val Green90 = Color(0xFFE8F5E9)
+private val Green90 = Color(0xFFE8F5E9)   // tertiaryContainer
 
 // Neutrals — Warm Cream & Greige
 private val Neutral10 = Color(0xFF1F1B16)
@@ -42,11 +44,11 @@ private val NeutralVar80 = Color(0xFFD6C3B7)
 private val NeutralVar90 = Color(0xFFF3DFD2)
 
 // Surface containers — warm cream tiers (prevents M3 from deriving lavender defaults)
-private val CreamCard = Color(0xFFFFF8EE) // surfaceContainerLow — list cards
-private val CreamSheet = Color(0xFFFBF3E8)
-private val CreamHighest = Color(0xFFF2E6D4)
+private val CreamCard    = Color(0xFFFFF8EE) // surfaceContainerLow
+private val CreamSheet   = Color(0xFFFBF3E8) // surfaceContainer
+private val CreamHighest = Color(0xFFF2E6D4) // surfaceContainerHighest
 
-private val ErrorRed = Color(0xFFBA1A1A)
+private val ErrorRed          = Color(0xFFBA1A1A)
 private val ErrorRedContainer = Color(0xFFFFDAD6)
 
 // ── Light scheme ─────────────────────────────────────────────────────────────
@@ -137,6 +139,7 @@ fun MenuTheme(
 ) {
     MaterialTheme(
         colorScheme = LightColors,
+        typography = MenuTypography,
         content = content,
     )
 }
