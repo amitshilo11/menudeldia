@@ -6,4 +6,5 @@ import androidx.compose.runtime.Composable
 actual fun rememberLocationState(): LocationState = LocationState(
     hasPermission = false,
     location = null,
+    requestPermission = {},
 )

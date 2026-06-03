@@ -26,7 +26,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,6 +43,8 @@ import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.login_apple
 import menudeldia.composeapp.generated.resources.login_google
 import menudeldia.composeapp.generated.resources.login_guest
+import menudeldia.composeapp.generated.resources.login_privacy_link
+import menudeldia.composeapp.generated.resources.login_privacy_prefix
 import menudeldia.composeapp.generated.resources.login_subtitle
 import menudeldia.composeapp.generated.resources.logo_wide
 import org.jetbrains.compose.resources.painterResource
@@ -121,8 +130,35 @@ private fun LoginContent(
                     Text(stringResource(Res.string.login_guest))
                 }
             }
+
+            Spacer(Modifier.height(24.dp))
+            PrivacyDisclaimerText()
         }
     }
+}
+
+@Composable
+private fun PrivacyDisclaimerText() {
+    val prefix = stringResource(Res.string.login_privacy_prefix)
+    val link = stringResource(Res.string.login_privacy_link)
+    val linkColor = MaterialTheme.colorScheme.primary
+    val textColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val annotated = buildAnnotatedString {
+        withStyle(SpanStyle(color = textColor)) { append(prefix) }
+        withLink(
+            LinkAnnotation.Url(
+                url = "https://menudiz.duckdns.org/privacy.html",
+                styles = TextLinkStyles(
+                    style = SpanStyle(color = linkColor, textDecoration = TextDecoration.Underline),
+                ),
+            )
+        ) { append(link) }
+    }
+    Text(
+        text = annotated,
+        style = MaterialTheme.typography.bodySmall,
+        textAlign = TextAlign.Center,
+    )
 }
 
 // ── Previews ────────────────────────────────────────────────────────────────

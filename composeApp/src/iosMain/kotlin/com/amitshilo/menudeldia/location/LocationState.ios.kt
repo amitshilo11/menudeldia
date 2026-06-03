@@ -55,7 +55,6 @@ actual fun rememberLocationState(): LocationState {
     LaunchedEffect(Unit) {
         manager.delegate = delegate
         manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        manager.requestWhenInUseAuthorization()
     }
 
     DisposableEffect(Unit) {
@@ -65,5 +64,9 @@ actual fun rememberLocationState(): LocationState {
         }
     }
 
-    return LocationState(hasPermission = hasPermission, location = location)
+    return LocationState(
+        hasPermission = hasPermission,
+        location = location,
+        requestPermission = { manager.requestWhenInUseAuthorization() },
+    )
 }

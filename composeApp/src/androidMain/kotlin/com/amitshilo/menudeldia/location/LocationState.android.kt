@@ -35,10 +35,6 @@ actual fun rememberLocationState(): LocationState {
         ActivityResultContracts.RequestPermission()
     ) { granted -> hasPermission = granted }
 
-    LaunchedEffect(Unit) {
-        if (!hasPermission) launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-    }
-
     LaunchedEffect(hasPermission) {
         if (hasPermission) {
             fusedClient.lastLocation.addOnSuccessListener { loc ->
@@ -47,5 +43,9 @@ actual fun rememberLocationState(): LocationState {
         }
     }
 
-    return LocationState(hasPermission = hasPermission, location = location)
+    return LocationState(
+        hasPermission = hasPermission,
+        location = location,
+        requestPermission = { launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION) },
+    )
 }
