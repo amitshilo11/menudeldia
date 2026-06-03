@@ -17,10 +17,6 @@ class SeederService(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    // Barcelona city center — used as placeholder until first Places enrichment sets real coords.
-    private val barcelonaLat = 41.3851
-    private val barcelonaLng = 2.1734
-
     @EventListener(ApplicationReadyEvent::class)
     fun seedIfEmpty() {
         if (repo.count() > 0) return
@@ -40,8 +36,9 @@ class SeederService(
 
     private fun SeedRecord.toRestaurant() = Restaurant(
         name = name,
-        lat = lat ?: barcelonaLat,
-        lng = lng ?: barcelonaLng,
+        lat = lat ?: 0.0,
+        lng = lng ?: 0.0,
+        hidden = lat == null || lng == null,
         googlePlaceId = googlePlaceId,
         phone = phone,
         website = website,

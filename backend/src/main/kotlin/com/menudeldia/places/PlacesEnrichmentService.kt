@@ -147,10 +147,11 @@ class PlacesEnrichmentService(
     private fun applyDetails(row: Restaurant, details: PlaceDetailsResponse) {
         // Admin-editable CSV fields: fill-when-empty only, so manual edits in the admin
         // portal are never silently overwritten by a refresh.
-        if (row.lat == BARCELONA_PLACEHOLDER_LAT && row.lng == BARCELONA_PLACEHOLDER_LNG) {
+        if (row.lat == PLACEHOLDER_LAT && row.lng == PLACEHOLDER_LNG) {
             details.location?.let {
                 row.lat = it.latitude
                 row.lng = it.longitude
+                row.hidden = false
             }
         }
         if (row.address.isNullOrBlank()) details.formattedAddress?.let { row.address = it }
@@ -185,8 +186,7 @@ class PlacesEnrichmentService(
     }
 
     companion object {
-        // Matches SeederService — placeholder used before the first Google enrichment fills real coords.
-        const val BARCELONA_PLACEHOLDER_LAT = 41.3851
-        const val BARCELONA_PLACEHOLDER_LNG = 2.1734
+        const val PLACEHOLDER_LAT = 0.0
+        const val PLACEHOLDER_LNG = 0.0
     }
 }

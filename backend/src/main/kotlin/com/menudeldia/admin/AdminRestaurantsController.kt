@@ -2,8 +2,8 @@ package com.menudeldia.admin
 
 import com.menudeldia.common.ApiPaths
 import com.menudeldia.places.PlacesEnrichmentService
-import com.menudeldia.places.PlacesEnrichmentService.Companion.BARCELONA_PLACEHOLDER_LAT
-import com.menudeldia.places.PlacesEnrichmentService.Companion.BARCELONA_PLACEHOLDER_LNG
+import com.menudeldia.places.PlacesEnrichmentService.Companion.PLACEHOLDER_LAT
+import com.menudeldia.places.PlacesEnrichmentService.Companion.PLACEHOLDER_LNG
 import com.menudeldia.restaurant.Restaurant
 import com.menudeldia.restaurant.RestaurantRepository
 import org.slf4j.LoggerFactory
@@ -43,8 +43,9 @@ class AdminRestaurantsController(
         require(name.isNotEmpty()) { "name required" }
         val newRow = Restaurant(
             name = name,
-            lat = BARCELONA_PLACEHOLDER_LAT,
-            lng = BARCELONA_PLACEHOLDER_LNG,
+            lat = PLACEHOLDER_LAT,
+            lng = PLACEHOLDER_LNG,
+            hidden = true,
             googlePlaceId = body.googlePlaceId?.trim()?.ifEmpty { null },
         )
         val saved = repo.save(newRow)
