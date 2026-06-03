@@ -4,6 +4,7 @@ import com.menudeldia.common.ApiPaths
 import com.menudeldia.places.PlacesEnrichmentService
 import com.menudeldia.places.PlacesEnrichmentService.Companion.PLACEHOLDER_LAT
 import com.menudeldia.places.PlacesEnrichmentService.Companion.PLACEHOLDER_LNG
+import com.menudeldia.restaurant.Cuisine
 import com.menudeldia.restaurant.Restaurant
 import com.menudeldia.restaurant.RestaurantRepository
 import org.slf4j.LoggerFactory
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
@@ -99,6 +102,61 @@ class AdminRestaurantsController(
         } else {
             mapOf("ok" to false, "message" to error)
         }
+    }
+
+    @PostMapping("/sync-csv", consumes = ["multipart/form-data"])
+    fun syncFromCsv(@RequestParam("file") file: MultipartFile): Map<String, Any> {
+        val rows = file.inputStream.bufferedReader().use { csv.parseRows(it) }
+        var created = 0;
+        var updated = 0;
+        var skipped = 0
+        rows.forEach { row ->
+            try {
+                val existing = when {
+                    row.googlePlaceId != null -> repo.findByGooglePlaceId(row.googlePlaceId)
+                    else -> repo.findByNameIgnoreCase(row.name)
+                }
+                if (existing != null) {
+                    existing.applyCsvRow(row)
+                    repo.save(existing)
+                    updated++
+                } else {
+                    val emoji = row.cuisineType?.let { ct ->
+                        runCatching { Cuisine.valueOf(ct.uppercase()).emoji }.getOrNull()
+                    }
+                    repo.save(
+                        Restaurant(
+                            name = row.name,
+                            lat = PLACEHOLDER_LAT,
+                            lng = PLACEHOLDER_LNG,
+                            hidden = true,
+                            cuisineType = row.cuisineType,
+                            cuisineEmoji = emoji,
+                            menuPrice = row.menuPrice,
+                            menuDetailsRaw = row.menuDetailsRaw,
+                            vegetarianOptions = row.vegetarianOptions,
+                            glutenFreeOptions = row.glutenFreeOptions,
+                            daysFrom = row.daysFrom,
+                            daysTo = row.daysTo,
+                            excludedDay = row.excludedDay,
+                            openTime = row.openTime,
+                            closeTime = row.closeTime,
+                            phone = row.phone,
+                            website = row.website,
+                            googleMapsUrl = row.googleMapsUrl,
+                            googlePlaceId = row.googlePlaceId,
+                        )
+                    )
+                    created++
+                }
+            } catch (ex: Exception) {
+                log.warn("CSV sync skipped row '{}': {}", row.name, ex.message)
+                skipped++
+            }
+        }
+        log.info("CSV sync done — created={} updated={} skipped={}", created, updated, skipped)
+        csv.writeAll(repo.findAll())
+        return mapOf("created" to created, "updated" to updated, "skipped" to skipped)
     }
 
     @DeleteMapping("/{id}")

@@ -63,4 +63,8 @@ interface RestaurantRepository : JpaRepository<Restaurant, UUID> {
     fun findWithoutPlaceId(): List<Restaurant>
 
     fun existsByGooglePlaceIdAndIdNot(googlePlaceId: String, id: UUID): Boolean
+
+    fun findByGooglePlaceId(googlePlaceId: String): Restaurant?
+
+    fun findByNameIgnoreCase(name: String): Restaurant?
 }

@@ -63,6 +63,25 @@ internal fun Restaurant.applyAdminUpdate(body: AdminRestaurantUpdate) {
     updatedAt = Instant.now()
 }
 
+internal fun Restaurant.applyCsvRow(row: CsvRow) {
+    name = row.name.trim().ifEmpty { name }
+    cuisineType = row.cuisineType
+    menuPrice = row.menuPrice
+    menuDetailsRaw = row.menuDetailsRaw
+    vegetarianOptions = row.vegetarianOptions
+    glutenFreeOptions = row.glutenFreeOptions
+    daysFrom = row.daysFrom
+    daysTo = row.daysTo
+    excludedDay = row.excludedDay
+    openTime = row.openTime
+    closeTime = row.closeTime
+    phone = row.phone
+    website = row.website
+    googleMapsUrl = row.googleMapsUrl
+    if (row.googlePlaceId != null) googlePlaceId = row.googlePlaceId
+    updatedAt = Instant.now()
+}
+
 /** Tuple of every CSV-mapped field — equality means CSV doesn't need to be rewritten. */
 internal fun Restaurant.csvSignature() = listOf(
     name, cuisineType, menuPrice, menuDetailsRaw,
