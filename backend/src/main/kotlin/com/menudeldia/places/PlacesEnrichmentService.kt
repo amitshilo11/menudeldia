@@ -99,9 +99,8 @@ class PlacesEnrichmentService(
             applyDetails(row, details)
             val allNames = details.photos.map { it.name }
             row.availablePhotoNames = allNames
-            row.photoNames = when {
-                row.photoNames.isEmpty() -> allNames.take(5)
-                else -> row.photoNames.filter { it in allNames }
+            if (row.photoNames.isEmpty()) {
+                row.photoNames = allNames.take(5)
             }
             row.placesFetchedAt = Instant.now()
             row.updatedAt = Instant.now()
