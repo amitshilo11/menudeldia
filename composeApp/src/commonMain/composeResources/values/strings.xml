@@ -11,6 +11,12 @@
     <string name="login_apple">Continue with Apple</string>
     <string name="login_guest">Continue as guest</string>
 
+    <!-- Location permission screen -->
+    <string name="location_permission_title">Find lunch near you</string>
+    <string name="location_permission_body">We use your location to show menús del día closest to you and center the map. You can change this anytime in Settings.</string>
+    <string name="location_permission_approve">Allow location</string>
+    <string name="location_permission_deny">Not now</string>
+
     <!-- Account screen -->
     <string name="account_title">Account</string>
     <string name="account_sign_out">Sign out</string>

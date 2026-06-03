@@ -16,6 +16,7 @@ import com.amitshilo.menudeldia.ui.account.AccountScreen
 import com.amitshilo.menudeldia.ui.auth.LoginScreen
 import com.amitshilo.menudeldia.ui.detail.RestaurantDetailScreen
 import com.amitshilo.menudeldia.ui.map.MapScreen
+import com.amitshilo.menudeldia.ui.permission.LocationPermissionScreen
 import com.amitshilo.menudeldia.ui.root.RootViewModel
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
 
@@ -35,7 +36,7 @@ fun App() {
                 is AuthState.Authenticated, AuthState.Guest -> {
                     val dest = navController.currentDestination?.route
                     if (dest == null || dest == Screen.Login.route) {
-                        navController.navigate(Screen.Map.route) {
+                        navController.navigate(Screen.LocationPermission.route) {
                             popUpTo(0) { inclusive = true }
                         }
                     }
@@ -48,6 +49,15 @@ fun App() {
         NavHost(navController = navController, startDestination = Screen.Login.route) {
             composable(Screen.Login.route) {
                 LoginScreen()
+            }
+            composable(Screen.LocationPermission.route) {
+                LocationPermissionScreen(
+                    onDone = {
+                        navController.navigate(Screen.Map.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    },
+                )
             }
             composable(Screen.Map.route) {
                 MapScreen(navController = navController)

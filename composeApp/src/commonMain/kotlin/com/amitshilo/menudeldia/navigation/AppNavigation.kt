@@ -7,4 +7,5 @@ sealed class Screen(val route: String) {
         fun createRoute(id: String) = "detail/$id"
     }
     data object Account : Screen("account")
+    data object LocationPermission : Screen("location_permission")
 }
