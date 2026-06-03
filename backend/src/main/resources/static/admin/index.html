@@ -219,6 +219,17 @@
     </div>
 
     <section class="panel">
+      <h4 class="group-label">Import CSV</h4>
+      <p class="hint">Upload restaurants_db_ready.csv to bulk-add or update restaurants.
+        New rows are created hidden with placeholder coordinates — run Enrich afterwards.</p>
+      <div class="action-bar-left">
+        <input type="file" id="csv-file-input" accept=".csv,text/csv">
+        <button class="primary" id="upload-csv-btn">Upload CSV</button>
+        <span class="hint" id="upload-csv-result"></span>
+      </div>
+    </section>
+
+    <section class="panel">
       <h4 class="group-label">Enrichment</h4>
       <p class="hint">Pull fresh Google Places data for restaurants enriched longest ago (or never).
         Runs oldest-first.</p>

@@ -82,11 +82,4 @@ internal fun Restaurant.applyCsvRow(row: CsvRow) {
     updatedAt = Instant.now()
 }
 
-/** Tuple of every CSV-mapped field — equality means CSV doesn't need to be rewritten. */
-internal fun Restaurant.csvSignature() = listOf(
-    name, cuisineType, menuPrice, menuDetailsRaw,
-    vegetarianOptions, glutenFreeOptions, daysFrom, daysTo, excludedDay,
-    openTime, closeTime, phone, website, googleMapsUrl, googlePlaceId,
-)
-
 private fun String.blankToNull(): String? = trim().ifEmpty { null }

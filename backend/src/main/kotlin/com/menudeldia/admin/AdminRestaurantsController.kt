@@ -30,6 +30,7 @@ class AdminRestaurantsController(
     private val csv: CsvFileService,
     private val enrichment: PlacesEnrichmentService,
 ) {
+
     private val log = LoggerFactory.getLogger(javaClass)
 
     @GetMapping
@@ -53,7 +54,6 @@ class AdminRestaurantsController(
         )
         val saved = repo.save(newRow)
         log.info("Admin created restaurant {} ({})", saved.name, saved.id)
-        csv.writeAll(repo.findAll())
         Thread({
             try {
                 repo.findById(saved.id).ifPresent { enrichment.refresh(it) }
@@ -79,17 +79,9 @@ class AdminRestaurantsController(
                 "Google Place ID '$newPlaceId' is already assigned to another restaurant",
             )
         }
-        val before = row.csvSignature()
         row.applyAdminUpdate(body)
         val saved = repo.save(row)
-        val csvChanged = saved.csvSignature() != before
-        if (csvChanged) csv.writeAll(repo.findAll())
-        log.info(
-            "Admin updated restaurant {} ({}); csvChanged={}",
-            saved.name,
-            saved.id,
-            csvChanged
-        )
+        log.info("Admin updated restaurant {} ({})", saved.name, saved.id)
         return saved.toAdminDto()
     }
 
@@ -155,7 +147,6 @@ class AdminRestaurantsController(
             }
         }
         log.info("CSV sync done — created={} updated={} skipped={}", created, updated, skipped)
-        csv.writeAll(repo.findAll())
         return mapOf("created" to created, "updated" to updated, "skipped" to skipped)
     }
 
@@ -164,7 +155,6 @@ class AdminRestaurantsController(
         val row = repo.findById(id).orElse(null) ?: throw notFound(id)
         val name = row.name
         repo.delete(row)
-        csv.writeAll(repo.findAll())
         log.info("Admin deleted restaurant {} ({})", name, id)
         return ResponseEntity.noContent().build()
     }

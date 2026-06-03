@@ -85,3 +85,4 @@ backend/var/photos/*
 
 # Local data files (not for version control)
 backend/data/
+backend/src/main/resources/seed.json

@@ -1,143 +1,69 @@
 package com.menudeldia.admin
 
-import com.menudeldia.config.AppProperties
-import com.menudeldia.restaurant.Restaurant
-import org.apache.commons.csv.CSVFormat
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 import java.math.BigDecimal
-import java.nio.file.Files
-import java.nio.file.Path
-import java.time.Duration
-import java.time.Instant
 
 class CsvFileServiceTest {
 
-    private fun service(csvPath: Path) = CsvFileService(
-        AppProperties(
-            google = AppProperties.GoogleProps("", Duration.ofHours(1), 5),
-            auth = AppProperties.AuthProps("", "", "a".repeat(32), Duration.ofDays(30)),
-            cors = AppProperties.CorsProps(emptyList()),
-            rateLimit = AppProperties.RateLimitProps(60, 10, 10),
-            csv = AppProperties.CsvProps(csvPath.toString()),
-        )
-    )
+    private val svc = CsvFileService()
 
-    private fun restaurant(
-        name: String,
-        cuisine: String? = "Asian",
-        price: BigDecimal? = BigDecimal("12.50"),
-        menuDetails: String? = "Starter + Main + Drink",
-        vegetarianOptions: Boolean = false,
-        glutenFreeOptions: Boolean = false,
-        daysFrom: String? = "Mon",
-        daysTo: String? = "Fri",
-        excludedDay: String? = null,
-        openTime: String? = "12:30",
-        closeTime: String? = "16:00",
-        phone: String? = "+34936227430",
-        website: String? = "https://example.com",
-        mapsUrl: String? = "https://maps.app.goo.gl/abc",
-        placeId: String? = "ChIJabc123",
-        createdAt: Instant = Instant.parse("2026-01-01T00:00:00Z"),
-    ) = Restaurant(
-        name = name,
-        lat = 41.3851, lng = 2.1734,
-        cuisineType = cuisine,
-        menuPrice = price,
-        menuDetailsRaw = menuDetails,
-        vegetarianOptions = vegetarianOptions,
-        glutenFreeOptions = glutenFreeOptions,
-        daysFrom = daysFrom, daysTo = daysTo, excludedDay = excludedDay,
-        openTime = openTime, closeTime = closeTime,
-        phone = phone, website = website,
-        googleMapsUrl = mapsUrl,
-        googlePlaceId = placeId,
-        createdAt = createdAt,
-    )
+    private fun parse(csv: String) = svc.parseRows(csv.trimIndent().reader())
 
     @Test
-    fun `writeAll produces header and rows in createdAt order with regenerated ids`(
-        @TempDir dir: Path,
-    ) {
-        val csvPath = dir.resolve("out.csv")
-        val svc = service(csvPath)
+    fun `parseRows maps all fields correctly`() {
+        val rows = parse("""
+            id,name,cuisine_type,price_normal,menu_details,Vegeterian options,Gluten free options,days_from,days_to,excluded_day,open_time,close_time,phone,website,google_maps_url,google_place_id
+            1,MOSCADA,Mediterranean,18.80,Starter + Main + Dessert + Drink,Yes,No,Mon,Fri,,12:30,16:00,+34931018764,https://www.moscadabcn.com/,https://maps.app.goo.gl/abc,ChIJbzY6rRWjpBIRNVxSPbboqZA
+        """)
 
-        // Second restaurant has earlier createdAt, should appear first.
-        val a = restaurant("Kemo", createdAt = Instant.parse("2026-02-01T00:00:00Z"))
-        val b = restaurant(
-            "Lady babka", cuisine = "Mediterranean", price = BigDecimal("18.90"),
-            vegetarianOptions = true, createdAt = Instant.parse("2026-01-15T00:00:00Z")
-        )
-
-        svc.writeAll(listOf(a, b))
-
-        assertTrue(Files.exists(csvPath), "CSV file should exist")
-        val parsed = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).build()
-            .parse(Files.newBufferedReader(csvPath)).records
-
-        assertEquals(2, parsed.size)
-        // b (earlier createdAt) is row 1, a is row 2
-        assertEquals("1", parsed[0].get("id"))
-        assertEquals("Lady babka", parsed[0].get("name"))
-        assertEquals("Mediterranean", parsed[0].get("cuisine_type"))
-        assertEquals("18.90", parsed[0].get("price_normal"))
-        assertEquals("Yes", parsed[0].get("Vegeterian options"))
-        assertEquals("No", parsed[0].get("Gluten free options"))
-
-        assertEquals("2", parsed[1].get("id"))
-        assertEquals("Kemo", parsed[1].get("name"))
-        assertEquals("No", parsed[1].get("Vegeterian options"))
+        assertEquals(1, rows.size)
+        val r = rows[0]
+        assertEquals("MOSCADA", r.name)
+        assertEquals("Mediterranean", r.cuisineType)
+        assertEquals(BigDecimal("18.80"), r.menuPrice)
+        assertEquals("Starter + Main + Dessert + Drink", r.menuDetailsRaw)
+        assertTrue(r.vegetarianOptions)
+        assertEquals(false, r.glutenFreeOptions)
+        assertEquals("Mon", r.daysFrom)
+        assertEquals("Fri", r.daysTo)
+        assertNull(r.excludedDay)
+        assertEquals("12:30", r.openTime)
+        assertEquals("16:00", r.closeTime)
+        assertEquals("+34931018764", r.phone)
+        assertEquals("https://www.moscadabcn.com/", r.website)
+        assertEquals("https://maps.app.goo.gl/abc", r.googleMapsUrl)
+        assertEquals("ChIJbzY6rRWjpBIRNVxSPbboqZA", r.googlePlaceId)
     }
 
     @Test
-    fun `writeAll round-trips every CSV-mapped field`(@TempDir dir: Path) {
-        val csvPath = dir.resolve("out.csv")
-        val svc = service(csvPath)
+    fun `parseRows skips rows with blank name`() {
+        val rows = parse("""
+            id,name,cuisine_type,price_normal,menu_details,Vegeterian options,Gluten free options,days_from,days_to,excluded_day,open_time,close_time,phone,website,google_maps_url,google_place_id
+            1,Kemo,Asian,12.50,,No,No,Mon,Fri,,12:30,16:00,,,,
+            2,  ,Asian,12.50,,No,No,Mon,Fri,,12:30,16:00,,,,
+            3,Valid,Spanish,10.00,,No,No,Mon,Fri,,13:00,15:30,,,,
+        """)
 
-        val r = restaurant(
-            "MOSCADA", cuisine = "Mediterranean", price = BigDecimal("18.80"),
-            menuDetails = "Starter + Main + Dessert + Drink",
-            vegetarianOptions = true, glutenFreeOptions = true,
-            phone = "+34931018764", website = "https://www.moscadabcn.com/",
-            mapsUrl = "https://maps.app.goo.gl/iC6w7Ho8Z64egXH57",
-            placeId = "ChIJbzY6rRWjpBIRNVxSPbboqZA",
-        )
-        svc.writeAll(listOf(r))
-
-        val record = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).build()
-            .parse(Files.newBufferedReader(csvPath)).records.single()
-
-        assertEquals("MOSCADA", record.get("name"))
-        assertEquals("Mediterranean", record.get("cuisine_type"))
-        assertEquals("18.80", record.get("price_normal"))
-        assertEquals("Starter + Main + Dessert + Drink", record.get("menu_details"))
-        assertEquals("Yes", record.get("Vegeterian options"))
-        assertEquals("Yes", record.get("Gluten free options"))
-        assertEquals("Mon", record.get("days_from"))
-        assertEquals("Fri", record.get("days_to"))
-        assertEquals("", record.get("excluded_day"))
-        assertEquals("12:30", record.get("open_time"))
-        assertEquals("16:00", record.get("close_time"))
-        assertEquals("+34931018764", record.get("phone"))
-        assertEquals("https://www.moscadabcn.com/", record.get("website"))
-        assertEquals("https://maps.app.goo.gl/iC6w7Ho8Z64egXH57", record.get("google_maps_url"))
-        assertEquals("ChIJbzY6rRWjpBIRNVxSPbboqZA", record.get("google_place_id"))
+        assertEquals(2, rows.size)
+        assertEquals("Kemo", rows[0].name)
+        assertEquals("Valid", rows[1].name)
     }
 
     @Test
-    fun `writeAll atomically replaces existing file`(@TempDir dir: Path) {
-        val csvPath = dir.resolve("out.csv")
-        Files.writeString(csvPath, "stale content")
-        val svc = service(csvPath)
+    fun `parseRows treats blank optional fields as null`() {
+        val rows = parse("""
+            id,name,cuisine_type,price_normal,menu_details,Vegeterian options,Gluten free options,days_from,days_to,excluded_day,open_time,close_time,phone,website,google_maps_url,google_place_id
+            1,Kemo,,,,,No,,,,,,,,,
+        """)
 
-        svc.writeAll(listOf(restaurant("Replaced")))
-
-        val text = Files.readString(csvPath)
-        assertTrue(text.startsWith("id,name,"), "expected header line, got: ${text.take(40)}")
-        assertTrue(text.contains("Replaced"))
-        assertTrue(!text.contains("stale content"))
+        val r = rows[0]
+        assertNull(r.cuisineType)
+        assertNull(r.menuPrice)
+        assertNull(r.menuDetailsRaw)
+        assertNull(r.daysFrom)
+        assertNull(r.googlePlaceId)
     }
 }
