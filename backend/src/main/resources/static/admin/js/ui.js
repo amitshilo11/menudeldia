@@ -15,6 +15,22 @@ function _settle(value) {
 export function confirmDialog(msg, okLabel = 'Confirm') {
   $('confirm-msg').textContent = msg;
   $('confirm-ok').textContent = okLabel;
+  $('confirm-ok').className = 'danger';
+  $('confirm-cancel').hidden = false;
+  $('confirm-modal').hidden = false;
+  return new Promise(resolve => { _confirmResolve = resolve; });
+}
+
+export function alertDialog(msg) {
+  const el = $('confirm-msg');
+  el.innerHTML = '';
+  msg.split('\n').forEach((line, i) => {
+    if (i > 0) el.appendChild(document.createElement('br'));
+    el.appendChild(document.createTextNode(line));
+  });
+  $('confirm-ok').textContent = 'Close';
+  $('confirm-ok').className = '';
+  $('confirm-cancel').hidden = true;
   $('confirm-modal').hidden = false;
   return new Promise(resolve => { _confirmResolve = resolve; });
 }

@@ -14,7 +14,6 @@ data class AppProperties(
     val cors: CorsProps,
     val rateLimit: RateLimitProps,
     val adminToken: String = "",
-    val csv: CsvProps = CsvProps(),
 ) {
     data class GoogleProps(
         val placesApiKey: String,
@@ -37,14 +36,5 @@ data class AppProperties(
         val readRpm: Int,
         val authRpm: Int,
         val adminRpm: Int,
-    )
-
-    /**
-     * Admin portal round-trip CSV.
-     * [path] is resolved against the JVM working dir; the default points at the repo root
-     * when the backend is launched from the project root (which `./gradlew :backend:bootRun` does).
-     */
-    data class CsvProps(
-        val path: String = "./data/restaurants_db_ready.csv",
     )
 }

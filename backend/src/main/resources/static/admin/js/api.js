@@ -11,5 +11,10 @@ export function apiFetch(path, opts = {}) {
   return fetch(path, {
     ...opts,
     headers: { 'X-Admin-Token': token || '', ...(opts.headers || {}) },
+  }).then(resp => {
+    if (resp.status === 401 && path !== '/api/v1/admin/restaurants') {
+      window.dispatchEvent(new CustomEvent('admin-token-rejected'));
+    }
+    return resp;
   });
 }

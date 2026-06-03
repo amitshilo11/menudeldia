@@ -1,5 +1,6 @@
 package com.amitshilo.menudeldia.ui.auth
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,7 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -36,7 +37,8 @@ import menudeldia.composeapp.generated.resources.login_apple
 import menudeldia.composeapp.generated.resources.login_google
 import menudeldia.composeapp.generated.resources.login_guest
 import menudeldia.composeapp.generated.resources.login_subtitle
-import menudeldia.composeapp.generated.resources.login_title
+import menudeldia.composeapp.generated.resources.logo_wide
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -80,26 +82,22 @@ private fun LoginContent(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = "🍽️",
-                style = MaterialTheme.typography.displayLarge,
-                textAlign = TextAlign.Center,
-            )
-            Spacer(Modifier.height(16.dp))
-            Text(
-                text = stringResource(Res.string.login_title),
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
+            Image(
+                painter = painterResource(Res.drawable.logo_wide),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
             )
             Text(
                 text = stringResource(Res.string.login_subtitle),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 8.dp),
             )
-            Spacer(Modifier.height(48.dp))
+            Spacer(Modifier.height(82.dp))
 
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.size(48.dp))
@@ -119,7 +117,6 @@ private fun LoginContent(
                         Text(stringResource(Res.string.login_apple))
                     }
                 }
-                Spacer(Modifier.height(24.dp))
                 TextButton(onClick = onContinueAsGuest) {
                     Text(stringResource(Res.string.login_guest))
                 }

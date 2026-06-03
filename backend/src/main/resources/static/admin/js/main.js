@@ -7,7 +7,7 @@ import {
   openAddModal, closeAddModal, onCreateSubmit,
 } from './detail.js';
 import {
-  openSettings, onEnrichAll, onFindPlaceIds,
+  openSettings, onUploadCsv, onEnrichAll, onFindPlaceIds,
   loadCircuitBreakers, onResetCircuitBreakers,
 } from './settings.js';
 
@@ -26,6 +26,7 @@ function _bindEvents() {
   $('back-btn').addEventListener('click', () => { showSection('list-section'); renderTable(); });
   $('settings-btn').addEventListener('click', openSettings);
   $('settings-back-btn').addEventListener('click', () => { showSection('list-section'); renderTable(); });
+  $('upload-csv-btn').addEventListener('click', onUploadCsv);
   $('enrich-all-btn').addEventListener('click', onEnrichAll);
   $('find-place-ids-btn').addEventListener('click', onFindPlaceIds);
   $('cb-refresh-btn').addEventListener('click', loadCircuitBreakers);
@@ -47,6 +48,18 @@ function _bindEvents() {
     });
   });
 
+  window.addEventListener('admin-token-rejected', () => {
+    localStorage.removeItem(TOKEN_KEY);
+    clearToken();
+    $('logout-btn').hidden = true;
+    showSection('login-section');
+    toast('Session expired — please log in again', 'err');
+  });
+
+  window.addEventListener('restaurants-reloaded', async () => {
+    const resp = await apiFetch('/api/v1/admin/restaurants');
+    if (resp.ok) { setRestaurants(await resp.json()); renderTable(); buildCuisineFilter(); }
+  });
   window.addEventListener('restaurant-saved', e => {
     const arr = [...restaurants];
     const idx = arr.findIndex(r => r.id === e.detail.id);

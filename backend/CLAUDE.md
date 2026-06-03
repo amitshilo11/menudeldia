@@ -36,8 +36,7 @@ com.menudeldia/
 ├── restaurant/  # Entity, repository (native PostGIS), service, controller, DTO, mapper
 ├── places/      # GooglePlacesClient (RestClient), PlacesEnrichmentService
 ├── photo/       # PhotoController — streams cached photo bytes
-├── admin/       # AdminController (admin-token: seed, enrich, CSV sync)
-├── seed/        # SeederService — first-boot load of seed.json
+├── admin/       # AdminController (admin-token: enrich, CSV upload/sync)
 ├── geo/         # GeoUtils (distance math beyond PostGIS)
 └── common/      # Errors, GlobalExceptionHandler, rate limit, web config
 ```
@@ -101,7 +100,8 @@ All routes under `/api/v1/`. JWT-protected unless marked otherwise.
 | `GET`  | `/restaurants`                  | JWT         |
 | `GET`  | `/restaurants/{id}`             | JWT         |
 | `GET`  | `/restaurants/{id}/photos/{n}`  | JWT         |
-| `POST` | `/admin/seed` · `/admin/enrich` | admin token |
+| `POST` | `/admin/enrich`                 | admin token |
+| `POST` | `/admin/restaurants/sync-csv`   | admin token |
 
 **`/restaurants` query params:** `lat` (req), `lng` (req), `radius` (m, default 2000, max 10000),
 `q` (ILIKE on name/cuisine), `openNow`, `cuisine[]`, `minPrice`, `maxPrice`.
@@ -186,12 +186,10 @@ Profiles: `dev` (local Docker Compose), `test` (Testcontainers), `prod` (no defa
 Tests use **Testcontainers** to stand up Postgres+PostGIS per test class — no shared mutable state.
 Mock the Google Places HTTP layer at the `RestClient` level.
 
-## Seed Data
+## Bootstrap
 
-`scripts/translate-seed.main.kts` is a one-time tool that reads the curated xlsx, calls the
-Anthropic API for ES/EN translations of cuisine/description/hours, and writes
-`src/main/resources/seed.json`. `SeederService` loads `seed.json` on `ApplicationReadyEvent` if the
-`restaurants` table is empty. CSV-based reseeds go through `AdminController` (`/admin/seed`).
+The DB starts empty. Populate by uploading `restaurants_db_ready.csv` via the admin portal
+(Settings → Import CSV), then run **Enrich** and **Find Place IDs** to fill coordinates and photos.
 
 ## Non-goals (v1)
 

@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.context.request.async.AsyncRequestNotUsableException
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.servlet.resource.NoResourceFoundException
@@ -50,6 +51,12 @@ class GlobalExceptionHandler {
         val status = HttpStatus.valueOf(ex.statusCode.value())
         return ResponseEntity.status(status)
             .body(ApiError(status.name.lowercase(), ex.reason ?: ex.message, status.value()))
+    }
+
+    @ExceptionHandler(AsyncRequestNotUsableException::class)
+    fun onClientDisconnect(ex: AsyncRequestNotUsableException): ResponseEntity<Void> {
+        log.debug("Client disconnected mid-response: {}", ex.message)
+        return ResponseEntity.noContent().build()
     }
 
     @ExceptionHandler(Exception::class)

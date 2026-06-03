@@ -107,6 +107,28 @@ class PlacesEnrichmentService(
             row.updatedAt = Instant.now()
             repo.save(row)
             log.info("Enriched restaurant {} ({})", row.name, row.id)
+            val ratings = row.userRatingCount ?: 0
+            if (ratings > 0 && allNames.isEmpty())
+                log.warn(
+                    "PLACES_CONTENT_MISSING photos — {} ratings but Google returned 0 photos for {} ({}). Check API key entitlements in Google Cloud Console.",
+                    ratings,
+                    row.name,
+                    row.id
+                )
+            if (ratings > 0 && details.reviews.isEmpty())
+                log.warn(
+                    "PLACES_CONTENT_MISSING reviews — {} ratings but Google returned 0 reviews for {} ({}). Check API key entitlements in Google Cloud Console.",
+                    ratings,
+                    row.name,
+                    row.id
+                )
+            if (ratings > 0 && details.editorialSummary == null && details.generativeSummary == null)
+                log.warn(
+                    "PLACES_CONTENT_MISSING summaries — {} ratings but Google returned no editorial/AI summary for {} ({}). Check API key entitlements in Google Cloud Console.",
+                    ratings,
+                    row.name,
+                    row.id
+                )
             null
         } catch (ex: PlacesException) {
             val rootCause = generateSequence(ex as Throwable) { it.cause }.last()
@@ -125,10 +147,11 @@ class PlacesEnrichmentService(
     private fun applyDetails(row: Restaurant, details: PlaceDetailsResponse) {
         // Admin-editable CSV fields: fill-when-empty only, so manual edits in the admin
         // portal are never silently overwritten by a refresh.
-        if (row.lat == BARCELONA_PLACEHOLDER_LAT && row.lng == BARCELONA_PLACEHOLDER_LNG) {
+        if (row.lat == PLACEHOLDER_LAT && row.lng == PLACEHOLDER_LNG) {
             details.location?.let {
                 row.lat = it.latitude
                 row.lng = it.longitude
+                row.hidden = false
             }
         }
         if (row.address.isNullOrBlank()) details.formattedAddress?.let { row.address = it }
@@ -163,8 +186,7 @@ class PlacesEnrichmentService(
     }
 
     companion object {
-        // Matches SeederService — placeholder used before the first Google enrichment fills real coords.
-        const val BARCELONA_PLACEHOLDER_LAT = 41.3851
-        const val BARCELONA_PLACEHOLDER_LNG = 2.1734
+        const val PLACEHOLDER_LAT = 0.0
+        const val PLACEHOLDER_LNG = 0.0
     }
 }

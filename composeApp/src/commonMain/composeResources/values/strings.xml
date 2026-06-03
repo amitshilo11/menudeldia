@@ -66,5 +66,7 @@
     <string name="feature_takeout">Takeout</string>
     <string name="feature_reservable">Reservable</string>
     <string name="menu_includes_header">Includes</string>
+    <string name="menu_del_dia_includes">MENÚ DEL DÍA INCLUDES</string>
+    <string name="open_closes">Open · closes %1$s</string>
     <string name="show_all_reviews">Show all reviews</string>
 </resources>
