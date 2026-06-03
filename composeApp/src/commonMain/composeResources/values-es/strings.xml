@@ -10,6 +10,8 @@
     <string name="login_google">Continuar con Google</string>
     <string name="login_apple">Continuar con Apple</string>
     <string name="login_guest">Continuar como invitado</string>
+    <string name="login_privacy_prefix">Al continuar, aceptas nuestra </string>
+    <string name="login_privacy_link">Política de privacidad</string>
 
     <!-- Location permission screen -->
     <string name="location_permission_title">Encuentra el menú más cercano</string>

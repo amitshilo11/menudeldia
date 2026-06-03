@@ -30,6 +30,7 @@ class SecurityConfig(
                     .requestMatchers("/actuator/**")
                     .access(AdminTokenAuthorizationManager(props.adminToken))
                     .requestMatchers("/admin", "/admin/**").permitAll()
+                    .requestMatchers("/privacy.html", "/privacy").permitAll()
                     .requestMatchers("${ApiPaths.V1}/health").permitAll()
                     .requestMatchers("${ApiPaths.V1}/auth/**").permitAll()
                     .requestMatchers("${ApiPaths.V1}/restaurants/**").permitAll()
@@ -47,7 +48,7 @@ class SecurityConfig(
                 h.frameOptions { it.deny() }
                 h.contentTypeOptions { }
                 h.contentSecurityPolicy { csp ->
-                    csp.policyDirectives("default-src 'none'; img-src 'self' blob:; style-src 'self'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'")
+                    csp.policyDirectives("default-src 'none'; img-src 'self' blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'")
                 }
             }
         return http.build()
