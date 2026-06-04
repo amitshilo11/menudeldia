@@ -6,6 +6,10 @@ val localProps = Properties().apply {
     rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
 }
 
+val versionProps = Properties().apply {
+    rootProject.file("version.properties").inputStream().use { load(it) }
+}
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
@@ -28,7 +32,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "ComposeApp"
+            baseName = "MenudizApp"
             isStatic = true
         }
     }
@@ -95,14 +99,14 @@ kotlin {
 
 android {
     namespace = "com.amitshilo.menudeldia"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk = versionProps["androidCompileSdk"].toString().toInt()
 
     defaultConfig {
         applicationId = "com.amitshilo.menudeldia"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = versionProps["androidMinSdk"].toString().toInt()
+        targetSdk = versionProps["androidTargetSdk"].toString().toInt()
+        versionCode = versionProps["versionCode"].toString().toInt()
+        versionName = versionProps["versionName"].toString()
         manifestPlaceholders["MAPS_API_KEY"] = localProps["MAPS_API_KEY"]?.toString() ?: ""
         // Web OAuth Client ID from Google Cloud Console (NOT the Android client ID).
         // Set GOOGLE_WEB_CLIENT_ID=your_client_id in local.properties.
@@ -122,7 +126,7 @@ android {
     }
     buildTypes {
         debug {
-//            applicationIdSuffix = ".debug"
+            applicationIdSuffix = ".debug"
         }
         getByName("release") {
             isMinifyEnabled = false
@@ -139,4 +143,20 @@ dependencies {
     debugImplementation(libs.compose.uiTooling)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+}
+
+val syncIosVersion by tasks.registering {
+    val xcconfig = rootProject.file("iosApp/Configuration/Config.xcconfig")
+    val versionCode = versionProps["versionCode"].toString()
+    val versionName = versionProps["versionName"].toString()
+    doLast {
+        val updated = xcconfig.readText()
+            .replace(Regex("CURRENT_PROJECT_VERSION=.*"), "CURRENT_PROJECT_VERSION=$versionCode")
+            .replace(Regex("MARKETING_VERSION=.*"), "MARKETING_VERSION=$versionName")
+        xcconfig.writeText(updated)
+    }
+}
+
+tasks.matching { it.name.matches(Regex("link.*(Ios|Framework).*")) }.configureEach {
+    dependsOn(syncIosVersion)
 }
