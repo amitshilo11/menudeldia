@@ -2,24 +2,28 @@ import { restaurants } from './api.js';
 import { escHtml, showSection } from './ui.js';
 import { openDetail } from './detail.js';
 
+const PAGE_SIZE = 20;
+
 let _sortField = '';
 let _sortDir = 1;
 let _searchQuery = '';
 let _filterStatus = '';
 let _filterCuisine = '';
+let _currentPage = 1;
 
 const $ = id => document.getElementById(id);
 
 export function initList() {
-  $('search-input').addEventListener('input', e => { _searchQuery = e.target.value; renderTable(); });
-  $('status-filter').addEventListener('change', e => { _filterStatus = e.target.value; renderTable(); });
-  $('cuisine-filter').addEventListener('change', e => { _filterCuisine = e.target.value; renderTable(); });
+  $('search-input').addEventListener('input', e => { _searchQuery = e.target.value; _currentPage = 1; renderTable(); });
+  $('status-filter').addEventListener('change', e => { _filterStatus = e.target.value; _currentPage = 1; renderTable(); });
+  $('cuisine-filter').addEventListener('change', e => { _filterCuisine = e.target.value; _currentPage = 1; renderTable(); });
 
   document.querySelectorAll('th.sortable').forEach(th => {
     th.addEventListener('click', () => {
       const field = th.dataset.sort;
       if (_sortField === field) _sortDir *= -1;
       else { _sortField = field; _sortDir = 1; }
+      _currentPage = 1;
       _updateSortIndicators();
       renderTable();
     });
@@ -87,6 +91,11 @@ export function renderTable() {
   }
 
   const total = rows.length;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  if (_currentPage > totalPages) _currentPage = totalPages;
+  const start = (_currentPage - 1) * PAGE_SIZE;
+  const pageRows = rows.slice(start, start + PAGE_SIZE);
+
   $('result-count').textContent = total + ' restaurant' + (total !== 1 ? 's' : '');
 
   const tbody = $('restaurant-tbody');
@@ -97,13 +106,14 @@ export function renderTable() {
     tbody.innerHTML = '';
     table.hidden = true;
     empty.hidden = false;
+    _renderPagination(0, 0);
     return;
   }
   table.hidden = false;
   empty.hidden = true;
   tbody.innerHTML = '';
 
-  for (const r of rows) {
+  for (const r of pageRows) {
     const tr = document.createElement('tr');
     if (r.hidden) tr.classList.add('hidden-row');
     const v = encodeURIComponent(r.updatedAt || r.id);
@@ -123,6 +133,30 @@ export function renderTable() {
     tr.addEventListener('click', () => openDetail(r.id));
     tbody.appendChild(tr);
   }
+  _renderPagination(total, totalPages);
+}
+
+function _renderPagination(total, totalPages) {
+  const bar = $('pagination-bar');
+  if (!bar) return;
+  if (total === 0 || totalPages <= 1) {
+    bar.hidden = true;
+    return;
+  }
+  bar.hidden = false;
+  const start = (_currentPage - 1) * PAGE_SIZE + 1;
+  const end = Math.min(_currentPage * PAGE_SIZE, total);
+  bar.innerHTML = `
+    <button class="page-btn" ${_currentPage === 1 ? 'disabled' : ''} data-page="${_currentPage - 1}">← Prev</button>
+    <span class="page-info">Page ${_currentPage} of ${totalPages} &nbsp;·&nbsp; ${start}–${end} of ${total}</span>
+    <button class="page-btn" ${_currentPage === totalPages ? 'disabled' : ''} data-page="${_currentPage + 1}">Next →</button>
+  `;
+  bar.querySelectorAll('.page-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      _currentPage = +btn.dataset.page;
+      renderTable();
+    });
+  });
 }
 
 function _updateSortIndicators() {

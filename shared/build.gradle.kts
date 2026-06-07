@@ -1,5 +1,10 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+
+val versionProps = Properties().apply {
+    rootProject.file("version.properties").inputStream().use { load(it) }
+}
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -72,13 +77,13 @@ kotlin {
 
 android {
     namespace = "com.amitshilo.menudeldia.shared"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk = versionProps["androidCompileSdk"].toString().toInt()
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
     defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
+        minSdk = versionProps["androidMinSdk"].toString().toInt()
     }
     buildFeatures {
         buildConfig = true
