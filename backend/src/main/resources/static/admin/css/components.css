@@ -155,6 +155,18 @@ tbody tr.hidden-row td { opacity: .5; }
 .skeleton.w-40  { width: 40px; }
 .skeleton-tr td { padding: 14px 16px; }
 
+/* ── Pagination ── */
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 14px 0 4px;
+}
+.pagination-bar .page-btn { min-width: 80px; }
+.pagination-bar .page-btn:disabled { opacity: .35; cursor: default; }
+.pagination-bar .page-info { font-size: var(--font-sm); color: var(--text-muted); white-space: nowrap; }
+
 /* ── Mobile: list ── */
 @media (max-width: 640px) {
   main { padding: 14px 12px; }
