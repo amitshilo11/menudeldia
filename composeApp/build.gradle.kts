@@ -128,6 +128,10 @@ android {
         debug {
             applicationIdSuffix = ".debug"
         }
+        create("mock") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".debug"
+        }
         getByName("release") {
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("debug")

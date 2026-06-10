@@ -3,8 +3,10 @@ package com.amitshilo.menudeldia.di
 import com.amitshilo.menudeldia.data.auth.local.SessionStore
 import com.amitshilo.menudeldia.data.auth.remote.AuthApiService
 import com.amitshilo.menudeldia.data.auth.repository.AuthRepositoryImpl
+import com.amitshilo.menudeldia.data.local.MockRestaurantRepository
 import com.amitshilo.menudeldia.data.remote.api.RestaurantApiService
 import com.amitshilo.menudeldia.data.remote.apiBaseUrl
+import com.amitshilo.menudeldia.data.remote.useMockData
 import com.amitshilo.menudeldia.data.repository.RestaurantRepositoryImpl
 import com.amitshilo.menudeldia.domain.auth.repository.AuthRepository
 import com.amitshilo.menudeldia.domain.repository.RestaurantRepository
@@ -78,7 +80,7 @@ interface AppGraph {
         @Provides
         @SingleIn(AppScope::class)
         fun provideRestaurantRepository(apiService: RestaurantApiService): RestaurantRepository =
-            RestaurantRepositoryImpl(apiService)
+            if (useMockData) MockRestaurantRepository() else RestaurantRepositoryImpl(apiService)
 
         @Provides
         fun provideGetNearbyRestaurantsUseCase(
