@@ -39,10 +39,10 @@ class RestaurantMapper {
             descriptionEn = entity.descriptionEn,
             menuPrice = entity.menuPrice?.toDouble(),
             currency = entity.currency,
-            todayHasMenu = todayHasMenu(entity.weekdayHours, now),
+            todayHasMenu = todayHasMenu(entity.weekdayHours, now, entity.openTime, entity.closeTime),
             cuisineEmoji = entity.cuisineEmoji,
             cuisineType = entity.cuisineType,
-            openingHours = buildOpeningHours(entity.weekdayHours),
+            openingHours = buildOpeningHours(entity.weekdayHours, entity.openTime, entity.closeTime),
             rating = entity.rating,
             userRatingCount = entity.userRatingCount,
             editorialSummary = entity.editorialSummary,
@@ -66,7 +66,7 @@ class RestaurantMapper {
             distanceMeters = if (originLat != null && originLng != null) {
                 GeoUtils.haversineMeters(originLat, originLng, entity.lat, entity.lng)
             } else null,
-            isOpenNow = isOpenNow(entity.weekdayHours, now),
+            isOpenNow = isOpenNow(entity.weekdayHours, now, entity.openTime, entity.closeTime),
             priceIncludesEs = entity.priceIncludesEs,
             priceIncludesEn = entity.priceIncludesEn,
             includesDessert = entity.priceIncludesEn.any {
@@ -97,17 +97,17 @@ class RestaurantMapper {
             thumbnailUrl = thumbnailUrl,
             menuPrice = entity.menuPrice?.toDouble(),
             currency = entity.currency,
-            todayHasMenu = todayHasMenu(entity.weekdayHours, now),
+            todayHasMenu = todayHasMenu(entity.weekdayHours, now, entity.openTime, entity.closeTime),
             cuisineEmoji = entity.cuisineEmoji,
             cuisineType = entity.cuisineType,
-            openingHours = buildOpeningHours(entity.weekdayHours),
+            openingHours = buildOpeningHours(entity.weekdayHours, entity.openTime, entity.closeTime),
             rating = entity.rating,
             userRatingCount = entity.userRatingCount,
             servesVegetarianFood = entity.vegetarianOptions || entity.servesVegetarian,
             servesGlutenFree = entity.glutenFreeOptions,
             distanceMeters = if (originLat != null && originLng != null)
                 GeoUtils.haversineMeters(originLat, originLng, entity.lat, entity.lng) else null,
-            isOpenNow = isOpenNow(entity.weekdayHours, now),
+            isOpenNow = isOpenNow(entity.weekdayHours, now, entity.openTime, entity.closeTime),
             priceIncludesEn = entity.priceIncludesEn,
             includesDessert = entity.priceIncludesEn.any {
                 it.contains(
@@ -119,21 +119,37 @@ class RestaurantMapper {
         )
     }
 
-    private fun todayHasMenu(weekdayHours: Map<String, String>, now: ZonedDateTime): Boolean {
+    private fun todayHasMenu(
+        weekdayHours: Map<String, String>,
+        now: ZonedDateTime,
+        openTime: String?,
+        closeTime: String?,
+    ): Boolean {
         val key = now.dayOfWeek.toKey() ?: return false
-        return weekdayHours[key] != null
+        return weekdayHours[key] != null || (openTime != null && closeTime != null)
     }
 
-    private fun isOpenNow(weekdayHours: Map<String, String>, now: ZonedDateTime): Boolean {
+    private fun isOpenNow(
+        weekdayHours: Map<String, String>,
+        now: ZonedDateTime,
+        openTime: String?,
+        closeTime: String?,
+    ): Boolean {
         val key = now.dayOfWeek.toKey() ?: return false
-        val range = weekdayHours[key] ?: return false
+        val range = weekdayHours[key]
+            ?: if (openTime != null && closeTime != null) "$openTime-$closeTime" else return false
         return range.toTimeRange()?.contains(now.toLocalTime()) ?: false
     }
 
-    private fun buildOpeningHours(weekdayHours: Map<String, String>): List<OpeningHoursDto> {
+    private fun buildOpeningHours(
+        weekdayHours: Map<String, String>,
+        openTime: String?,
+        closeTime: String?,
+    ): List<OpeningHoursDto> {
         val days = listOf("mon" to 1, "tue" to 2, "wed" to 3, "thu" to 4, "fri" to 5)
+        val fallbackRange = if (openTime != null && closeTime != null) "$openTime-$closeTime" else null
         return days.map { (key, dayNum) ->
-            val range = weekdayHours[key]
+            val range = weekdayHours[key] ?: fallbackRange
             val parsed = range?.toTimeRange()
             if (parsed != null) {
                 OpeningHoursDto(
