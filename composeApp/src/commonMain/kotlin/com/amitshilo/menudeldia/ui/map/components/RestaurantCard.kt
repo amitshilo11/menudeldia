@@ -5,10 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -62,61 +59,60 @@ fun RestaurantCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
         elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 3.dp else 1.dp),
     ) {
-        Row(modifier = Modifier.height(IntrinsicSize.Min)) {
+        Column {
             Box(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .width(4.dp)
-                    .background(
-                        if (restaurant.todayHasMenu) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.surfaceContainerHighest,
-                    ),
-            )
-            Column(modifier = Modifier.padding(12.dp).weight(1f)) {
-                Row(
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    Thumbnail(
-                        thumbnailUrl = restaurant.thumbnailUrl,
-                        contentDescription = restaurant.name,
-                        modifier = Modifier.size(76.dp).clip(RoundedCornerShape(12.dp)),
-                    )
-                    Column(modifier = Modifier.weight(1f)) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            Text(
-                                text = restaurant.name,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.weight(1f).padding(end = 8.dp),
-                            )
-                            if (restaurant.todayHasMenu) {
-                                restaurant.menuPrice?.let { price -> CardPriceBadge(price) }
-                            } else {
-                                NoMenuBadge()
-                            }
-                        }
-                        Spacer(Modifier.height(4.dp))
-                        InfoRow(restaurant, isOpen, closeTime)
-                        Spacer(Modifier.height(6.dp))
-                        CardChipsRow(restaurant)
+                    .fillMaxWidth()
+                    .height(160.dp),
+            ) {
+                Thumbnail(
+                    thumbnailUrl = restaurant.thumbnailUrl,
+                    contentDescription = restaurant.name,
+                    modifier = Modifier.matchParentSize(),
+                )
+                if (restaurant.todayHasMenu) {
+                    restaurant.menuPrice?.let { price ->
+                        CardPriceBadge(
+                            price = price,
+                            modifier = Modifier.align(Alignment.TopEnd).padding(8.dp),
+                        )
                     }
                 }
+                CardChipsRow(
+                    restaurant = restaurant,
+                    modifier = Modifier.align(Alignment.BottomStart).padding(8.dp),
+                )
+            }
+            Column(modifier = Modifier.padding(12.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(
+                        text = restaurant.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f).padding(end = 8.dp),
+                    )
+                    if (!restaurant.todayHasMenu) {
+                        NoMenuBadge()
+                    }
+                }
+                Spacer(Modifier.height(4.dp))
+                InfoRow(restaurant, isOpen, closeTime)
             }
         }
     }
 }
 
 @Composable
-private fun CardPriceBadge(price: Double) {
+private fun CardPriceBadge(price: Double, modifier: Modifier = Modifier) {
     Surface(
         shape = RoundedCornerShape(999.dp),
         color = MaterialTheme.colorScheme.primary,
+        modifier = modifier,
     ) {
         Text(
             text = "€${price.format(2)}",
@@ -210,13 +206,13 @@ private fun InfoRow(restaurant: Restaurant, isOpen: Boolean, closeTime: LocalTim
 }
 
 @Composable
-private fun CardChipsRow(restaurant: Restaurant) {
+private fun CardChipsRow(restaurant: Restaurant, modifier: Modifier = Modifier) {
     val chips = buildList {
         restaurant.cuisineType?.let { add("${restaurant.cuisineEmoji ?: "🍽"} $it") }
         if (restaurant.servesVegetarianFood) add("🌱 Vegan")
     }
     if (chips.isEmpty()) return
-    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         chips.forEach { label ->
             Surface(
                 shape = RoundedCornerShape(999.dp),
@@ -277,6 +273,7 @@ private fun PreviewRestaurantCardNoMenu() {
         RestaurantCard(
             restaurant = previewRestaurantNoMenu,
             isSelected = false,
-            onClick = {})
+            onClick = {},
+        )
     }
 }
