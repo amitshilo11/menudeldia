@@ -48,9 +48,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.location.UserLocation
 import com.amitshilo.menudeldia.location.rememberLocationState
 import com.amitshilo.menudeldia.navigation.Screen
+import com.amitshilo.menudeldia.ui.map.components.BestPicksSheet
 import com.amitshilo.menudeldia.ui.map.components.ErrorState
 import com.amitshilo.menudeldia.ui.map.components.FilterPanel
 import com.amitshilo.menudeldia.ui.map.components.MapSearchBar
@@ -165,6 +167,8 @@ private fun RecenterFab(onClick: () -> Unit, modifier: Modifier = Modifier) {
 fun MapScreen(navController: NavController) {
     val viewModel: MapViewModel = viewModel { MapViewModel() }
     val uiState by viewModel.uiState.collectAsState()
+    val bestPicks by viewModel.bestPicks.collectAsState()
+    val showBestPicks by viewModel.showBestPicks.collectAsState()
     val locationState = rememberLocationState()
 
     LaunchedEffect(locationState.location) {
@@ -185,6 +189,9 @@ fun MapScreen(navController: NavController) {
             userLocation = locationState.location,
             onEvent = viewModel::onEvent,
             effects = viewModel.effects,
+            bestPicks = bestPicks,
+            showBestPicks = showBestPicks,
+            onDismissBestPicks = viewModel::dismissBestPicks,
             onNavigateToDetail = { navController.navigate(Screen.RestaurantDetail.createRoute(it)) },
         )
     }
@@ -197,6 +204,9 @@ private fun MapContent(
     userLocation: UserLocation?,
     onEvent: (MapEvent) -> Unit,
     effects: Flow<MapEffect>,
+    bestPicks: List<Restaurant>,
+    showBestPicks: Boolean,
+    onDismissBestPicks: () -> Unit,
     onNavigateToDetail: (String) -> Unit,
 ) {
     val density = LocalDensity.current
@@ -342,6 +352,14 @@ private fun MapContent(
                 allRestaurants = state.allRestaurants,
                 onFilterChange = { onEvent(MapEvent.FilterChanged(it)) },
                 onDismiss = { filterPanelVisible = false },
+            )
+        }
+
+        if (showBestPicks && bestPicks.isNotEmpty()) {
+            BestPicksSheet(
+                picks = bestPicks,
+                onDismiss = onDismissBestPicks,
+                onPickTap = onNavigateToDetail,
             )
         }
     }

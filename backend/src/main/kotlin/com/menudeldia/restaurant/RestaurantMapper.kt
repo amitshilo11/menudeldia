@@ -102,6 +102,7 @@ class RestaurantMapper {
             cuisineType = entity.cuisineType,
             openingHours = buildOpeningHours(entity.weekdayHours),
             rating = entity.rating,
+            userRatingCount = entity.userRatingCount,
             servesVegetarianFood = entity.vegetarianOptions || entity.servesVegetarian,
             servesGlutenFree = entity.glutenFreeOptions,
             distanceMeters = if (originLat != null && originLng != null)

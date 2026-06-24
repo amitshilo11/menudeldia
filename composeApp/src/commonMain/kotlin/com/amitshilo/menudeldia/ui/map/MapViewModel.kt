@@ -6,6 +6,7 @@ import com.amitshilo.menudeldia.di.AppGraphProvider
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.domain.model.SearchFilterState
 import com.amitshilo.menudeldia.domain.usecase.FilterRestaurantsUseCase
+import com.amitshilo.menudeldia.domain.usecase.RecommendRestaurantsUseCase
 import com.amitshilo.menudeldia.location.UserLocation
 import com.amitshilo.menudeldia.util.haversineMeters
 import kotlinx.coroutines.Job
@@ -30,6 +31,7 @@ class MapViewModel : ViewModel() {
 
     private val useCase = AppGraphProvider.appGraph.getNearbyRestaurantsUseCase
     private val filterUseCase = FilterRestaurantsUseCase()
+    private val recommendUseCase = RecommendRestaurantsUseCase()
 
     private val _allRestaurants = MutableStateFlow<List<Restaurant>>(emptyList())
     private val _selectedRestaurant = MutableStateFlow<Restaurant?>(null)
@@ -37,6 +39,12 @@ class MapViewModel : ViewModel() {
     private val _loadError = MutableStateFlow<String?>(null)
     private val _isLoading = MutableStateFlow(true)
     private val _userLocation = MutableStateFlow<UserLocation?>(null)
+
+    private val _bestPicks = MutableStateFlow<List<Restaurant>>(emptyList())
+    val bestPicks: StateFlow<List<Restaurant>> = _bestPicks
+
+    private val _showBestPicks = MutableStateFlow(true)
+    val showBestPicks: StateFlow<Boolean> = _showBestPicks
 
     private val _effects = Channel<MapEffect>(Channel.BUFFERED)
     val effects: Flow<MapEffect> = _effects.receiveAsFlow()
@@ -85,6 +93,10 @@ class MapViewModel : ViewModel() {
         }
     }
 
+    fun dismissBestPicks() {
+        _showBestPicks.value = false
+    }
+
     private fun updateLocation(location: UserLocation?) {
         if (location == _userLocation.value) return
         _userLocation.value = location
@@ -116,7 +128,7 @@ class MapViewModel : ViewModel() {
                 val userLng = loc?.lng ?: searchLng
                 val raw =
                     useCase(lat = searchLat, lng = searchLng, radiusMeters = searchRadius.toInt())
-                _allRestaurants.value = raw
+                val sorted = raw
                     .map {
                         it.copy(
                             distanceMeters = haversineMeters(
@@ -128,6 +140,10 @@ class MapViewModel : ViewModel() {
                         )
                     }
                     .sortedBy { it.distanceMeters }
+                _allRestaurants.value = sorted
+                if (_bestPicks.value.isEmpty() && sorted.isNotEmpty()) {
+                    _bestPicks.value = recommendUseCase(sorted)
+                }
                 _loadError.value = null
             } catch (e: Exception) {
                 _loadError.value = e.message ?: "Failed to load restaurants"

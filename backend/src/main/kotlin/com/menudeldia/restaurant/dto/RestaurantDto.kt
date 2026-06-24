@@ -55,6 +55,7 @@ data class RestaurantSummaryDto(
     val cuisineType: String? = null,
     val openingHours: List<OpeningHoursDto> = emptyList(),
     val rating: Double? = null,
+    val userRatingCount: Int? = null,
     val servesVegetarianFood: Boolean = false,
     val servesGlutenFree: Boolean = false,
     val distanceMeters: Double? = null,
