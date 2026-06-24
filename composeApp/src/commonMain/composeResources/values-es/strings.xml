@@ -53,6 +53,8 @@
     <string name="closed_now">Cerrado</string>
     <string name="no_menu_today_short">Sin menú hoy</string>
     <string name="open_closes_at">Abierto · cierra a las %1$s</string>
+    <string name="opens_at">Abre a las %1$s</string>
+    <string name="not_open_today">Hoy no abre</string>
 
     <!-- Detail screen -->
     <string name="daily_menu">Menú del día</string>

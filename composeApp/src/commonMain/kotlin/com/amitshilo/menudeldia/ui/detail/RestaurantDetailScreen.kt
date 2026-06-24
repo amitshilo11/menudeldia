@@ -46,6 +46,7 @@ import com.amitshilo.menudeldia.ui.theme.MenuTheme
 import com.amitshilo.menudeldia.util.currentLocalDateTime
 import com.amitshilo.menudeldia.util.format
 import com.amitshilo.menudeldia.util.isCurrentlyOpen
+import com.amitshilo.menudeldia.util.opensAtToday
 import com.amitshilo.menudeldia.util.todayHours
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.arrow_back
@@ -114,6 +115,7 @@ internal fun RestaurantDetailContent(
     val now = currentLocalDateTime()
     val isOpen = restaurant.isCurrentlyOpen(now)
     val today = todayHours(restaurant.openingHours, now)
+    val opensAt = if (!isOpen) opensAtToday(restaurant.openingHours, now) else null
 
     Column(
         modifier = modifier
@@ -137,7 +139,13 @@ internal fun RestaurantDetailContent(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(Modifier.height(10.dp))
-            OpenStatusBadge(isOpen = isOpen, closesAt = today?.closeTime?.toString())
+            OpenStatusBadge(
+                isOpen = isOpen,
+                closesAt = today?.closeTime?.toString(),
+                opensAt = opensAt?.let {
+                    "${it.hour.toString().padStart(2, '0')}:${it.minute.toString().padStart(2, '0')}"
+                },
+            )
             Spacer(Modifier.height(16.dp))
             ActionButtonsRow(lat = restaurant.lat, lng = restaurant.lng, phone = restaurant.phone)
             Spacer(Modifier.height(20.dp))

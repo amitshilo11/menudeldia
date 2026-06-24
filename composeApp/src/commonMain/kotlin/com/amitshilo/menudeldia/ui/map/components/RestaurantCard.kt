@@ -35,12 +35,14 @@ import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
 import com.amitshilo.menudeldia.util.format
 import com.amitshilo.menudeldia.util.isCurrentlyOpen
+import com.amitshilo.menudeldia.util.opensAtToday
 import com.amitshilo.menudeldia.util.todayHours
 import kotlinx.datetime.LocalTime
 import menudeldia.composeapp.generated.resources.Res
-import menudeldia.composeapp.generated.resources.closed_now
 import menudeldia.composeapp.generated.resources.no_menu_today_short
+import menudeldia.composeapp.generated.resources.not_open_today
 import menudeldia.composeapp.generated.resources.open_now
+import menudeldia.composeapp.generated.resources.opens_at
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -52,6 +54,7 @@ fun RestaurantCard(
 ) {
     val isOpen = restaurant.isCurrentlyOpen()
     val closeTime = todayHours(restaurant.openingHours)?.closeTime
+    val opensAt = if (!isOpen) restaurant.opensAtToday() else null
 
     Card(
         modifier = modifier.fillMaxWidth().clickable(onClick = onClick),
@@ -101,7 +104,7 @@ fun RestaurantCard(
                     }
                 }
                 Spacer(Modifier.height(4.dp))
-                InfoRow(restaurant, isOpen, closeTime)
+                InfoRow(restaurant, isOpen, closeTime, opensAt)
             }
         }
     }
@@ -140,7 +143,7 @@ private fun NoMenuBadge() {
 }
 
 @Composable
-private fun InfoRow(restaurant: Restaurant, isOpen: Boolean, closeTime: LocalTime?) {
+private fun InfoRow(restaurant: Restaurant, isOpen: Boolean, closeTime: LocalTime?, opensAt: LocalTime?) {
     val statusText = when {
         isOpen && closeTime != null ->
             "Open · ${closeTime.hour.toString().padStart(2, '0')}:${
@@ -148,7 +151,12 @@ private fun InfoRow(restaurant: Restaurant, isOpen: Boolean, closeTime: LocalTim
             }"
 
         isOpen -> stringResource(Res.string.open_now)
-        else -> stringResource(Res.string.closed_now)
+        opensAt != null -> stringResource(
+            Res.string.opens_at,
+            "${opensAt.hour.toString().padStart(2, '0')}:${opensAt.minute.toString().padStart(2, '0')}",
+        )
+
+        else -> stringResource(Res.string.not_open_today)
     }
     Row(verticalAlignment = Alignment.CenterVertically) {
         restaurant.rating?.let { rating ->

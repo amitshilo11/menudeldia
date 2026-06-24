@@ -53,6 +53,8 @@
     <string name="closed_now">Closed</string>
     <string name="no_menu_today_short">No menu today</string>
     <string name="open_closes_at">Open · closes %1$s</string>
+    <string name="opens_at">Opens at %1$s</string>
+    <string name="not_open_today">Not open today</string>
 
     <!-- Detail screen -->
     <string name="daily_menu">Daily menu</string>

@@ -17,10 +17,11 @@ import com.amitshilo.menudeldia.domain.model.Restaurant
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 import menudeldia.composeapp.generated.resources.Res
-import menudeldia.composeapp.generated.resources.closed_now
 import menudeldia.composeapp.generated.resources.hours_header
+import menudeldia.composeapp.generated.resources.not_open_today
 import menudeldia.composeapp.generated.resources.open_closes_at
 import menudeldia.composeapp.generated.resources.open_now
+import menudeldia.composeapp.generated.resources.opens_at
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -40,7 +41,7 @@ fun HoursSection(restaurant: Restaurant, now: LocalDateTime, modifier: Modifier 
 }
 
 @Composable
-fun OpenStatusBadge(isOpen: Boolean, closesAt: String?, modifier: Modifier = Modifier) {
+fun OpenStatusBadge(isOpen: Boolean, closesAt: String?, opensAt: String? = null, modifier: Modifier = Modifier) {
     val bg = if (isOpen) MaterialTheme.colorScheme.tertiaryContainer
     else MaterialTheme.colorScheme.surfaceVariant
     val fg = if (isOpen) MaterialTheme.colorScheme.onTertiaryContainer
@@ -48,7 +49,8 @@ fun OpenStatusBadge(isOpen: Boolean, closesAt: String?, modifier: Modifier = Mod
     val label = when {
         isOpen && closesAt != null -> stringResource(Res.string.open_closes_at, closesAt)
         isOpen -> stringResource(Res.string.open_now)
-        else -> stringResource(Res.string.closed_now)
+        opensAt != null -> stringResource(Res.string.opens_at, opensAt)
+        else -> stringResource(Res.string.not_open_today)
     }
     Box(
         modifier = modifier
