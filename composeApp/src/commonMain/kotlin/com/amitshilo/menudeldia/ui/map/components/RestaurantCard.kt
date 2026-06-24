@@ -40,7 +40,6 @@ import com.amitshilo.menudeldia.util.todayHours
 import kotlinx.datetime.LocalTime
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.no_menu_today_short
-import menudeldia.composeapp.generated.resources.not_open_today
 import menudeldia.composeapp.generated.resources.open_now
 import menudeldia.composeapp.generated.resources.opens_at
 import org.jetbrains.compose.resources.stringResource
@@ -144,19 +143,17 @@ private fun NoMenuBadge() {
 
 @Composable
 private fun InfoRow(restaurant: Restaurant, isOpen: Boolean, closeTime: LocalTime?, opensAt: LocalTime?) {
-    val statusText = when {
+    val statusText: String? = when {
         isOpen && closeTime != null ->
             "Open · ${closeTime.hour.toString().padStart(2, '0')}:${
                 closeTime.minute.toString().padStart(2, '0')
             }"
-
         isOpen -> stringResource(Res.string.open_now)
         opensAt != null -> stringResource(
             Res.string.opens_at,
             "${opensAt.hour.toString().padStart(2, '0')}:${opensAt.minute.toString().padStart(2, '0')}",
         )
-
-        else -> stringResource(Res.string.not_open_today)
+        else -> null
     }
     Row(verticalAlignment = Alignment.CenterVertically) {
         restaurant.rating?.let { rating ->
@@ -178,11 +175,13 @@ private fun InfoRow(restaurant: Restaurant, isOpen: Boolean, closeTime: LocalTim
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            Text(
-                " · ",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.outlineVariant
-            )
+            if (restaurant.distanceMeters != null || statusText != null) {
+                Text(
+                    " · ",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.outlineVariant
+                )
+            }
         }
         restaurant.distanceMeters?.let { meters ->
             Text(
@@ -190,26 +189,30 @@ private fun InfoRow(restaurant: Restaurant, isOpen: Boolean, closeTime: LocalTim
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            if (statusText != null) {
+                Text(
+                    " · ",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.outlineVariant
+                )
+            }
+        }
+        if (statusText != null) {
+            Box(
+                modifier = Modifier
+                    .size(7.dp)
+                    .background(
+                        color = if (isOpen) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outlineVariant,
+                        shape = CircleShape,
+                    ),
+            )
+            Spacer(Modifier.width(4.dp))
             Text(
-                " · ",
+                text = statusText,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.outlineVariant
+                color = if (isOpen) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        Box(
-            modifier = Modifier
-                .size(7.dp)
-                .background(
-                    color = if (isOpen) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outlineVariant,
-                    shape = CircleShape,
-                ),
-        )
-        Spacer(Modifier.width(4.dp))
-        Text(
-            text = statusText,
-            style = MaterialTheme.typography.bodySmall,
-            color = if (isOpen) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant,
-        )
     }
 }
 

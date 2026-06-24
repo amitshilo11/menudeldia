@@ -18,7 +18,6 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.hours_header
-import menudeldia.composeapp.generated.resources.not_open_today
 import menudeldia.composeapp.generated.resources.open_closes_at
 import menudeldia.composeapp.generated.resources.open_now
 import menudeldia.composeapp.generated.resources.opens_at
@@ -42,16 +41,16 @@ fun HoursSection(restaurant: Restaurant, now: LocalDateTime, modifier: Modifier 
 
 @Composable
 fun OpenStatusBadge(isOpen: Boolean, closesAt: String?, opensAt: String? = null, modifier: Modifier = Modifier) {
-    val bg = if (isOpen) MaterialTheme.colorScheme.tertiaryContainer
-    else MaterialTheme.colorScheme.surfaceVariant
-    val fg = if (isOpen) MaterialTheme.colorScheme.onTertiaryContainer
-    else MaterialTheme.colorScheme.onSurfaceVariant
     val label = when {
         isOpen && closesAt != null -> stringResource(Res.string.open_closes_at, closesAt)
         isOpen -> stringResource(Res.string.open_now)
         opensAt != null -> stringResource(Res.string.opens_at, opensAt)
-        else -> stringResource(Res.string.not_open_today)
+        else -> return
     }
+    val bg = if (isOpen) MaterialTheme.colorScheme.tertiaryContainer
+    else MaterialTheme.colorScheme.surfaceVariant
+    val fg = if (isOpen) MaterialTheme.colorScheme.onTertiaryContainer
+    else MaterialTheme.colorScheme.onSurfaceVariant
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))

@@ -41,7 +41,6 @@ import kotlinx.datetime.LocalTime
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.close
 import menudeldia.composeapp.generated.resources.no_menu_today_short
-import menudeldia.composeapp.generated.resources.not_open_today
 import menudeldia.composeapp.generated.resources.open_closes
 import menudeldia.composeapp.generated.resources.open_now
 import menudeldia.composeapp.generated.resources.opens_at
@@ -179,7 +178,7 @@ private fun OpenStatusBadge(
             Res.string.opens_at,
             "${opensAt.hour.toString().padStart(2, '0')}:${opensAt.minute.toString().padStart(2, '0')}",
         )
-        else -> stringResource(Res.string.not_open_today)
+        else -> return
     }
     Surface(
         shape = RoundedCornerShape(999.dp),
