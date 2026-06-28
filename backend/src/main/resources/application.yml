@@ -44,8 +44,8 @@ menudeldia:
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
   rate-limit:
-    read-rpm: 60
-    auth-rpm: 10
+    read-rpm: 300
+    auth-rpm: 30
     admin-rpm: 10
   admin-token: ${ADMIN_TOKEN:}
 

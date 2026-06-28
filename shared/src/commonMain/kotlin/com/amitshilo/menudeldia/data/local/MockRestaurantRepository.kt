@@ -7,7 +7,11 @@ import com.amitshilo.menudeldia.util.haversineMeters
 
 class MockRestaurantRepository : RestaurantRepository {
 
-    override suspend fun getNearbyRestaurants(lat: Double, lng: Double, radiusMeters: Int): List<Restaurant> =
+    override suspend fun getNearbyRestaurants(
+        lat: Double,
+        lng: Double,
+        radiusMeters: Int
+    ): List<Restaurant> =
         mockRestaurants
             .map { it.copy(distanceMeters = haversineMeters(lat, lng, it.lat, it.lng)) }
             .filter { it.distanceMeters!! <= radiusMeters }

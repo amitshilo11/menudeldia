@@ -27,6 +27,7 @@ play-services-location = "21.3.0"
 material3 = "1.10.0-alpha05"
 metro = "1.1.1"
 multiplatform-settings = "1.3.0"
+compose-shimmer = "1.3.3"
 navigation-compose = "2.9.2"
 postgresql = "42.7.11"
 timber = "5.0.1"
@@ -104,6 +105,9 @@ ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 # Image loading — Coil 3
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+
+# Shimmer
+valentinilk-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "compose-shimmer" }
 
 # Maps (Android)
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "maps-compose" }

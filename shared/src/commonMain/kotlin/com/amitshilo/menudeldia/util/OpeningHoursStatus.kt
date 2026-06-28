@@ -3,6 +3,7 @@ package com.amitshilo.menudeldia.util
 import com.amitshilo.menudeldia.domain.model.OpeningHours
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
@@ -35,3 +36,15 @@ fun todayHours(
     now: LocalDateTime = currentLocalDateTime()
 ): OpeningHours? =
     hours.firstOrNull { it.dayOfWeek == now.dayOfWeek && !it.isClosed }
+
+/**
+ * Returns today's open time only if the restaurant hasn't opened yet (now < openTime).
+ * Returns null when already open, already past closing, or no hours today.
+ */
+fun opensAtToday(hours: List<OpeningHours>, now: LocalDateTime = currentLocalDateTime()): LocalTime? {
+    val today = hours.firstOrNull { it.dayOfWeek == now.dayOfWeek && !it.isClosed } ?: return null
+    return if (now.time < today.openTime) today.openTime else null
+}
+
+fun Restaurant.opensAtToday(now: LocalDateTime = currentLocalDateTime()): LocalTime? =
+    opensAtToday(openingHours, now)

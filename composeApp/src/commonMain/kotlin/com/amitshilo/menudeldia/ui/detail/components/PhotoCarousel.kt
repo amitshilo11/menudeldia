@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,7 +22,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
+import com.amitshilo.menudeldia.ui.designsystem.component.ShimmerBone
+import com.amitshilo.menudeldia.ui.designsystem.component.menuShimmer
+import com.amitshilo.menudeldia.ui.designsystem.component.rememberMenuShimmer
 
 @Composable
 fun PhotoCarousel(
@@ -35,12 +39,19 @@ fun PhotoCarousel(
         PhotoFallback(modifier = modifier.fillMaxWidth().height(240.dp))
         return
     }
+    val shimmer = rememberMenuShimmer()
     if (images.size == 1) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             model = images[0],
             contentDescription = contentDescription,
             modifier = modifier.fillMaxWidth().height(240.dp),
             contentScale = ContentScale.Crop,
+            loading = {
+                ShimmerBone(
+                    modifier = Modifier.fillMaxSize().menuShimmer(shimmer),
+                    shape = RoundedCornerShape(0.dp),
+                )
+            },
         )
         return
     }
@@ -50,11 +61,17 @@ fun PhotoCarousel(
             state = pagerState,
             modifier = Modifier.fillMaxWidth().height(240.dp),
         ) { page ->
-            AsyncImage(
+            SubcomposeAsyncImage(
                 model = images[page],
                 contentDescription = contentDescription,
                 modifier = Modifier.fillMaxWidth().height(240.dp),
                 contentScale = ContentScale.Crop,
+                loading = {
+                    ShimmerBone(
+                        modifier = Modifier.fillMaxSize().menuShimmer(shimmer),
+                        shape = RoundedCornerShape(0.dp),
+                    )
+                },
             )
         }
         Row(

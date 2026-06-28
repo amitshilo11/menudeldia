@@ -35,6 +35,10 @@
     <string name="restaurants_nearby">%1$d restaurants nearby</string>
     <string name="restaurants_of_total">%1$d of %2$d restaurants</string>
 
+    <!-- Best picks sheet -->
+    <string name="best_picks_title">Top picks for you today</string>
+    <string name="best_picks_subtitle">Based on rating, distance and today\'s menu</string>
+
     <!-- Empty / Error -->
     <string name="empty_no_menus">No menús nearby</string>
     <string name="empty_no_menus_sub">Try moving the map or recentering on your location.</string>
@@ -49,6 +53,8 @@
     <string name="closed_now">Closed</string>
     <string name="no_menu_today_short">No menu today</string>
     <string name="open_closes_at">Open · closes %1$s</string>
+    <string name="opens_at">Opens at %1$s</string>
+    <string name="not_open_today">Not open today</string>
 
     <!-- Detail screen -->
     <string name="daily_menu">Daily menu</string>

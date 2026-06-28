@@ -35,6 +35,10 @@
     <string name="restaurants_nearby">%1$d restaurantes cerca</string>
     <string name="restaurants_of_total">%1$d de %2$d restaurantes</string>
 
+    <!-- Best picks sheet -->
+    <string name="best_picks_title">Tus mejores opciones de hoy</string>
+    <string name="best_picks_subtitle">Según valoración, distancia y menú de hoy</string>
+
     <!-- Empty / Error -->
     <string name="empty_no_menus">No hay menús cerca</string>
     <string name="empty_no_menus_sub">Mueve el mapa o céntralo en tu ubicación.</string>
@@ -49,6 +53,8 @@
     <string name="closed_now">Cerrado</string>
     <string name="no_menu_today_short">Sin menú hoy</string>
     <string name="open_closes_at">Abierto · cierra a las %1$s</string>
+    <string name="opens_at">Abre a las %1$s</string>
+    <string name="not_open_today">Hoy no abre</string>
 
     <!-- Detail screen -->
     <string name="daily_menu">Menú del día</string>

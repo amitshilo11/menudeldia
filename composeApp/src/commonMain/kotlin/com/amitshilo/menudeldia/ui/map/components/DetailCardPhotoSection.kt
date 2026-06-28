@@ -35,14 +35,15 @@ import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
 import com.amitshilo.menudeldia.util.format
 import com.amitshilo.menudeldia.util.isCurrentlyOpen
+import com.amitshilo.menudeldia.util.opensAtToday
 import com.amitshilo.menudeldia.util.todayHours
 import kotlinx.datetime.LocalTime
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.close
-import menudeldia.composeapp.generated.resources.closed_now
 import menudeldia.composeapp.generated.resources.no_menu_today_short
 import menudeldia.composeapp.generated.resources.open_closes
 import menudeldia.composeapp.generated.resources.open_now
+import menudeldia.composeapp.generated.resources.opens_at
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -53,6 +54,7 @@ internal fun DetailCardPhotoSection(
 ) {
     val isOpen = restaurant.isCurrentlyOpen()
     val closeTime = todayHours(restaurant.openingHours)?.closeTime
+    val opensAt = if (!isOpen) restaurant.opensAtToday() else null
 
     Box(
         modifier = Modifier
@@ -97,6 +99,7 @@ internal fun DetailCardPhotoSection(
             isOpen = isOpen,
             hasMenuToday = restaurant.todayHasMenu,
             closeTime = closeTime,
+            opensAt = opensAt,
             modifier = Modifier.align(Alignment.TopStart).padding(12.dp),
         )
 
@@ -158,6 +161,7 @@ private fun OpenStatusBadge(
     isOpen: Boolean,
     hasMenuToday: Boolean,
     closeTime: LocalTime?,
+    opensAt: LocalTime?,
     modifier: Modifier = Modifier,
 ) {
     val label = when {
@@ -170,7 +174,11 @@ private fun OpenStatusBadge(
             )
         isOpen -> stringResource(Res.string.open_now)
         !hasMenuToday -> stringResource(Res.string.no_menu_today_short)
-        else -> stringResource(Res.string.closed_now)
+        opensAt != null -> stringResource(
+            Res.string.opens_at,
+            "${opensAt.hour.toString().padStart(2, '0')}:${opensAt.minute.toString().padStart(2, '0')}",
+        )
+        else -> return
     }
     Surface(
         shape = RoundedCornerShape(999.dp),

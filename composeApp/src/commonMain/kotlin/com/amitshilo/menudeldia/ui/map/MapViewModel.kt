@@ -6,8 +6,10 @@ import com.amitshilo.menudeldia.di.AppGraphProvider
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.domain.model.SearchFilterState
 import com.amitshilo.menudeldia.domain.usecase.FilterRestaurantsUseCase
+import com.amitshilo.menudeldia.domain.usecase.RecommendRestaurantsUseCase
 import com.amitshilo.menudeldia.location.UserLocation
 import com.amitshilo.menudeldia.util.haversineMeters
+import kotlin.math.abs
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -25,11 +27,15 @@ private const val BARCELONA_CENTER_LNG = 2.1734
 private const val INITIAL_SEARCH_RADIUS_METERS = 3000.0
 private const val MAX_SEARCH_RADIUS_METERS = 10_000.0
 private const val MIN_SEARCH_RADIUS_METERS = 50.0
+private const val MAP_IDLE_DEBOUNCE_MS = 500L
+private const val MOVE_THRESHOLD_FRACTION = 0.2
+private const val RADIUS_THRESHOLD_FRACTION = 0.15
 
 class MapViewModel : ViewModel() {
 
     private val useCase = AppGraphProvider.appGraph.getNearbyRestaurantsUseCase
     private val filterUseCase = FilterRestaurantsUseCase()
+    private val recommendUseCase = RecommendRestaurantsUseCase()
 
     private val _allRestaurants = MutableStateFlow<List<Restaurant>>(emptyList())
     private val _selectedRestaurant = MutableStateFlow<Restaurant?>(null)
@@ -37,6 +43,12 @@ class MapViewModel : ViewModel() {
     private val _loadError = MutableStateFlow<String?>(null)
     private val _isLoading = MutableStateFlow(true)
     private val _userLocation = MutableStateFlow<UserLocation?>(null)
+
+    private val _bestPicks = MutableStateFlow<List<Restaurant>>(emptyList())
+    val bestPicks: StateFlow<List<Restaurant>> = _bestPicks
+
+    private val _showBestPicks = MutableStateFlow(true)
+    val showBestPicks: StateFlow<Boolean> = _showBestPicks
 
     private val _effects = Channel<MapEffect>(Channel.BUFFERED)
     val effects: Flow<MapEffect> = _effects.receiveAsFlow()
@@ -85,6 +97,10 @@ class MapViewModel : ViewModel() {
         }
     }
 
+    fun dismissBestPicks() {
+        _showBestPicks.value = false
+    }
+
     private fun updateLocation(location: UserLocation?) {
         if (location == _userLocation.value) return
         _userLocation.value = location
@@ -92,13 +108,15 @@ class MapViewModel : ViewModel() {
 
     private fun onMapIdle(lat: Double, lng: Double, radiusMeters: Double) {
         val clamped = radiusMeters.coerceIn(MIN_SEARCH_RADIUS_METERS, MAX_SEARCH_RADIUS_METERS)
-        if (searchLat == lat && searchLng == lng && searchRadius == clamped) return
+        val movedMeters = haversineMeters(searchLat, searchLng, lat, lng)
+        val radiusChange = abs(clamped - searchRadius) / searchRadius
+        if (movedMeters < searchRadius * MOVE_THRESHOLD_FRACTION && radiusChange < RADIUS_THRESHOLD_FRACTION) return
         searchLat = lat
         searchLng = lng
         searchRadius = clamped
         mapIdleJob?.cancel()
         mapIdleJob = viewModelScope.launch {
-            delay(300)
+            delay(MAP_IDLE_DEBOUNCE_MS)
             loadRestaurants()
         }
     }
@@ -116,7 +134,7 @@ class MapViewModel : ViewModel() {
                 val userLng = loc?.lng ?: searchLng
                 val raw =
                     useCase(lat = searchLat, lng = searchLng, radiusMeters = searchRadius.toInt())
-                _allRestaurants.value = raw
+                val sorted = raw
                     .map {
                         it.copy(
                             distanceMeters = haversineMeters(
@@ -128,6 +146,10 @@ class MapViewModel : ViewModel() {
                         )
                     }
                     .sortedBy { it.distanceMeters }
+                _allRestaurants.value = sorted
+                if (_bestPicks.value.isEmpty() && sorted.isNotEmpty()) {
+                    _bestPicks.value = recommendUseCase(sorted)
+                }
                 _loadError.value = null
             } catch (e: Exception) {
                 _loadError.value = e.message ?: "Failed to load restaurants"

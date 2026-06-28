@@ -91,9 +91,15 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:8080\"")
+            buildConfigField("Boolean", "USE_MOCK_DATA", "false")
+        }
+        create("mock") {
+            initWith(getByName("debug"))
+            buildConfigField("Boolean", "USE_MOCK_DATA", "true")
         }
         release {
             buildConfigField("String", "API_BASE_URL", "\"https://menudiz.duckdns.org\"")
+            buildConfigField("Boolean", "USE_MOCK_DATA", "false")
         }
     }
 }

@@ -22,6 +22,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.amitshilo.menudeldia.ui.designsystem.component.menuShimmer
+import com.amitshilo.menudeldia.ui.designsystem.component.rememberMenuShimmer
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.domain.model.SearchFilterState
 import com.amitshilo.menudeldia.ui.preview.previewRestaurant
@@ -47,11 +49,26 @@ internal fun RestaurantListSheet(
     selectedRestaurantId: String?,
     filterState: SearchFilterState,
     totalCount: Int,
+    isLoading: Boolean,
     onRestaurantTap: (String) -> Unit,
     onClearFilters: () -> Unit,
     onRecenter: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (isLoading && restaurants.isEmpty()) {
+        val shimmer = rememberMenuShimmer()
+        LazyColumn(
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            modifier = modifier.fillMaxWidth().menuShimmer(shimmer),
+        ) {
+            items(5) {
+                RestaurantCardSkeleton(modifier = Modifier.padding(bottom = 8.dp))
+            }
+            item { Spacer(Modifier.navigationBarsPadding().height(16.dp)) }
+        }
+        return
+    }
+
     if (restaurants.isEmpty()) {
         EmptySheetState(
             isFiltered = filterState.isActive,
@@ -146,6 +163,26 @@ private fun PreviewRestaurantListSheet() {
                 selectedRestaurantId = previewRestaurant.id,
                 filterState = SearchFilterState(),
                 totalCount = previewRestaurants.size,
+                isLoading = false,
+                onRestaurantTap = {},
+                onClearFilters = {},
+                onRecenter = {},
+            )
+        }
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun PreviewRestaurantListSheetLoading() {
+    MenuTheme {
+        Surface {
+            RestaurantListSheet(
+                restaurants = emptyList(),
+                selectedRestaurantId = null,
+                filterState = SearchFilterState(),
+                totalCount = 0,
+                isLoading = true,
                 onRestaurantTap = {},
                 onClearFilters = {},
                 onRecenter = {},
@@ -164,6 +201,7 @@ private fun PreviewRestaurantListSheetFiltered() {
                 selectedRestaurantId = null,
                 filterState = SearchFilterState(openNowOnly = true, isVegan = true),
                 totalCount = previewRestaurants.size,
+                isLoading = false,
                 onRestaurantTap = {},
                 onClearFilters = {},
                 onRecenter = {},
@@ -182,6 +220,7 @@ private fun PreviewRestaurantListSheetEmpty() {
                 selectedRestaurantId = null,
                 filterState = SearchFilterState(),
                 totalCount = 0,
+                isLoading = false,
                 onRestaurantTap = {},
                 onClearFilters = {},
                 onRecenter = {},
@@ -200,6 +239,7 @@ private fun PreviewRestaurantListSheetEmptyFiltered() {
                 selectedRestaurantId = null,
                 filterState = SearchFilterState(openNowOnly = true),
                 totalCount = previewRestaurants.size,
+                isLoading = false,
                 onRestaurantTap = {},
                 onClearFilters = {},
                 onRecenter = {},
