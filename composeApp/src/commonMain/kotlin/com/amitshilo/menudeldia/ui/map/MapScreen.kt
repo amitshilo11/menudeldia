@@ -5,6 +5,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -41,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -61,6 +64,7 @@ import com.amitshilo.menudeldia.ui.map.components.RestaurantListSheet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.logo_wide
 import menudeldia.composeapp.generated.resources.my_location
 import menudeldia.composeapp.generated.resources.recenter_on_me
 import org.jetbrains.compose.resources.painterResource
@@ -296,13 +300,23 @@ private fun MapContent(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .statusBarsPadding()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
             ) {
-                MapSearchBar(
-                    filterState = state.filterState,
-                    onFilterChange = { onEvent(MapEvent.FilterChanged(it)) },
-                    onFilterClick = { filterPanelVisible = true },
-                )
+                Column(horizontalAlignment = Alignment.Start) {
+                    Image(
+                        painter = painterResource(Res.drawable.logo_wide),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .width(130.dp)
+                            .padding(vertical = 8.dp),
+                    )
+                    MapSearchBar(
+                        filterState = state.filterState,
+                        onFilterChange = { onEvent(MapEvent.FilterChanged(it)) },
+                        onFilterClick = { filterPanelVisible = true },
+                    )
+                }
             }
 
             AnimatedVisibility(
