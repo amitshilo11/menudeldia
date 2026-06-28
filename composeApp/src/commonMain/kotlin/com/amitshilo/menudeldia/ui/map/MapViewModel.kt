@@ -9,6 +9,7 @@ import com.amitshilo.menudeldia.domain.usecase.FilterRestaurantsUseCase
 import com.amitshilo.menudeldia.domain.usecase.RecommendRestaurantsUseCase
 import com.amitshilo.menudeldia.location.UserLocation
 import com.amitshilo.menudeldia.util.haversineMeters
+import kotlin.math.abs
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -26,6 +27,9 @@ private const val BARCELONA_CENTER_LNG = 2.1734
 private const val INITIAL_SEARCH_RADIUS_METERS = 3000.0
 private const val MAX_SEARCH_RADIUS_METERS = 10_000.0
 private const val MIN_SEARCH_RADIUS_METERS = 50.0
+private const val MAP_IDLE_DEBOUNCE_MS = 500L
+private const val MOVE_THRESHOLD_FRACTION = 0.2
+private const val RADIUS_THRESHOLD_FRACTION = 0.15
 
 class MapViewModel : ViewModel() {
 
@@ -104,13 +108,15 @@ class MapViewModel : ViewModel() {
 
     private fun onMapIdle(lat: Double, lng: Double, radiusMeters: Double) {
         val clamped = radiusMeters.coerceIn(MIN_SEARCH_RADIUS_METERS, MAX_SEARCH_RADIUS_METERS)
-        if (searchLat == lat && searchLng == lng && searchRadius == clamped) return
+        val movedMeters = haversineMeters(searchLat, searchLng, lat, lng)
+        val radiusChange = abs(clamped - searchRadius) / searchRadius
+        if (movedMeters < searchRadius * MOVE_THRESHOLD_FRACTION && radiusChange < RADIUS_THRESHOLD_FRACTION) return
         searchLat = lat
         searchLng = lng
         searchRadius = clamped
         mapIdleJob?.cancel()
         mapIdleJob = viewModelScope.launch {
-            delay(300)
+            delay(MAP_IDLE_DEBOUNCE_MS)
             loadRestaurants()
         }
     }
