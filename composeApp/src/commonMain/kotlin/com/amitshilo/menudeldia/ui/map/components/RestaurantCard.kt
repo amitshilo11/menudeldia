@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,7 +29,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
+import com.amitshilo.menudeldia.ui.designsystem.component.ShimmerBone
+import com.amitshilo.menudeldia.ui.designsystem.component.menuShimmer
+import com.amitshilo.menudeldia.ui.designsystem.component.rememberMenuShimmer
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.ui.preview.previewRestaurant
 import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
@@ -247,11 +251,18 @@ private fun Thumbnail(
     modifier: Modifier = Modifier,
 ) {
     if (thumbnailUrl != null) {
-        AsyncImage(
+        val shimmer = rememberMenuShimmer()
+        SubcomposeAsyncImage(
             model = thumbnailUrl,
             contentDescription = contentDescription,
             modifier = modifier,
             contentScale = ContentScale.Crop,
+            loading = {
+                ShimmerBone(
+                    modifier = Modifier.fillMaxSize().menuShimmer(shimmer),
+                    shape = RoundedCornerShape(0.dp),
+                )
+            },
         )
     } else {
         Box(
