@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
-import com.amitshilo.menudeldia.ui.designsystem.component.ShimmerBone
 import com.amitshilo.menudeldia.ui.designsystem.component.menuShimmer
 import com.amitshilo.menudeldia.ui.designsystem.component.rememberMenuShimmer
 import com.amitshilo.menudeldia.domain.model.Restaurant
@@ -258,9 +257,11 @@ private fun Thumbnail(
             modifier = modifier,
             contentScale = ContentScale.Crop,
             loading = {
-                ShimmerBone(
-                    modifier = Modifier.fillMaxSize().menuShimmer(shimmer),
-                    shape = RoundedCornerShape(0.dp),
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .menuShimmer(shimmer)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest),
                 )
             },
         )
