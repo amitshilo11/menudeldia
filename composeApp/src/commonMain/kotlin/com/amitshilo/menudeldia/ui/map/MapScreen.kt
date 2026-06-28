@@ -280,6 +280,7 @@ private fun MapContent(
                         selectedRestaurantId = state.selectedRestaurant?.id,
                         filterState = state.filterState,
                         totalCount = state.allRestaurants.size,
+                        isLoading = state.isLoading,
                         onRestaurantTap = { onEvent(MapEvent.SelectRestaurant(it)) },
                         onClearFilters = { onEvent(MapEvent.ClearFilters) },
                         onRecenter = { onEvent(MapEvent.RecenterRequested) },

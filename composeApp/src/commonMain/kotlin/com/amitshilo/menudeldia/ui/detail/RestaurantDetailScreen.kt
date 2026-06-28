@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
+import com.amitshilo.menudeldia.ui.detail.components.RestaurantDetailSkeleton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -87,10 +87,7 @@ fun RestaurantDetailScreen(restaurantId: String, navController: NavController) {
         },
     ) { innerPadding ->
         when (val state = uiState) {
-            is DetailUiState.Loading -> Box(
-                Modifier.fillMaxSize().padding(innerPadding),
-                contentAlignment = Alignment.Center,
-            ) { CircularProgressIndicator() }
+            is DetailUiState.Loading -> RestaurantDetailSkeleton(Modifier.padding(innerPadding))
 
             is DetailUiState.Error -> Box(
                 Modifier.fillMaxSize().padding(innerPadding),

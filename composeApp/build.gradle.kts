@@ -75,6 +75,7 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
             implementation(libs.metro.runtime)
+            implementation(libs.valentinilk.shimmer)
             implementation(libs.kotlinx.datetime)
             implementation(projects.shared)
         }
