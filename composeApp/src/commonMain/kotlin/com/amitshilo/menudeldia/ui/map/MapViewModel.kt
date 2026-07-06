@@ -9,7 +9,6 @@ import com.amitshilo.menudeldia.domain.usecase.FilterRestaurantsUseCase
 import com.amitshilo.menudeldia.domain.usecase.RecommendRestaurantsUseCase
 import com.amitshilo.menudeldia.location.UserLocation
 import com.amitshilo.menudeldia.util.haversineMeters
-import kotlin.math.abs
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -21,6 +20,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 private const val BARCELONA_CENTER_LAT = 41.3851
 private const val BARCELONA_CENTER_LNG = 2.1734
@@ -103,7 +103,31 @@ class MapViewModel : ViewModel() {
 
     private fun updateLocation(location: UserLocation?) {
         if (location == _userLocation.value) return
+        val hadLocation = _userLocation.value != null
         _userLocation.value = location
+        if (location != null && !hadLocation) {
+            refreshDistancesForLocation(location)
+        }
+    }
+
+    private fun refreshDistancesForLocation(location: UserLocation) {
+        val current = _allRestaurants.value
+        if (current.isEmpty()) return
+        val refreshed = current
+            .map {
+                it.copy(
+                    distanceMeters = haversineMeters(
+                        location.lat,
+                        location.lng,
+                        it.lat,
+                        it.lng
+                    )
+                )
+            }
+            .sortedBy { it.distanceMeters }
+        _allRestaurants.value = refreshed
+        _bestPicks.value = recommendUseCase(refreshed)
+        println("[MapViewModel] fallback refresh: ${refreshed.size} restaurants re-sorted from real location")
     }
 
     private fun onMapIdle(lat: Double, lng: Double, radiusMeters: Double) {
@@ -129,11 +153,13 @@ class MapViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             try {
+                val raw =
+                    useCase(lat = searchLat, lng = searchLng, radiusMeters = searchRadius.toInt())
+                // Read location AFTER the API call so we get the real location if it arrived
+                // during the network round-trip (avoids a race on cold start).
                 val loc = _userLocation.value
                 val userLat = loc?.lat ?: searchLat
                 val userLng = loc?.lng ?: searchLng
-                val raw =
-                    useCase(lat = searchLat, lng = searchLng, radiusMeters = searchRadius.toInt())
                 val sorted = raw
                     .map {
                         it.copy(
@@ -147,7 +173,10 @@ class MapViewModel : ViewModel() {
                     }
                     .sortedBy { it.distanceMeters }
                 _allRestaurants.value = sorted
-                if (_bestPicks.value.isEmpty() && sorted.isNotEmpty()) {
+                // Refresh picks whenever real location is known; fall back to once on first load.
+                val shouldRefreshPicks = sorted.isNotEmpty() &&
+                        (_userLocation.value != null || _bestPicks.value.isEmpty())
+                if (shouldRefreshPicks) {
                     _bestPicks.value = recommendUseCase(sorted)
                 }
                 _loadError.value = null
