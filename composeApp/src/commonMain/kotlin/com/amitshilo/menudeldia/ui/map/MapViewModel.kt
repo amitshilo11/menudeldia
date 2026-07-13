@@ -6,7 +6,9 @@ import com.amitshilo.menudeldia.di.AppGraphProvider
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.domain.model.SearchFilterState
 import com.amitshilo.menudeldia.domain.usecase.FilterRestaurantsUseCase
+import com.amitshilo.menudeldia.domain.usecase.IsBestPicksWindowUseCase
 import com.amitshilo.menudeldia.domain.usecase.RecommendRestaurantsUseCase
+import com.amitshilo.menudeldia.domain.usecase.SortPicksByLabelUseCase
 import com.amitshilo.menudeldia.location.UserLocation
 import com.amitshilo.menudeldia.util.haversineMeters
 import kotlinx.coroutines.Job
@@ -36,6 +38,8 @@ class MapViewModel : ViewModel() {
     private val useCase = AppGraphProvider.appGraph.getNearbyRestaurantsUseCase
     private val filterUseCase = FilterRestaurantsUseCase()
     private val recommendUseCase = RecommendRestaurantsUseCase()
+    private val sortPicksUseCase = SortPicksByLabelUseCase()
+    private val picksWindowUseCase = IsBestPicksWindowUseCase()
 
     private val _allRestaurants = MutableStateFlow<List<Restaurant>>(emptyList())
     private val _selectedRestaurant = MutableStateFlow<Restaurant?>(null)
@@ -47,7 +51,7 @@ class MapViewModel : ViewModel() {
     private val _bestPicks = MutableStateFlow<List<Restaurant>>(emptyList())
     val bestPicks: StateFlow<List<Restaurant>> = _bestPicks
 
-    private val _showBestPicks = MutableStateFlow(true)
+    private val _showBestPicks = MutableStateFlow(picksWindowUseCase())
     val showBestPicks: StateFlow<Boolean> = _showBestPicks
 
     private val _effects = Channel<MapEffect>(Channel.BUFFERED)
@@ -126,7 +130,7 @@ class MapViewModel : ViewModel() {
             }
             .sortedBy { it.distanceMeters }
         _allRestaurants.value = refreshed
-        _bestPicks.value = recommendUseCase(refreshed)
+        _bestPicks.value = sortPicksUseCase(recommendUseCase(refreshed))
         println("[MapViewModel] fallback refresh: ${refreshed.size} restaurants re-sorted from real location")
     }
 
