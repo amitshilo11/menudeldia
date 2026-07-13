@@ -6,6 +6,7 @@ import com.menudeldia.places.dto.PlaceDetailsResponse
 import com.menudeldia.restaurant.Restaurant
 import com.menudeldia.restaurant.RestaurantRepository
 import com.menudeldia.restaurant.ReviewData
+import com.menudeldia.restaurant.parseMenuIncludes
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -153,6 +154,8 @@ class PlacesEnrichmentService(
                 row.hidden = false
             }
         }
+        if (row.priceIncludesEn.isEmpty()) row.priceIncludesEn =
+            parseMenuIncludes(row.menuDetailsRaw)
         if (row.address.isNullOrBlank()) details.formattedAddress?.let { row.address = it }
         if (row.phone.isNullOrBlank()) details.internationalPhoneNumber?.let { row.phone = it }
         if (row.website.isNullOrBlank()) details.websiteUri?.let { row.website = it }

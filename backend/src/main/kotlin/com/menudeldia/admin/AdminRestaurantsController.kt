@@ -7,6 +7,7 @@ import com.menudeldia.places.PlacesEnrichmentService.Companion.PLACEHOLDER_LNG
 import com.menudeldia.restaurant.Cuisine
 import com.menudeldia.restaurant.Restaurant
 import com.menudeldia.restaurant.RestaurantRepository
+import com.menudeldia.restaurant.parseMenuIncludes
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -126,6 +127,7 @@ class AdminRestaurantsController(
                             cuisineEmoji = emoji,
                             menuPrice = row.menuPrice,
                             menuDetailsRaw = row.menuDetailsRaw,
+                            priceIncludesEn = parseMenuIncludes(row.menuDetailsRaw),
                             vegetarianOptions = row.vegetarianOptions,
                             glutenFreeOptions = row.glutenFreeOptions,
                             daysFrom = row.daysFrom,

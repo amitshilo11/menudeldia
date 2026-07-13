@@ -188,3 +188,9 @@ class RestaurantMapper {
     private fun Pair<LocalTime, LocalTime>.contains(time: LocalTime) =
         time >= first && time <= second
 }
+
+private val menuIncludesDelimiter = Regex("""\s*\+\s*""")
+
+/** Splits CSV `menu_details` text (e.g. "Starter + Main + Dessert + Drink") into course labels. */
+fun parseMenuIncludes(raw: String?): List<String> =
+    raw?.split(menuIncludesDelimiter)?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
