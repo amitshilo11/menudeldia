@@ -146,6 +146,7 @@ android {
 
 dependencies {
     debugImplementation(libs.compose.uiTooling)
+    "mockImplementation"(libs.compose.uiTooling)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
 }
