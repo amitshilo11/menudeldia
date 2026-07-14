@@ -23,7 +23,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
-import com.amitshilo.menudeldia.ui.designsystem.component.ShimmerBone
 import com.amitshilo.menudeldia.ui.designsystem.component.menuShimmer
 import com.amitshilo.menudeldia.ui.designsystem.component.rememberMenuShimmer
 
@@ -47,9 +46,11 @@ fun PhotoCarousel(
             modifier = modifier.fillMaxWidth().height(240.dp),
             contentScale = ContentScale.Crop,
             loading = {
-                ShimmerBone(
-                    modifier = Modifier.fillMaxSize().menuShimmer(shimmer),
-                    shape = RoundedCornerShape(0.dp),
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .menuShimmer(shimmer)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest),
                 )
             },
         )
@@ -67,9 +68,11 @@ fun PhotoCarousel(
                 modifier = Modifier.fillMaxWidth().height(240.dp),
                 contentScale = ContentScale.Crop,
                 loading = {
-                    ShimmerBone(
-                        modifier = Modifier.fillMaxSize().menuShimmer(shimmer),
-                        shape = RoundedCornerShape(0.dp),
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .menuShimmer(shimmer)
+                            .background(MaterialTheme.colorScheme.surfaceContainerHighest),
                     )
                 },
             )

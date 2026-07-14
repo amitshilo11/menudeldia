@@ -1,6 +1,7 @@
 package com.menudeldia.admin
 
 import com.menudeldia.restaurant.Restaurant
+import com.menudeldia.restaurant.parseMenuIncludes
 import java.time.Instant
 
 internal fun Restaurant.toAdminDto() = AdminRestaurantDto(
@@ -48,6 +49,7 @@ internal fun Restaurant.applyAdminUpdate(body: AdminRestaurantUpdate) {
     cuisineEmoji = body.cuisineEmoji?.blankToNull()
     menuPrice = body.menuPrice
     menuDetailsRaw = body.menuDetailsRaw?.blankToNull()
+    priceIncludesEn = parseMenuIncludes(menuDetailsRaw)
     vegetarianOptions = body.vegetarianOptions
     glutenFreeOptions = body.glutenFreeOptions
     daysFrom = body.daysFrom?.blankToNull()
@@ -68,6 +70,7 @@ internal fun Restaurant.applyCsvRow(row: CsvRow) {
     cuisineType = row.cuisineType
     menuPrice = row.menuPrice
     menuDetailsRaw = row.menuDetailsRaw
+    priceIncludesEn = parseMenuIncludes(menuDetailsRaw)
     vegetarianOptions = row.vegetarianOptions
     glutenFreeOptions = row.glutenFreeOptions
     daysFrom = row.daysFrom

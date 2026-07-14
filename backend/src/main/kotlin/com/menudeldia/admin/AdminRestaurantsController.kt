@@ -7,6 +7,7 @@ import com.menudeldia.places.PlacesEnrichmentService.Companion.PLACEHOLDER_LNG
 import com.menudeldia.restaurant.Cuisine
 import com.menudeldia.restaurant.Restaurant
 import com.menudeldia.restaurant.RestaurantRepository
+import com.menudeldia.restaurant.parseMenuIncludes
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -96,6 +97,23 @@ class AdminRestaurantsController(
         }
     }
 
+    /**
+     * One-shot backfill: derives `priceIncludesEn` from the `menuDetailsRaw` text already
+     * stored on each row. Pure local computation — no Google Place ID or Places API needed,
+     * so it fixes every already-imported restaurant immediately, regardless of enrichment state.
+     */
+    @PostMapping("/backfill-menu-includes")
+    fun backfillMenuIncludes(): Map<String, Int> {
+        val stale = repo.findAll()
+            .filter { it.priceIncludesEn.isEmpty() && !it.menuDetailsRaw.isNullOrBlank() }
+        stale.forEach { row ->
+            row.priceIncludesEn = parseMenuIncludes(row.menuDetailsRaw)
+            repo.save(row)
+        }
+        log.info("Backfilled priceIncludesEn for {} restaurants", stale.size)
+        return mapOf("updated" to stale.size)
+    }
+
     @PostMapping("/sync-csv", consumes = ["multipart/form-data"])
     fun syncFromCsv(@RequestParam("file") file: MultipartFile): Map<String, Any> {
         val rows = file.inputStream.bufferedReader().use { csv.parseRows(it) }
@@ -126,6 +144,7 @@ class AdminRestaurantsController(
                             cuisineEmoji = emoji,
                             menuPrice = row.menuPrice,
                             menuDetailsRaw = row.menuDetailsRaw,
+                            priceIncludesEn = parseMenuIncludes(row.menuDetailsRaw),
                             vegetarianOptions = row.vegetarianOptions,
                             glutenFreeOptions = row.glutenFreeOptions,
                             daysFrom = row.daysFrom,

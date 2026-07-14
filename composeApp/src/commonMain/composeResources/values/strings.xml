@@ -36,7 +36,7 @@
     <string name="restaurants_of_total">%1$d of %2$d restaurants</string>
 
     <!-- Best picks sheet -->
-    <string name="best_picks_title">Top picks for you today</string>
+    <string name="best_picks_title">Best lunch. Zero indecision.</string>
     <string name="best_picks_subtitle">Based on rating, distance and today\'s menu</string>
 
     <!-- Empty / Error -->
