@@ -1,4 +1,4 @@
-import ComposeApp
+import MenudizApp
 
 /// Implements the KMP IosAuthBridge protocol, combining Apple and Google sign-in.
 /// Pass an instance of this class to MainViewControllerKt.MainViewController(bridge:).

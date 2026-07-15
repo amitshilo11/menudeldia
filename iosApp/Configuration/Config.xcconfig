@@ -3,8 +3,8 @@ TEAM_ID=
 PRODUCT_NAME=Menudeldia
 PRODUCT_BUNDLE_IDENTIFIER=com.amitshilo.menudeldia.Menudeldia$(TEAM_ID)
 
-CURRENT_PROJECT_VERSION=1
-MARKETING_VERSION=1.0
+CURRENT_PROJECT_VERSION=4
+MARKETING_VERSION=1.1
 
 // Google Sign-In: set these to your iOS OAuth client ID values from Google Cloud Console
 GID_CLIENT_ID=

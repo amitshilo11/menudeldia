@@ -6,7 +6,7 @@ WORKDIR /workspace
 # TODO: actual build context is the repo root; adjust `docker compose build` accordingly,
 #       or switch to a multi-module aware buildx setup.
 COPY . .
-RUN ./gradlew :backend:bootJar --no-daemon -x test
+RUN ./gradlew :backend:bootJar --no-daemon -x test --configure-on-demand
 
 FROM eclipse-temurin:21-jre AS runtime
 WORKDIR /app
