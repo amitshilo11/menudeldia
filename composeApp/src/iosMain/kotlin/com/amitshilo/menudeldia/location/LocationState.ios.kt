@@ -19,13 +19,16 @@ import platform.CoreLocation.kCLLocationAccuracyHundredMeters
 import platform.Foundation.NSError
 import platform.darwin.NSObject
 
+private fun CLAuthorizationStatus.isGranted() =
+    this == kCLAuthorizationStatusAuthorizedWhenInUse || this == kCLAuthorizationStatusAuthorizedAlways
+
 @OptIn(ExperimentalForeignApi::class)
 @Composable
 actual fun rememberLocationState(): LocationState {
-    var hasPermission by remember { mutableStateOf(false) }
+    val manager = remember { CLLocationManager() }
+    var hasPermission by remember { mutableStateOf(manager.authorizationStatus.isGranted()) }
     var location by remember { mutableStateOf<UserLocation?>(null) }
 
-    val manager = remember { CLLocationManager() }
     val delegate = remember {
         object : NSObject(), CLLocationManagerDelegateProtocol {
             override fun locationManager(manager: CLLocationManager, didUpdateLocations: List<*>) {
@@ -39,13 +42,11 @@ actual fun rememberLocationState(): LocationState {
                 // Swallow — we render a "no location" fallback in the UI when location is null.
             }
 
-            override fun locationManager(
-                manager: CLLocationManager,
-                didChangeAuthorizationStatus: CLAuthorizationStatus,
-            ) {
-                val granted =
-                    didChangeAuthorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse ||
-                            didChangeAuthorizationStatus == kCLAuthorizationStatusAuthorizedAlways
+            // The system guarantees this fires once when the delegate is assigned (with the
+            // current status) and again on every change — unlike the deprecated
+            // locationManager(_:didChangeAuthorizationStatus:), which iOS may skip.
+            override fun locationManagerDidChangeAuthorization(manager: CLLocationManager) {
+                val granted = manager.authorizationStatus.isGranted()
                 hasPermission = granted
                 if (granted) manager.startUpdatingLocation()
             }
@@ -55,6 +56,7 @@ actual fun rememberLocationState(): LocationState {
     LaunchedEffect(Unit) {
         manager.delegate = delegate
         manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        if (hasPermission) manager.startUpdatingLocation()
     }
 
     DisposableEffect(Unit) {
