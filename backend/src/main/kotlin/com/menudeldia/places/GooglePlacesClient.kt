@@ -88,10 +88,20 @@ class GooglePlacesClient(private val props: AppProperties) {
             }
             bytes
         } catch (ex: HttpClientErrorException) {
-            log.warn("Google Places 4xx for photo {}: {}", photoName, ex.statusCode)
+            log.warn(
+                "Google Places 4xx for photo {}: {} — {}",
+                photoName,
+                ex.statusCode,
+                ex.responseBodyAsString
+            )
             throw PlacesException.ApiError("Client error ${ex.statusCode} for photo $photoName", ex)
         } catch (ex: HttpServerErrorException) {
-            log.warn("Google Places 5xx for photo {}: {}", photoName, ex.statusCode)
+            log.warn(
+                "Google Places 5xx for photo {}: {} — {}",
+                photoName,
+                ex.statusCode,
+                ex.responseBodyAsString
+            )
             throw PlacesException.ApiError("Server error ${ex.statusCode} for photo $photoName", ex)
         }
     }
