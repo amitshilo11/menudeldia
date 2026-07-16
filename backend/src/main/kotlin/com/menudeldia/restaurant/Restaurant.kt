@@ -159,6 +159,13 @@ class Restaurant(
     @Column(name = "available_photo_names", columnDefinition = "jsonb")
     var availablePhotoNames: List<String> = emptyList(),
 
+    // Positions within availablePhotoNames that were curated by an admin. Photo resource
+    // strings go stale and are re-fetched on every enrichment, so curation is tracked by
+    // position rather than by the literal name — see PlacesEnrichmentService.refresh().
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "curated_photo_indices", columnDefinition = "jsonb")
+    var curatedPhotoIndices: List<Int> = emptyList(),
+
     @Column(name = "places_fetched_at")
     var placesFetchedAt: Instant? = null,
 

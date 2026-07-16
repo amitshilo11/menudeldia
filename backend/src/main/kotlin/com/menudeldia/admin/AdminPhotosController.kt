@@ -51,12 +51,15 @@ class AdminPhotosController(
         @RequestBody body: UpdatePhotosRequest,
     ): ResponseEntity<AdminRestaurantDto> {
         val restaurant = repo.findById(id).orElse(null) ?: return ResponseEntity.notFound().build()
-        val available = restaurant.availablePhotoNames.toSet()
+        val available = restaurant.availablePhotoNames
         val invalid = body.photoNames.filter { it !in available }
         if (invalid.isNotEmpty()) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown photo names: $invalid")
         }
         restaurant.photoNames = body.photoNames
+        // Remembered by position so curation survives Google rotating photo resource
+        // strings on the next enrichment refresh — see PlacesEnrichmentService.refresh().
+        restaurant.curatedPhotoIndices = body.photoNames.map { available.indexOf(it) }
         repo.save(restaurant)
         log.info(
             "Updated photo curation for {} ({}): {} photos",
