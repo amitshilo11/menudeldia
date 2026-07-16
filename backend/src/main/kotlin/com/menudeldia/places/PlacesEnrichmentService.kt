@@ -100,9 +100,10 @@ class PlacesEnrichmentService(
             applyDetails(row, details)
             val allNames = details.photos.map { it.name }
             row.availablePhotoNames = allNames
-            if (row.photoNames.isEmpty()) {
-                row.photoNames = allNames.take(5)
-            }
+            // Google's photo resource names go stale, so photoNames must be re-derived from
+            // the freshly fetched allNames on every refresh rather than reusing old strings.
+            val curated = row.curatedPhotoIndices.mapNotNull { allNames.getOrNull(it) }
+            row.photoNames = curated.ifEmpty { allNames.take(5) }
             row.placesFetchedAt = Instant.now()
             row.updatedAt = Instant.now()
             repo.save(row)
