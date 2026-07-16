@@ -64,32 +64,16 @@ class GooglePlacesClient(private val props: AppProperties) {
 
     @CircuitBreaker(name = "googlePhotos", fallbackMethod = "photoBytesFallback")
     fun photoBytes(photoName: String, maxHeightPx: Int): ByteArray {
-        return try {
-            val mediaResponse = http.get()
+        val mediaResponse = try {
+            http.get()
                 .uri("/$photoName/media?maxHeightPx=$maxHeightPx&skipHttpRedirect=true")
                 .header("X-Goog-Api-Key", props.google.placesApiKey)
                 .retrieve()
                 .body(PhotoMediaResponse::class.java)
                 ?: throw PlacesException.ApiError("Empty photo metadata response for $photoName")
-
-            val bytes = RestClient.create().get()
-                .uri(mediaResponse.photoUri)
-                .retrieve()
-                .body(ByteArray::class.java)
-                ?: throw PlacesException.ApiError("Empty photo bytes response for $photoName")
-
-            if (bytes.size < 100) {
-                log.warn(
-                    "Photo {} download is suspiciously small ({} bytes): {}",
-                    photoName,
-                    bytes.size,
-                    String(bytes.take(100).toByteArray())
-                )
-            }
-            bytes
         } catch (ex: HttpClientErrorException) {
             log.warn(
-                "Google Places 4xx for photo {}: {} — {}",
+                "Google Places 4xx fetching photo metadata for {}: {} — {}",
                 photoName,
                 ex.statusCode,
                 ex.responseBodyAsString
@@ -97,13 +81,55 @@ class GooglePlacesClient(private val props: AppProperties) {
             throw PlacesException.ApiError("Client error ${ex.statusCode} for photo $photoName", ex)
         } catch (ex: HttpServerErrorException) {
             log.warn(
-                "Google Places 5xx for photo {}: {} — {}",
+                "Google Places 5xx fetching photo metadata for {}: {} — {}",
                 photoName,
                 ex.statusCode,
                 ex.responseBodyAsString
             )
             throw PlacesException.ApiError("Server error ${ex.statusCode} for photo $photoName", ex)
         }
+
+        val bytes = try {
+            RestClient.create().get()
+                .uri(mediaResponse.photoUri)
+                .retrieve()
+                .body(ByteArray::class.java)
+                ?: throw PlacesException.ApiError("Empty photo bytes response for $photoName")
+        } catch (ex: HttpClientErrorException) {
+            log.warn(
+                "Google Places 4xx downloading photo bytes for {} from {}: {} — {}",
+                photoName,
+                mediaResponse.photoUri,
+                ex.statusCode,
+                ex.responseBodyAsString
+            )
+            throw PlacesException.ApiError(
+                "Client error ${ex.statusCode} downloading photo $photoName",
+                ex
+            )
+        } catch (ex: HttpServerErrorException) {
+            log.warn(
+                "Google Places 5xx downloading photo bytes for {} from {}: {} — {}",
+                photoName,
+                mediaResponse.photoUri,
+                ex.statusCode,
+                ex.responseBodyAsString
+            )
+            throw PlacesException.ApiError(
+                "Server error ${ex.statusCode} downloading photo $photoName",
+                ex
+            )
+        }
+
+        if (bytes.size < 100) {
+            log.warn(
+                "Photo {} download is suspiciously small ({} bytes): {}",
+                photoName,
+                bytes.size,
+                String(bytes.take(100).toByteArray())
+            )
+        }
+        return bytes
     }
 
     @CircuitBreaker(name = "googlePlaces", fallbackMethod = "searchTextFallback")
