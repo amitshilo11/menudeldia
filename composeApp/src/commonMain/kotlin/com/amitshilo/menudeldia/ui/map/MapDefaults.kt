@@ -8,7 +8,9 @@ internal object MapDefaults {
     const val userMoveAnimMs = 600
     const val selectionAnimMs = 400
     const val recenterAnimMs = 400
-    const val collisionRadiusDp = 96
+    const val pinAppearAnimMs = 350
+    const val pinFadeInAnimMs = 600
+    const val collisionRadiusDp = 46
     const val focusDistanceMeters = 1500.0
     const val defaultRadiusMeters = 3000.0
 }
