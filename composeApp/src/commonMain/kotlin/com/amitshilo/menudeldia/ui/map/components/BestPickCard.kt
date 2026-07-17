@@ -175,7 +175,7 @@ internal fun BestPickCard(
 }
 
 @Composable
-private fun MenuIncludesRow(restaurant: Restaurant, modifier: Modifier = Modifier) {
+internal fun MenuIncludesRow(restaurant: Restaurant, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         Text(
             text = stringResource(Res.string.menu_del_dia_includes),
