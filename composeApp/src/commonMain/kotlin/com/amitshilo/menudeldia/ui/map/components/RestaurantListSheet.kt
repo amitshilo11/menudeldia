@@ -1,5 +1,7 @@
 package com.amitshilo.menudeldia.ui.map.components
 
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,10 +24,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.amitshilo.menudeldia.ui.designsystem.component.menuShimmer
-import com.amitshilo.menudeldia.ui.designsystem.component.rememberMenuShimmer
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.domain.model.SearchFilterState
+import com.amitshilo.menudeldia.ui.designsystem.component.menuShimmer
+import com.amitshilo.menudeldia.ui.designsystem.component.rememberMenuShimmer
 import com.amitshilo.menudeldia.ui.preview.previewRestaurant
 import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
 import com.amitshilo.menudeldia.ui.preview.previewRestaurants
@@ -101,7 +103,13 @@ internal fun RestaurantListSheet(
                 restaurant = restaurant,
                 isSelected = restaurant.id == selectedRestaurantId,
                 onClick = { onRestaurantTap(restaurant.id) },
-                modifier = Modifier.padding(bottom = 8.dp),
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .animateItem(
+                        fadeInSpec = tween(220),
+                        placementSpec = spring(stiffness = 400f, dampingRatio = 0.85f),
+                        fadeOutSpec = tween(150),
+                    ),
             )
         }
         item { Spacer(Modifier.navigationBarsPadding().height(16.dp)) }

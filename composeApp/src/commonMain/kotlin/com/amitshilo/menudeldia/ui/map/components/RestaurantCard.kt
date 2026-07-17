@@ -1,5 +1,6 @@
 package com.amitshilo.menudeldia.ui.map.components
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,21 +22,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
+import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.ui.designsystem.component.menuShimmer
 import com.amitshilo.menudeldia.ui.designsystem.component.rememberMenuShimmer
-import com.amitshilo.menudeldia.domain.model.Restaurant
-import com.amitshilo.menudeldia.ui.preview.previewRestaurant
-import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
-import com.amitshilo.menudeldia.ui.theme.MenuTheme
 import com.amitshilo.menudeldia.util.format
 import com.amitshilo.menudeldia.util.isCurrentlyOpen
 import com.amitshilo.menudeldia.util.opensAtToday
@@ -57,12 +55,13 @@ fun RestaurantCard(
     val isOpen = restaurant.isCurrentlyOpen()
     val closeTime = todayHours(restaurant.openingHours)?.closeTime
     val opensAt = if (!isOpen) restaurant.opensAtToday() else null
+    val elevation by animateDpAsState(if (isSelected) 3.dp else 1.dp)
 
     Card(
         modifier = modifier.fillMaxWidth().clickable(onClick = onClick),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
-        elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 3.dp else 1.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = elevation),
     ) {
         Column {
             Box(
@@ -272,31 +271,5 @@ private fun Thumbnail(
         ) {
             Text(text = "🍽", fontSize = 28.sp)
         }
-    }
-}
-
-// ── Previews ────────────────────────────────────────────────────────────────
-
-@PreviewLightDark
-@Composable
-private fun PreviewRestaurantCardSelected() {
-    MenuTheme { RestaurantCard(restaurant = previewRestaurant, isSelected = true, onClick = {}) }
-}
-
-@PreviewLightDark
-@Composable
-private fun PreviewRestaurantCardDefault() {
-    MenuTheme { RestaurantCard(restaurant = previewRestaurant, isSelected = false, onClick = {}) }
-}
-
-@PreviewLightDark
-@Composable
-private fun PreviewRestaurantCardNoMenu() {
-    MenuTheme {
-        RestaurantCard(
-            restaurant = previewRestaurantNoMenu,
-            isSelected = false,
-            onClick = {},
-        )
     }
 }

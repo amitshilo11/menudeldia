@@ -20,6 +20,7 @@ import com.amitshilo.menudeldia.util.haversineMeters
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.ObjCSignatureOverride
 import kotlinx.cinterop.useContents
+import platform.CoreGraphics.CGAffineTransformMakeScale
 import platform.CoreLocation.CLLocationCoordinate2DMake
 import platform.MapKit.MKAnnotationProtocol
 import platform.MapKit.MKAnnotationView
@@ -28,6 +29,7 @@ import platform.MapKit.MKMapView
 import platform.MapKit.MKMapViewDelegateProtocol
 import platform.UIKit.UIColor
 import platform.UIKit.UIEdgeInsetsMake
+import platform.UIKit.UIView
 import platform.darwin.NSObject
 
 private fun Color.toUIColor(): UIColor = UIColor(
@@ -69,6 +71,21 @@ private class MapDelegate(
                     ?: DotAnnotationView(ann, "dot")
             view.configure(primaryColor)
             view
+        }
+    }
+
+    @ObjCSignatureOverride
+    override fun mapView(mapView: MKMapView, didAddAnnotationViews: List<*>) {
+        didAddAnnotationViews.filterIsInstance<MKAnnotationView>().forEach { view ->
+            view.alpha = 0.0
+            view.transform = CGAffineTransformMakeScale(0.4, 0.4)
+            UIView.animateWithDuration(
+                duration = MapDefaults.pinAppearAnimMs / 1000.0,
+                animations = {
+                    view.alpha = 1.0
+                    view.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                },
+            )
         }
     }
 
