@@ -34,6 +34,7 @@
     <string name="recenter_on_me">Centrar en mi ubicación</string>
     <string name="restaurants_nearby">%1$d restaurantes cerca</string>
     <string name="restaurants_of_total">%1$d de %2$d restaurantes</string>
+    <string name="loading_restaurants">Cargando restaurantes…</string>
 
     <!-- Best picks sheet -->
     <string name="best_picks_title">Tus mejores opciones de hoy</string>

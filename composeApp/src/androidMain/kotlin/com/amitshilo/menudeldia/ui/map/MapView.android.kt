@@ -51,6 +51,7 @@ actual @Composable fun MapView(
     }
     var bubbleIds by remember { mutableStateOf<Set<String>>(emptySet()) }
     var hasMovedToUser by remember { mutableStateOf(false) }
+    var mapLoaded by remember { mutableStateOf(false) }
 
     LaunchedEffect(userLocation) {
         if (userLocation != null && !hasMovedToUser) {
@@ -100,7 +101,7 @@ actual @Composable fun MapView(
         onMapIdle(center.latitude, center.longitude, radiusMeters)
     }
 
-    LaunchedEffect(cameraPositionState.isMoving, restaurants, selectedRestaurantId) {
+    LaunchedEffect(cameraPositionState.isMoving, restaurants, selectedRestaurantId, mapLoaded) {
         if (cameraPositionState.isMoving) return@LaunchedEffect
         val projection = cameraPositionState.projection ?: return@LaunchedEffect
         bubbleIds = pickBubbleIds(restaurants, selectedRestaurantId, { r ->
@@ -125,6 +126,7 @@ actual @Composable fun MapView(
         ),
         contentPadding = PaddingValues(bottom = bottomPadding),
         onMapClick = { onMapTap() },
+        onMapLoaded = { mapLoaded = true },
     ) {
         restaurants.forEach { restaurant ->
             val isBubble = restaurant.id in bubbleIds

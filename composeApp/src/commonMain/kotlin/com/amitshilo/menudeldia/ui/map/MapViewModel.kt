@@ -51,6 +51,9 @@ class MapViewModel : ViewModel() {
     private val _bestPicks = MutableStateFlow<List<Restaurant>>(emptyList())
     val bestPicks: StateFlow<List<Restaurant>> = _bestPicks
 
+    private val _fetchGeneration = MutableStateFlow(0)
+    val fetchGeneration: StateFlow<Int> = _fetchGeneration
+
     private val _showBestPicks = MutableStateFlow(picksWindowUseCase())
     val showBestPicks: StateFlow<Boolean> = _showBestPicks
 
@@ -177,6 +180,7 @@ class MapViewModel : ViewModel() {
                     }
                     .sortedBy { it.distanceMeters }
                 _allRestaurants.value = sorted
+                _fetchGeneration.value++
                 // Refresh picks whenever real location is known; fall back to once on first load.
                 val shouldRefreshPicks = sorted.isNotEmpty() &&
                         (_userLocation.value != null || _bestPicks.value.isEmpty())

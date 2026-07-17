@@ -113,7 +113,10 @@ private class MapDelegate(
             centerLng + lngDelta / 2
         )
         onMapIdle(centerLat, centerLng, radiusMeters)
+        refreshBubbleClassification(mapView)
+    }
 
+    fun refreshBubbleClassification(mapView: MKMapView) {
         val bubbleIds = pickBubbleIds(restaurants, selectedId, { r ->
             mapView.convertCoordinate(
                 CLLocationCoordinate2DMake(r.lat, r.lng),
@@ -218,6 +221,7 @@ actual fun MapView(
             delegate.selectedId = selectedRestaurantId
             delegate.primaryColor = primaryColor
             annotationManager.sync(mv, restaurants, selectedRestaurantId, primaryColor)
+            delegate.refreshBubbleClassification(mv)
             mv.setLayoutMargins(UIEdgeInsetsMake(0.0, 0.0, bottomPadding.value.toDouble(), 0.0))
         },
         modifier = modifier,

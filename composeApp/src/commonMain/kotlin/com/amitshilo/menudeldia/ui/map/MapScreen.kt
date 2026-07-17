@@ -173,6 +173,7 @@ fun MapScreen(navController: NavController) {
     val uiState by viewModel.uiState.collectAsState()
     val bestPicks by viewModel.bestPicks.collectAsState()
     val showBestPicks by viewModel.showBestPicks.collectAsState()
+    val fetchGeneration by viewModel.fetchGeneration.collectAsState()
     val locationState = rememberLocationState()
 
     LaunchedEffect(locationState.location) {
@@ -195,6 +196,7 @@ fun MapScreen(navController: NavController) {
             effects = viewModel.effects,
             bestPicks = bestPicks,
             showBestPicks = showBestPicks,
+            fetchGeneration = fetchGeneration,
             onDismissBestPicks = viewModel::dismissBestPicks,
             onNavigateToDetail = { navController.navigate(Screen.RestaurantDetail.createRoute(it)) },
         )
@@ -210,6 +212,7 @@ private fun MapContent(
     effects: Flow<MapEffect>,
     bestPicks: List<Restaurant>,
     showBestPicks: Boolean,
+    fetchGeneration: Int,
     onDismissBestPicks: () -> Unit,
     onNavigateToDetail: (String) -> Unit,
 ) {
@@ -285,6 +288,7 @@ private fun MapContent(
                         filterState = state.filterState,
                         totalCount = state.allRestaurants.size,
                         isLoading = state.isLoading,
+                        fetchGeneration = fetchGeneration,
                         onRestaurantTap = { onEvent(MapEvent.SelectRestaurant(it)) },
                         onClearFilters = { onEvent(MapEvent.ClearFilters) },
                         onRecenter = { onEvent(MapEvent.RecenterRequested) },
