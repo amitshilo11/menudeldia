@@ -187,7 +187,7 @@ private fun MenuIncludesSection(restaurant: Restaurant) {
     )
 }
 
-private fun menuItemLabel(item: String) = when (item.lowercase()) {
+internal fun menuItemLabel(item: String) = when (item.lowercase()) {
     "starter", "entrante", "primer" -> "✓ Starter"
     "main", "principal", "segundo" -> "✓ Main"
     "dessert", "postre" -> "☕ Dessert"
