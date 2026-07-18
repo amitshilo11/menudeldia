@@ -2,7 +2,6 @@ package com.amitshilo.menudeldia.ui.map.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,10 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -39,8 +38,10 @@ import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.ic_distance
 import menudeldia.composeapp.generated.resources.ic_hotel_class
 import menudeldia.composeapp.generated.resources.ic_money_bag
+import menudeldia.composeapp.generated.resources.menu_del_dia_includes
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 // ── Pick-type accent colours ──────────────────────────────────────────────────
 private val AmberPick = Color(0xFFF5A623)
@@ -160,17 +161,13 @@ internal fun BestPickCard(
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(
-                    start = 12.dp,
-                    end = 12.dp,
-                    top = 10.dp,
-                    bottom = if (restaurant.menuIncludes.isEmpty()) 10.dp else 6.dp,
-                ),
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
             )
             if (restaurant.menuIncludes.isNotEmpty()) {
-                MenuIncludesChipsRow(
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f))
+                MenuIncludesRow(
                     restaurant = restaurant,
-                    modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
                 )
             }
         }
@@ -178,26 +175,22 @@ internal fun BestPickCard(
 }
 
 @Composable
-internal fun MenuIncludesChipsRow(restaurant: Restaurant, modifier: Modifier = Modifier) {
-    if (restaurant.menuIncludes.isEmpty()) return
-    Row(
-        modifier = modifier.horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-    ) {
-        restaurant.menuIncludes.forEach { item ->
-            Surface(
-                shape = RoundedCornerShape(999.dp),
-                color = MaterialTheme.colorScheme.primaryContainer,
-            ) {
-                Text(
-                    text = menuItemLabel(item),
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-                )
-            }
-        }
+internal fun MenuIncludesRow(restaurant: Restaurant, modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(Res.string.menu_del_dia_includes),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.SemiBold,
+        )
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = restaurant.menuIncludes.joinToString("  ·  ") { menuItemLabel(it) },
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 
