@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -106,14 +105,14 @@ fun RestaurantCard(
                         NoMenuBadge()
                     }
                 }
-                Spacer(Modifier.height(4.dp))
-                InfoRow(restaurant, isOpen, closeTime, opensAt)
                 if (restaurant.menuIncludes.isNotEmpty()) {
-                    Spacer(Modifier.height(10.dp))
-                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f))
-                    Spacer(Modifier.height(10.dp))
-                    MenuIncludesRow(restaurant)
+                    Spacer(Modifier.height(6.dp))
+                    MenuIncludesChipsRow(restaurant)
+                    Spacer(Modifier.height(8.dp))
+                } else {
+                    Spacer(Modifier.height(4.dp))
                 }
+                InfoRow(restaurant, isOpen, closeTime, opensAt)
             }
         }
     }
