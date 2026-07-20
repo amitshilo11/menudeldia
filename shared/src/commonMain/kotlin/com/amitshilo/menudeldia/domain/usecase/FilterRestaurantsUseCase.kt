@@ -2,6 +2,7 @@ package com.amitshilo.menudeldia.domain.usecase
 
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.domain.model.SearchFilterState
+import com.amitshilo.menudeldia.util.isCurrentlyOpen
 
 class FilterRestaurantsUseCase {
     operator fun invoke(restaurants: List<Restaurant>, state: SearchFilterState): List<Restaurant> {
@@ -13,7 +14,7 @@ class FilterRestaurantsUseCase {
                         it.cuisineType?.lowercase()?.contains(q) == true
             }
         }
-        if (state.openNowOnly) result = result.filter { it.todayHasMenu }
+        if (state.openNowOnly) result = result.filter { it.isCurrentlyOpen() }
         if (state.isVegan) result = result.filter { it.servesVegetarianFood }
         if (state.isGlutenFree) result = result.filter { it.servesGlutenFree }
         state.minPrice?.let { min ->
