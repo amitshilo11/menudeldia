@@ -20,6 +20,7 @@ import com.amitshilo.menudeldia.util.haversineMeters
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.ObjCSignatureOverride
 import kotlinx.cinterop.useContents
+import platform.CoreGraphics.CGAffineTransformMakeScale
 import platform.CoreLocation.CLLocationCoordinate2DMake
 import platform.MapKit.MKAnnotationProtocol
 import platform.MapKit.MKAnnotationView
@@ -28,6 +29,7 @@ import platform.MapKit.MKMapView
 import platform.MapKit.MKMapViewDelegateProtocol
 import platform.UIKit.UIColor
 import platform.UIKit.UIEdgeInsetsMake
+import platform.UIKit.UIView
 import platform.darwin.NSObject
 
 private fun Color.toUIColor(): UIColor = UIColor(
@@ -73,6 +75,21 @@ private class MapDelegate(
     }
 
     @ObjCSignatureOverride
+    override fun mapView(mapView: MKMapView, didAddAnnotationViews: List<*>) {
+        didAddAnnotationViews.filterIsInstance<MKAnnotationView>().forEach { view ->
+            view.alpha = 0.0
+            view.transform = CGAffineTransformMakeScale(0.4, 0.4)
+            UIView.animateWithDuration(
+                duration = MapDefaults.pinAppearAnimMs / 1000.0,
+                animations = {
+                    view.alpha = 1.0
+                    view.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                },
+            )
+        }
+    }
+
+    @ObjCSignatureOverride
     override fun mapView(mapView: MKMapView, didSelectAnnotationView: MKAnnotationView) {
         val ann = didSelectAnnotationView.annotation as? RestaurantAnnotation ?: return
         onRestaurantSelected(ann.restaurantId)
@@ -96,7 +113,10 @@ private class MapDelegate(
             centerLng + lngDelta / 2
         )
         onMapIdle(centerLat, centerLng, radiusMeters)
+        refreshBubbleClassification(mapView)
+    }
 
+    fun refreshBubbleClassification(mapView: MKMapView) {
         val bubbleIds = pickBubbleIds(restaurants, selectedId, { r ->
             mapView.convertCoordinate(
                 CLLocationCoordinate2DMake(r.lat, r.lng),
@@ -201,6 +221,7 @@ actual fun MapView(
             delegate.selectedId = selectedRestaurantId
             delegate.primaryColor = primaryColor
             annotationManager.sync(mv, restaurants, selectedRestaurantId, primaryColor)
+            delegate.refreshBubbleClassification(mv)
             mv.setLayoutMargins(UIEdgeInsetsMake(0.0, 0.0, bottomPadding.value.toDouble(), 0.0))
         },
         modifier = modifier,

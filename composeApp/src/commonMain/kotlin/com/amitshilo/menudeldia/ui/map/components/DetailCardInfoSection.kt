@@ -187,7 +187,7 @@ private fun MenuIncludesSection(restaurant: Restaurant) {
     )
 }
 
-private fun menuItemLabel(item: String) = when (item.lowercase()) {
+internal fun menuItemLabel(item: String) = when (item.lowercase()) {
     "starter", "entrante", "primer" -> "✓ Starter"
     "main", "principal", "segundo" -> "✓ Main"
     "dessert", "postre" -> "☕ Dessert"
@@ -211,7 +211,7 @@ private fun ActionButtonRow(
         Button(
             onClick = onDirections,
             modifier = Modifier.weight(1f).height(52.dp),
-            shape = RoundedCornerShape(999.dp),
+            shape = RoundedCornerShape(16.dp),
             contentPadding = PaddingValues(horizontal = 16.dp),
         ) {
             Icon(painterResource(Res.drawable.my_location), null, Modifier.size(18.dp))

@@ -8,6 +8,7 @@ import com.menudeldia.restaurant.RestaurantRepository
 import com.menudeldia.restaurant.ReviewData
 import com.menudeldia.restaurant.parseMenuIncludes
 import org.slf4j.LoggerFactory
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.time.Instant
@@ -49,6 +50,16 @@ class PlacesEnrichmentService(
                 }
             } catch (ex: PlacesException) {
                 log.warn("Text search failed for {} ({}): {}", row.name, row.id, ex.message)
+            } catch (ex: DataIntegrityViolationException) {
+                // Text search resolved this row to a place ID another restaurant already
+                // owns (duplicate/near-duplicate listing) — skip it rather than aborting
+                // the whole batch.
+                log.warn(
+                    "Place ID for '{}' ({}) collides with an existing restaurant: {}",
+                    row.name,
+                    row.id,
+                    ex.message
+                )
             }
         }
         return found
