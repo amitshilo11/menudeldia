@@ -25,7 +25,9 @@ class FilterRestaurantsUseCase {
         }
         state.cuisineType?.let { ct -> result = result.filter { it.cuisineType == ct } }
         state.maxDistanceMeters?.let { d ->
-            result = result.filter { it.distanceMeters != null && it.distanceMeters <= d }
+            // An unknown distance (no user location yet) can't fail the filter — dropping
+            // those would blank the map instead of simply not narrowing it.
+            result = result.filter { it.distanceMeters == null || it.distanceMeters <= d }
         }
         return result
     }

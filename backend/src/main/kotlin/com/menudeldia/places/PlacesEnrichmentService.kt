@@ -96,6 +96,43 @@ class PlacesEnrichmentService(
     }
 
     /**
+     * One-shot repair for rows whose coordinates were never written — see the V4 migration.
+     *
+     * Unlike [enrichAllStale] this ignores `places_fetched_at`: the affected rows enriched
+     * successfully and so look perfectly fresh, which is exactly why nothing ever revisited
+     * them. Selection is driven by `coords_verified` instead.
+     */
+    fun backfillCoordinates(limit: Int = 200): EnrichmentStats {
+        val resolved = findMissingPlaceIds(limit)
+        if (resolved > 0) log.info(
+            "Resolved {} missing place IDs before coordinate backfill",
+            resolved
+        )
+        val rows = repo.findWithUnverifiedCoords().take(limit)
+        var succeeded = 0
+        var failed = 0
+        var lastFailReason: String? = null
+        rows.forEach { row ->
+            val err = refresh(row)
+            if (err == null) succeeded++ else {
+                failed++; lastFailReason = err
+            }
+        }
+        log.info(
+            "Coordinate backfill: {} attempted, {} succeeded, {} failed",
+            rows.size,
+            succeeded,
+            failed
+        )
+        return EnrichmentStats(
+            attempted = rows.size,
+            succeeded = succeeded,
+            failed = failed,
+            failureReason = lastFailReason,
+        )
+    }
+
+    /**
      * Synchronous enrichment of a single restaurant.
      * Returns null on success, or an error message on failure.
      */
@@ -159,11 +196,16 @@ class PlacesEnrichmentService(
     private fun applyDetails(row: Restaurant, details: PlaceDetailsResponse) {
         // Admin-editable CSV fields: fill-when-empty only, so manual edits in the admin
         // portal are never silently overwritten by a refresh.
-        if (row.lat == PLACEHOLDER_LAT && row.lng == PLACEHOLDER_LNG) {
+        if (!row.coordsVerified) {
             details.location?.let {
+                // A row still on the "never placed" sentinel was created hidden and is
+                // published once it has a location. Rows being repaired already have
+                // coordinates, so their visibility is an admin decision — leave it alone.
+                val wasUnplaced = row.lat == PLACEHOLDER_LAT && row.lng == PLACEHOLDER_LNG
                 row.lat = it.latitude
                 row.lng = it.longitude
-                row.hidden = false
+                row.coordsVerified = true
+                if (wasUnplaced) row.hidden = false
             }
         }
         if (row.priceIncludesEn.isEmpty()) row.priceIncludesEn =

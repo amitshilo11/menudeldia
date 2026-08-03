@@ -114,6 +114,22 @@ class AdminRestaurantsController(
         return mapOf("updated" to stale.size)
     }
 
+    /**
+     * One-shot repair for rows stranded by the old coordinate sentinel (see V4 migration):
+     * re-fetches the location from Places for every row whose coordinates were never
+     * verified. Safe to re-run — rows drop out of the set as they succeed.
+     */
+    @PostMapping("/backfill-coords")
+    fun backfillCoords(@RequestParam(defaultValue = "200") limit: Int): Map<String, Any?> {
+        val stats = enrichment.backfillCoordinates(limit)
+        return mapOf(
+            "attempted" to stats.attempted,
+            "succeeded" to stats.succeeded,
+            "failed" to stats.failed,
+            "failureReason" to stats.failureReason,
+        )
+    }
+
     @PostMapping("/sync-csv", consumes = ["multipart/form-data"])
     fun syncFromCsv(@RequestParam("file") file: MultipartFile): Map<String, Any> {
         val rows = file.inputStream.bufferedReader().use { csv.parseRows(it) }

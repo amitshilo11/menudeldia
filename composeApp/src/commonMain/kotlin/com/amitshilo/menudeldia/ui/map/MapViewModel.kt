@@ -33,6 +33,12 @@ private const val MAP_IDLE_DEBOUNCE_MS = 500L
 private const val MOVE_THRESHOLD_FRACTION = 0.2
 private const val RADIUS_THRESHOLD_FRACTION = 0.15
 
+/**
+ * How many candidates the recommender draws for the picks sheet. Wider than the three
+ * label slots so [SortPicksByLabelUseCase] has something to actually choose from.
+ */
+private const val PICK_CANDIDATE_COUNT = 6
+
 class MapViewModel : ViewModel() {
 
     private val useCase = AppGraphProvider.appGraph.getNearbyRestaurantsUseCase
@@ -64,6 +70,12 @@ class MapViewModel : ViewModel() {
     private var searchLng = BARCELONA_CENTER_LNG
     private var searchRadius = INITIAL_SEARCH_RADIUS_METERS
     private var mapIdleJob: Job? = null
+
+    /**
+     * Today's pick candidates, kept around so the label slots can be re-filled when the
+     * user's location changes without re-rolling the daily selection underneath them.
+     */
+    private var pickCandidates: List<Restaurant> = emptyList()
 
     val uiState: StateFlow<MapUiState> = combine(
         _isLoading,
@@ -110,32 +122,43 @@ class MapViewModel : ViewModel() {
 
     private fun updateLocation(location: UserLocation?) {
         if (location == _userLocation.value) return
-        val hadLocation = _userLocation.value != null
         _userLocation.value = location
-        if (location != null && !hadLocation) {
-            refreshDistancesForLocation(location)
-        }
+        refreshDistancesForLocation(location)
     }
 
-    private fun refreshDistancesForLocation(location: UserLocation) {
+    /**
+     * Re-measures every distance against [location]. Runs on *every* fix, not just the
+     * first: the first location a device hands us is typically a coarse cached one, and
+     * pinning distances to it leaves the entire list — and the picks sheet — measured
+     * from wherever the phone happened to be last.
+     */
+    private fun refreshDistancesForLocation(location: UserLocation?) {
+        pickCandidates = pickCandidates.withDistancesFrom(location)
+        _bestPicks.value = sortPicksUseCase(pickCandidates)
+        _selectedRestaurant.value = _selectedRestaurant.value
+            ?.let { listOf(it).withDistancesFrom(location).first() }
         val current = _allRestaurants.value
         if (current.isEmpty()) return
-        val refreshed = current
-            .map {
-                it.copy(
-                    distanceMeters = haversineMeters(
-                        location.lat,
-                        location.lng,
-                        it.lat,
-                        it.lng
-                    )
-                )
-            }
-            .sortedBy { it.distanceMeters }
-        _allRestaurants.value = refreshed
-        _bestPicks.value = sortPicksUseCase(recommendUseCase(refreshed))
-        println("[MapViewModel] fallback refresh: ${refreshed.size} restaurants re-sorted from real location")
+        _allRestaurants.value = current.withDistancesFrom(location).sortedByProximity()
     }
+
+    /**
+     * A null [location] means the distance is genuinely unknown, so it stays null and the
+     * UI omits it rather than quietly reporting the distance from the map centre as if it
+     * were measured from the user.
+     */
+    private fun List<Restaurant>.withDistancesFrom(location: UserLocation?): List<Restaurant> =
+        map { restaurant ->
+            restaurant.copy(
+                distanceMeters = location?.let {
+                    haversineMeters(it.lat, it.lng, restaurant.lat, restaurant.lng)
+                },
+            )
+        }
+
+    /** Nearest first, falling back to the search centre while the location is unknown. */
+    private fun List<Restaurant>.sortedByProximity(): List<Restaurant> =
+        sortedBy { it.distanceMeters ?: haversineMeters(searchLat, searchLng, it.lat, it.lng) }
 
     private fun onMapIdle(lat: Double, lng: Double, radiusMeters: Double) {
         val clamped = radiusMeters.coerceIn(MIN_SEARCH_RADIUS_METERS, MAX_SEARCH_RADIUS_METERS)
@@ -165,28 +188,17 @@ class MapViewModel : ViewModel() {
                 // Read location AFTER the API call so we get the real location if it arrived
                 // during the network round-trip (avoids a race on cold start).
                 val loc = _userLocation.value
-                val userLat = loc?.lat ?: searchLat
-                val userLng = loc?.lng ?: searchLng
-                val sorted = raw
-                    .map {
-                        it.copy(
-                            distanceMeters = haversineMeters(
-                                userLat,
-                                userLng,
-                                it.lat,
-                                it.lng
-                            )
-                        )
-                    }
-                    .sortedBy { it.distanceMeters }
+                val sorted = raw.withDistancesFrom(loc).sortedByProximity()
                 _allRestaurants.value = sorted
                 _fetchGeneration.value++
-                // Refresh picks whenever real location is known; fall back to once on first load.
-                val shouldRefreshPicks = sorted.isNotEmpty() &&
-                        (_userLocation.value != null || _bestPicks.value.isEmpty())
-                if (shouldRefreshPicks) {
-                    _bestPicks.value = recommendUseCase(sorted)
+                // The selection is meant to be stable for the day, so draw it once and from
+                // then on only re-measure it — panning the map must not re-roll the picks.
+                pickCandidates = if (pickCandidates.isEmpty()) {
+                    recommendUseCase(sorted, count = PICK_CANDIDATE_COUNT)
+                } else {
+                    pickCandidates.withDistancesFrom(loc)
                 }
+                _bestPicks.value = sortPicksUseCase(pickCandidates)
                 _loadError.value = null
             } catch (e: Exception) {
                 _loadError.value = e.message ?: "Failed to load restaurants"

@@ -43,6 +43,14 @@ class Restaurant(
     @Column(nullable = false)
     var lng: Double,
 
+    /**
+     * True once Google Places has supplied this row's location. Enrichment writes lat/lng
+     * only while this is false. It replaces the old "coordinates still equal the sentinel"
+     * check, which stranded every row whose sentinel value later changed — see V4.
+     */
+    @Column(name = "coords_verified", nullable = false)
+    var coordsVerified: Boolean = false,
+
     /** Generated PostGIS geography column — Postgres computes from lat/lng; never write from JPA. */
     @Column(name = "geom", insertable = false, updatable = false)
     var geom: Point? = null,
