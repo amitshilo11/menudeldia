@@ -33,6 +33,7 @@ import coil3.compose.SubcomposeAsyncImage
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.ui.designsystem.component.menuShimmer
 import com.amitshilo.menudeldia.ui.designsystem.component.rememberMenuShimmer
+import com.amitshilo.menudeldia.ui.theme.MenuPickAccent
 import com.amitshilo.menudeldia.util.format
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.ic_distance
@@ -43,15 +44,10 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-// ── Pick-type accent colours ──────────────────────────────────────────────────
-private val AmberPick = Color(0xFFF5A623)
-private val GreenPick = Color(0xFF4CAF50)
-private val PurplePick = Color(0xFF7B61FF)
-
 internal enum class PickType(val color: Color, val label: String, val icon: DrawableResource) {
-    BestRated(AmberPick, "BEST RATED", Res.drawable.ic_hotel_class),
-    BestPrice(GreenPick, "BEST PRICE", Res.drawable.ic_money_bag),
-    Closest(PurplePick, "CLOSEST", Res.drawable.ic_distance),
+    BestRated(MenuPickAccent.amber, "BEST RATED", Res.drawable.ic_hotel_class),
+    BestPrice(MenuPickAccent.green, "BEST PRICE", Res.drawable.ic_money_bag),
+    Closest(MenuPickAccent.purple, "CLOSEST", Res.drawable.ic_distance),
 }
 
 internal fun pickTypeAt(index: Int) = when (index) {
@@ -133,7 +129,11 @@ internal fun BestPickCard(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         restaurant.rating?.let { rating ->
-                            Text("★", style = MaterialTheme.typography.bodySmall, color = AmberPick)
+                            Text(
+                                "★",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MenuPickAccent.amber,
+                            )
                             Text(
                                 text = " ${rating.format(1)}",
                                 style = MaterialTheme.typography.bodySmall,
