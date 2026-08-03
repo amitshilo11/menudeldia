@@ -51,9 +51,13 @@ private val CreamHighest = Color(0xFFF2E6D4) // surfaceContainerHighest
 private val ErrorRed          = Color(0xFFBA1A1A)
 private val ErrorRedContainer = Color(0xFFFFDAD6)
 
+// Exposed so platform-specific code (e.g. iOS launch/transition UI) can reuse the
+// same source of truth instead of hardcoding colors.
+val PrimaryColor = Orange40
+
 // ── Light scheme ─────────────────────────────────────────────────────────────
 private val LightColors = lightColorScheme(
-    primary = Orange40,
+    primary = PrimaryColor,
     onPrimary = Color.White,
     primaryContainer = Orange90,
     onPrimaryContainer = Orange10,

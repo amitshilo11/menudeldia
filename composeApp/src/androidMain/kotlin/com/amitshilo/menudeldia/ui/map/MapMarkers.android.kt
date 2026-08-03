@@ -113,7 +113,7 @@ internal fun PriceMarker(
     }
     val borderModifier = when {
         isSelected -> Modifier.border(2.dp, MaterialTheme.colorScheme.primary, shape)
-        else -> Modifier.border(0.5.dp, Color(0xFFCCCCCC), shape)
+        else -> Modifier.border(0.5.dp, MaterialTheme.colorScheme.outlineVariant, shape)
     }
 
     Box(
