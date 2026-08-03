@@ -31,6 +31,7 @@ class SecurityConfig(
                     .access(AdminTokenAuthorizationManager(props.adminToken))
                     .requestMatchers("/admin", "/admin/**").permitAll()
                     .requestMatchers("/privacy.html", "/privacy").permitAll()
+                    .requestMatchers("/support.html", "/support").permitAll()
                     .requestMatchers("${ApiPaths.V1}/health").permitAll()
                     .requestMatchers("${ApiPaths.V1}/auth/**").permitAll()
                     .requestMatchers("${ApiPaths.V1}/restaurants/**").permitAll()
