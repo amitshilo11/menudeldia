@@ -95,7 +95,7 @@ internal class BubbleAnnotationView(
     }
 
     private fun buildBubblePath(w: Double, pillH: Double, totalH: Double): UIBezierPath {
-        val cr = 10.0
+        val cr = 16.0
         val nw = 12.0
         val cx = w / 2.0
         val path = UIBezierPath()

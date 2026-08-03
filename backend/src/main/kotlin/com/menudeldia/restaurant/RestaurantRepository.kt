@@ -62,6 +62,10 @@ interface RestaurantRepository : JpaRepository<Restaurant, UUID> {
     @Query("SELECT r FROM Restaurant r WHERE r.googlePlaceId IS NULL")
     fun findWithoutPlaceId(): List<Restaurant>
 
+    /** Rows whose location Google Places has never confirmed — repair targets for V4. */
+    @Query("SELECT r FROM Restaurant r WHERE r.coordsVerified = FALSE")
+    fun findWithUnverifiedCoords(): List<Restaurant>
+
     fun existsByGooglePlaceIdAndIdNot(googlePlaceId: String, id: UUID): Boolean
 
     fun findByGooglePlaceId(googlePlaceId: String): Restaurant?

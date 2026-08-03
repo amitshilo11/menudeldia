@@ -34,6 +34,7 @@
     <string name="recenter_on_me">Recenter on me</string>
     <string name="restaurants_nearby">%1$d restaurants nearby</string>
     <string name="restaurants_of_total">%1$d of %2$d restaurants</string>
+    <string name="loading_restaurants">Loading restaurants…</string>
 
     <!-- Best picks sheet -->
     <string name="best_picks_title">Best lunch. Zero indecision.</string>

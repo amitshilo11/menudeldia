@@ -14,6 +14,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 
 @SuppressLint("MissingPermission")
 @Composable
@@ -36,10 +38,20 @@ actual fun rememberLocationState(): LocationState {
     ) { granted -> hasPermission = granted }
 
     LaunchedEffect(hasPermission) {
-        if (hasPermission) {
-            fusedClient.lastLocation.addOnSuccessListener { loc ->
+        if (!hasPermission) return@LaunchedEffect
+        // The cached fix lands instantly, so the map has something to centre on — but it
+        // can be hours old and kilometres away, so it only fills the gap until a real fix
+        // arrives. Distances are measured from whichever of the two is current.
+        fusedClient.lastLocation.addOnSuccessListener { loc ->
+            if (location == null) {
                 loc?.let { location = UserLocation(it.latitude, it.longitude) }
             }
+        }
+        fusedClient.getCurrentLocation(
+            Priority.PRIORITY_HIGH_ACCURACY,
+            CancellationTokenSource().token,
+        ).addOnSuccessListener { loc ->
+            loc?.let { location = UserLocation(it.latitude, it.longitude) }
         }
     }
 
