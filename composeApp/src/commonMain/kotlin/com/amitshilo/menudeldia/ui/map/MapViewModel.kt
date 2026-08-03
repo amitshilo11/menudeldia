@@ -22,6 +22,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.error_failed_to_load_restaurants
+import org.jetbrains.compose.resources.getString
 import kotlin.math.abs
 
 private const val BARCELONA_CENTER_LAT = 41.3851
@@ -201,7 +204,8 @@ class MapViewModel : ViewModel() {
                 _bestPicks.value = sortPicksUseCase(pickCandidates)
                 _loadError.value = null
             } catch (e: Exception) {
-                _loadError.value = e.message ?: "Failed to load restaurants"
+                _loadError.value =
+                    e.message ?: getString(Res.string.error_failed_to_load_restaurants)
             } finally {
                 _isLoading.value = false
             }

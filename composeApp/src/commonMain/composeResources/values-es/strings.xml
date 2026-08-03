@@ -12,6 +12,9 @@
     <string name="login_guest">Continuar como invitado</string>
     <string name="login_privacy_prefix">Al continuar, aceptas nuestra </string>
     <string name="login_privacy_link">Política de privacidad</string>
+    <string name="sign_in_unavailable">Inicio de sesión no disponible en esta plataforma</string>
+    <string name="sign_in_failed">Error al iniciar sesión</string>
+    <string name="sign_in_cancelled">Inicio de sesión cancelado</string>
 
     <!-- Location permission screen -->
     <string name="location_permission_title">Encuentra el menú más cercano</string>
@@ -22,6 +25,7 @@
     <!-- Account screen -->
     <string name="account_title">Cuenta</string>
     <string name="account_sign_out">Cerrar sesión</string>
+    <string name="account_guest_message">Estás navegando como invitado.</string>
 
     <!-- Map screen -->
     <string name="search_placeholder">Buscar restaurantes…</string>
@@ -30,15 +34,38 @@
     <string name="filter_open_now">Abierto ahora</string>
     <string name="filter_vegan">Vegano</string>
     <string name="filter_gluten_free">Sin gluten</string>
+    <string name="filter_clear_all">Borrar todo</string>
+    <string name="filter_section_availability">Disponibilidad</string>
+    <string name="filter_section_diet">Dieta</string>
+    <string name="filter_section_price">Precio</string>
+    <string name="filter_price_any">Cualquier precio</string>
+    <string name="filter_price_under_10">&lt; €10</string>
+    <string name="filter_price_10_15">€10 – €15</string>
+    <string name="filter_price_over_15">&gt; €15</string>
+    <string name="filter_section_cuisine">Cocina</string>
+    <string name="filter_cuisine_all">Todas</string>
+    <string name="filter_section_distance">Distancia máxima</string>
+    <string name="filter_distance_any">Cualquier distancia</string>
+    <string name="filter_distance_500m">500m</string>
+    <string name="filter_distance_1km">1 km</string>
+    <string name="filter_distance_2km">2 km</string>
+    <string name="filter_distance_5km">5 km</string>
     <string name="recenter">Centrar</string>
     <string name="recenter_on_me">Centrar en mi ubicación</string>
     <string name="restaurants_nearby">%1$d restaurantes cerca</string>
     <string name="restaurants_of_total">%1$d de %2$d restaurantes</string>
     <string name="loading_restaurants">Cargando restaurantes…</string>
+    <string name="web_map_coming_soon">Mapa — Próximamente en web</string>
 
     <!-- Best picks sheet -->
     <string name="best_picks_title">Tus mejores opciones de hoy</string>
     <string name="best_picks_subtitle">Según valoración, distancia y menú de hoy</string>
+    <string name="best_picks_options_subtitle">%1$d grandes opciones, cada día cerca de ti.</string>
+    <string name="best_picks_updated_daily">Actualizado a diario a las 11:00</string>
+    <string name="best_picks_fresh_deals">Ofertas frescas de restaurantes reales</string>
+    <string name="pick_best_rated">MEJOR VALORADO</string>
+    <string name="pick_best_price">MEJOR PRECIO</string>
+    <string name="pick_closest">MÁS CERCA</string>
 
     <!-- Empty / Error -->
     <string name="empty_no_menus">No hay menús cerca</string>
@@ -48,6 +75,8 @@
     <string name="clear_filters">Borrar filtros</string>
     <string name="error_title">No podemos llegar a la cocina</string>
     <string name="retry">Reintentar</string>
+    <string name="error_failed_to_load_restaurant">No se pudo cargar el restaurante</string>
+    <string name="error_failed_to_load_restaurants">No se pudieron cargar los restaurantes</string>
 
     <!-- Status badges -->
     <string name="open_now">Abierto</string>
@@ -71,4 +100,28 @@
     <string name="includes_drink">Bebida</string>
     <string name="call_restaurant">Llamar</string>
     <string name="more_info">Más info</string>
+    <string name="about_header">Sobre</string>
+    <string name="features_header">Características</string>
+    <string name="reviews_header">Reseñas</string>
+    <string name="read_more">Leer más</string>
+    <string name="read_less">Leer menos</string>
+    <string name="feature_vegetarian">Vegano</string>
+    <string name="feature_outdoor_seating">Terraza</string>
+    <string name="feature_takeout">Para llevar</string>
+    <string name="feature_reservable">Reservable</string>
+    <string name="menu_includes_header">Incluye</string>
+    <string name="menu_del_dia_includes">MENÚ DEL DÍA INCLUDES</string>
+    <string name="price_badge_menu_del_dia">menú del día</string>
+    <string name="open_closes">Abierto · cierra a las %1$s</string>
+    <string name="show_all_reviews">Ver todas las reseñas</string>
+    <string name="ratings_count">%1$d valoraciones</string>
+    <string name="chip_vegan_options">Opciones veganas</string>
+    <string name="chip_outdoor">Terraza</string>
+    <string name="menu_item_starter">Entrante</string>
+    <string name="menu_item_main">Principal</string>
+    <string name="menu_item_dessert">Postre</string>
+    <string name="menu_item_drink">Bebida</string>
+    <string name="menu_item_coffee">Café</string>
+    <string name="menu_item_bread">Pan</string>
+    <string name="review_anonymous_author">Anónimo</string>
 </resources>

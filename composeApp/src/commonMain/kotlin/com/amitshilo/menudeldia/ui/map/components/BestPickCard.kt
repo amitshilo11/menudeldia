@@ -40,14 +40,22 @@ import menudeldia.composeapp.generated.resources.ic_distance
 import menudeldia.composeapp.generated.resources.ic_hotel_class
 import menudeldia.composeapp.generated.resources.ic_money_bag
 import menudeldia.composeapp.generated.resources.menu_del_dia_includes
+import menudeldia.composeapp.generated.resources.pick_best_price
+import menudeldia.composeapp.generated.resources.pick_best_rated
+import menudeldia.composeapp.generated.resources.pick_closest
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-internal enum class PickType(val color: Color, val label: String, val icon: DrawableResource) {
-    BestRated(MenuPickAccent.amber, "BEST RATED", Res.drawable.ic_hotel_class),
-    BestPrice(MenuPickAccent.green, "BEST PRICE", Res.drawable.ic_money_bag),
-    Closest(MenuPickAccent.purple, "CLOSEST", Res.drawable.ic_distance),
+internal enum class PickType(
+    val color: Color,
+    val labelRes: StringResource,
+    val icon: DrawableResource
+) {
+    BestRated(MenuPickAccent.amber, Res.string.pick_best_rated, Res.drawable.ic_hotel_class),
+    BestPrice(MenuPickAccent.green, Res.string.pick_best_price, Res.drawable.ic_money_bag),
+    Closest(MenuPickAccent.purple, Res.string.pick_closest, Res.drawable.ic_distance),
 }
 
 internal fun pickTypeAt(index: Int) = when (index) {
@@ -184,8 +192,12 @@ internal fun MenuIncludesRow(restaurant: Restaurant, modifier: Modifier = Modifi
             fontWeight = FontWeight.SemiBold,
         )
         Spacer(Modifier.height(4.dp))
+        val menuIncludesLabels = mutableListOf<String>()
+        for (item in restaurant.menuIncludes) {
+            menuIncludesLabels.add(menuItemLabel(item))
+        }
         Text(
-            text = restaurant.menuIncludes.joinToString("  ·  ") { menuItemLabel(it) },
+            text = menuIncludesLabels.joinToString("  ·  "),
             style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.SemiBold,
             maxLines = 1,
@@ -215,7 +227,7 @@ private fun PickBadge(pickType: PickType, modifier: Modifier = Modifier) {
                 modifier = Modifier.size(14.dp),
             )
             Text(
-                text = pickType.label,
+                text = stringResource(pickType.labelRes),
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,

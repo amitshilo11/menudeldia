@@ -32,6 +32,7 @@ import coil3.compose.AsyncImage
 import com.amitshilo.menudeldia.domain.auth.model.AuthState
 import com.amitshilo.menudeldia.navigation.Screen
 import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.account_guest_message
 import menudeldia.composeapp.generated.resources.account_sign_out
 import menudeldia.composeapp.generated.resources.account_title
 import menudeldia.composeapp.generated.resources.arrow_back
@@ -110,7 +111,7 @@ fun AccountScreen(
 
                 AuthState.Guest -> {
                     Text(
-                        text = "You're browsing as a guest.",
+                        text = stringResource(Res.string.account_guest_message),
                         style = MaterialTheme.typography.bodyLarge,
                     )
                     Spacer(Modifier.height(24.dp))

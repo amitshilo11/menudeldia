@@ -46,8 +46,10 @@ import com.amitshilo.menudeldia.util.opensAtToday
 import com.amitshilo.menudeldia.util.todayHours
 import kotlinx.datetime.LocalTime
 import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.filter_vegan
 import menudeldia.composeapp.generated.resources.ic_directions_walk
 import menudeldia.composeapp.generated.resources.no_menu_today_short
+import menudeldia.composeapp.generated.resources.open_closes_at
 import menudeldia.composeapp.generated.resources.open_now
 import menudeldia.composeapp.generated.resources.opens_at
 import org.jetbrains.compose.resources.painterResource
@@ -178,9 +180,12 @@ private fun NoMenuBadge() {
 private fun StatusBadge(isOpen: Boolean, closeTime: LocalTime?, opensAt: LocalTime?) {
     val statusText = when {
         isOpen && closeTime != null ->
-            "Open · ${closeTime.hour.toString().padStart(2, '0')}:${
-                closeTime.minute.toString().padStart(2, '0')
-            }"
+            stringResource(
+                Res.string.open_closes_at,
+                "${closeTime.hour.toString().padStart(2, '0')}:${
+                    closeTime.minute.toString().padStart(2, '0')
+                }",
+            )
         isOpen -> stringResource(Res.string.open_now)
         opensAt != null -> stringResource(
             Res.string.opens_at,
@@ -254,9 +259,10 @@ private fun DistanceLabel(meters: Double, modifier: Modifier = Modifier) {
 
 @Composable
 private fun CardChipsRow(restaurant: Restaurant, modifier: Modifier = Modifier) {
+    val veganLabel = stringResource(Res.string.filter_vegan)
     val chips = buildList {
         restaurant.cuisineType?.let { add("${restaurant.cuisineEmoji ?: "🍽"} $it") }
-        if (restaurant.servesVegetarianFood) add("🌱 Vegan")
+        if (restaurant.servesVegetarianFood) add("🌱 $veganLabel")
     }
     if (chips.isEmpty()) return
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(6.dp)) {

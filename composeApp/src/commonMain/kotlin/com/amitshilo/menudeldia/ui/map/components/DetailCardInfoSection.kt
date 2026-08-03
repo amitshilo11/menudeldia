@@ -36,12 +36,23 @@ import com.amitshilo.menudeldia.util.rememberUriLauncher
 import com.amitshilo.menudeldia.util.walkingDirectionsUri
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.call_restaurant
+import menudeldia.composeapp.generated.resources.chip_outdoor
+import menudeldia.composeapp.generated.resources.chip_vegan_options
+import menudeldia.composeapp.generated.resources.feature_reservable
+import menudeldia.composeapp.generated.resources.feature_takeout
 import menudeldia.composeapp.generated.resources.get_directions
 import menudeldia.composeapp.generated.resources.info
 import menudeldia.composeapp.generated.resources.menu_del_dia_includes
+import menudeldia.composeapp.generated.resources.menu_item_bread
+import menudeldia.composeapp.generated.resources.menu_item_coffee
+import menudeldia.composeapp.generated.resources.menu_item_dessert
+import menudeldia.composeapp.generated.resources.menu_item_drink
+import menudeldia.composeapp.generated.resources.menu_item_main
+import menudeldia.composeapp.generated.resources.menu_item_starter
 import menudeldia.composeapp.generated.resources.more_info
 import menudeldia.composeapp.generated.resources.my_location
 import menudeldia.composeapp.generated.resources.phone
+import menudeldia.composeapp.generated.resources.ratings_count
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -127,10 +138,12 @@ private fun StarRatingRow(restaurant: Restaurant) {
             )
         }
         Spacer(Modifier.width(4.dp))
+        val ratingsCountLabel =
+            restaurant.userRatingCount?.let { stringResource(Res.string.ratings_count, it) }
         Text(
             text = buildString {
                 append(rating.format(1))
-                restaurant.userRatingCount?.let { append(" · $it ratings") }
+                ratingsCountLabel?.let { append(" · $it") }
             },
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -140,12 +153,16 @@ private fun StarRatingRow(restaurant: Restaurant) {
 
 @Composable
 private fun FeatureChipsRow(restaurant: Restaurant) {
+    val veganOptionsLabel = stringResource(Res.string.chip_vegan_options)
+    val outdoorLabel = stringResource(Res.string.chip_outdoor)
+    val reservableLabel = stringResource(Res.string.feature_reservable)
+    val takeoutLabel = stringResource(Res.string.feature_takeout)
     val chips = buildList {
         restaurant.cuisineType?.let { add("${restaurant.cuisineEmoji ?: "🍽"} $it") }
-        if (restaurant.servesVegetarianFood) add("🌱 Vegan options")
-        if (restaurant.outdoorSeating) add("☀️ Outdoor")
-        if (restaurant.reservable) add("📅 Reservable")
-        if (restaurant.takeout) add("🥡 Takeout")
+        if (restaurant.servesVegetarianFood) add("🌱 $veganOptionsLabel")
+        if (restaurant.outdoorSeating) add("☀️ $outdoorLabel")
+        if (restaurant.reservable) add("📅 $reservableLabel")
+        if (restaurant.takeout) add("🥡 $takeoutLabel")
     }
     if (chips.isEmpty()) return
     Row(
@@ -178,8 +195,12 @@ private fun MenuIncludesSection(restaurant: Restaurant) {
         fontWeight = FontWeight.SemiBold,
     )
     Spacer(Modifier.height(6.dp))
+    val menuIncludesLabels = mutableListOf<String>()
+    for (item in restaurant.menuIncludes) {
+        menuIncludesLabels.add(menuItemLabel(item))
+    }
     Text(
-        text = restaurant.menuIncludes.joinToString("  ·  ") { menuItemLabel(it) },
+        text = menuIncludesLabels.joinToString("  ·  "),
         style = MaterialTheme.typography.bodyMedium,
         fontWeight = FontWeight.SemiBold,
         maxLines = 1,
@@ -187,13 +208,14 @@ private fun MenuIncludesSection(restaurant: Restaurant) {
     )
 }
 
-internal fun menuItemLabel(item: String) = when (item.lowercase()) {
-    "starter", "entrante", "primer" -> "✓ Starter"
-    "main", "principal", "segundo" -> "✓ Main"
-    "dessert", "postre" -> "☕ Dessert"
-    "drink", "bebida" -> "🥤 Drink"
-    "coffee", "café" -> "☕ Coffee"
-    "bread", "pan" -> "🍞 Bread"
+@Composable
+internal fun menuItemLabel(item: String): String = when (item.lowercase()) {
+    "starter", "entrante", "primer" -> "✓ " + stringResource(Res.string.menu_item_starter)
+    "main", "principal", "segundo" -> "✓ " + stringResource(Res.string.menu_item_main)
+    "dessert", "postre" -> "☕ " + stringResource(Res.string.menu_item_dessert)
+    "drink", "bebida" -> "🥤 " + stringResource(Res.string.menu_item_drink)
+    "coffee", "café" -> "☕ " + stringResource(Res.string.menu_item_coffee)
+    "bread", "pan" -> "🍞 " + stringResource(Res.string.menu_item_bread)
     else -> "✓ $item"
 }
 

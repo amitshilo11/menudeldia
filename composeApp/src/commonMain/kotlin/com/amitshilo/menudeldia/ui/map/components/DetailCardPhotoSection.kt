@@ -44,6 +44,7 @@ import menudeldia.composeapp.generated.resources.no_menu_today_short
 import menudeldia.composeapp.generated.resources.open_closes
 import menudeldia.composeapp.generated.resources.open_now
 import menudeldia.composeapp.generated.resources.opens_at
+import menudeldia.composeapp.generated.resources.price_badge_menu_del_dia
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -141,7 +142,7 @@ private fun PriceBadge(price: Double, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
         ) {
             Text(
-                text = "menú del día",
+                text = stringResource(Res.string.price_badge_menu_del_dia),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontStyle = FontStyle.Italic,

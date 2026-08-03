@@ -26,6 +26,28 @@ import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.domain.model.SearchFilterState
 import com.amitshilo.menudeldia.ui.preview.previewRestaurants
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
+import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.filter_clear_all
+import menudeldia.composeapp.generated.resources.filter_cuisine_all
+import menudeldia.composeapp.generated.resources.filter_distance_1km
+import menudeldia.composeapp.generated.resources.filter_distance_2km
+import menudeldia.composeapp.generated.resources.filter_distance_500m
+import menudeldia.composeapp.generated.resources.filter_distance_5km
+import menudeldia.composeapp.generated.resources.filter_distance_any
+import menudeldia.composeapp.generated.resources.filter_gluten_free
+import menudeldia.composeapp.generated.resources.filter_open_now
+import menudeldia.composeapp.generated.resources.filter_price_10_15
+import menudeldia.composeapp.generated.resources.filter_price_any
+import menudeldia.composeapp.generated.resources.filter_price_over_15
+import menudeldia.composeapp.generated.resources.filter_price_under_10
+import menudeldia.composeapp.generated.resources.filter_section_availability
+import menudeldia.composeapp.generated.resources.filter_section_cuisine
+import menudeldia.composeapp.generated.resources.filter_section_diet
+import menudeldia.composeapp.generated.resources.filter_section_distance
+import menudeldia.composeapp.generated.resources.filter_section_price
+import menudeldia.composeapp.generated.resources.filter_vegan
+import menudeldia.composeapp.generated.resources.filters
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,22 +89,22 @@ private fun FilterPanelContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text("Filtros", style = MaterialTheme.typography.titleLarge)
+            Text(stringResource(Res.string.filters), style = MaterialTheme.typography.titleLarge)
             if (filterState.isActive) {
                 TextButton(onClick = { onFilterChange(SearchFilterState()) }) {
-                    Text("Borrar todo")
+                    Text(stringResource(Res.string.filter_clear_all))
                 }
             }
         }
 
         Spacer(Modifier.height(16.dp))
 
-        FilterSectionLabel("Disponibilidad")
+        FilterSectionLabel(stringResource(Res.string.filter_section_availability))
         ChipRow {
             FilterChip(
                 selected = filterState.openNowOnly,
                 onClick = { onFilterChange(filterState.copy(openNowOnly = !filterState.openNowOnly)) },
-                label = { Text("Abierto ahora") },
+                label = { Text(stringResource(Res.string.filter_open_now)) },
                 leadingIcon = { Text("🕒") },
                 shape = RoundedCornerShape(24.dp),
             )
@@ -90,19 +112,19 @@ private fun FilterPanelContent(
 
         Spacer(Modifier.height(16.dp))
 
-        FilterSectionLabel("Dieta")
+        FilterSectionLabel(stringResource(Res.string.filter_section_diet))
         ChipRow {
             FilterChip(
                 selected = filterState.isVegan,
                 onClick = { onFilterChange(filterState.copy(isVegan = !filterState.isVegan)) },
-                label = { Text("Vegano") },
+                label = { Text(stringResource(Res.string.filter_vegan)) },
                 leadingIcon = { Text("🌱") },
                 shape = RoundedCornerShape(24.dp),
             )
             FilterChip(
                 selected = filterState.isGlutenFree,
                 onClick = { onFilterChange(filterState.copy(isGlutenFree = !filterState.isGlutenFree)) },
-                label = { Text("Sin gluten") },
+                label = { Text(stringResource(Res.string.filter_gluten_free)) },
                 leadingIcon = { Text("🌾") },
                 shape = RoundedCornerShape(24.dp),
             )
@@ -110,22 +132,46 @@ private fun FilterPanelContent(
 
         Spacer(Modifier.height(16.dp))
 
-        FilterSectionLabel("Precio")
+        FilterSectionLabel(stringResource(Res.string.filter_section_price))
         ChipRow {
-            PriceOption(null, null, "Cualquier precio", filterState, onFilterChange)
-            PriceOption(null, 10.0, "< €10", filterState, onFilterChange)
-            PriceOption(10.0, 15.0, "€10 – €15", filterState, onFilterChange)
-            PriceOption(15.0, null, "> €15", filterState, onFilterChange)
+            PriceOption(
+                null,
+                null,
+                stringResource(Res.string.filter_price_any),
+                filterState,
+                onFilterChange
+            )
+            PriceOption(
+                null,
+                10.0,
+                stringResource(Res.string.filter_price_under_10),
+                filterState,
+                onFilterChange
+            )
+            PriceOption(
+                10.0,
+                15.0,
+                stringResource(Res.string.filter_price_10_15),
+                filterState,
+                onFilterChange
+            )
+            PriceOption(
+                15.0,
+                null,
+                stringResource(Res.string.filter_price_over_15),
+                filterState,
+                onFilterChange
+            )
         }
 
         if (cuisineTypes.isNotEmpty()) {
             Spacer(Modifier.height(16.dp))
-            FilterSectionLabel("Cocina")
+            FilterSectionLabel(stringResource(Res.string.filter_section_cuisine))
             ChipRow {
                 FilterChip(
                     selected = filterState.cuisineType == null,
                     onClick = { onFilterChange(filterState.copy(cuisineType = null)) },
-                    label = { Text("Todas") },
+                    label = { Text(stringResource(Res.string.filter_cuisine_all)) },
                     shape = RoundedCornerShape(24.dp),
                 )
                 cuisineTypes.forEach { type ->
@@ -147,13 +193,38 @@ private fun FilterPanelContent(
 
         Spacer(Modifier.height(16.dp))
 
-        FilterSectionLabel("Distancia máxima")
+        FilterSectionLabel(stringResource(Res.string.filter_section_distance))
         ChipRow {
-            DistanceOption(null, "Cualquier distancia", filterState, onFilterChange)
-            DistanceOption(500.0, "500m", filterState, onFilterChange)
-            DistanceOption(1000.0, "1 km", filterState, onFilterChange)
-            DistanceOption(2000.0, "2 km", filterState, onFilterChange)
-            DistanceOption(5000.0, "5 km", filterState, onFilterChange)
+            DistanceOption(
+                null,
+                stringResource(Res.string.filter_distance_any),
+                filterState,
+                onFilterChange
+            )
+            DistanceOption(
+                500.0,
+                stringResource(Res.string.filter_distance_500m),
+                filterState,
+                onFilterChange
+            )
+            DistanceOption(
+                1000.0,
+                stringResource(Res.string.filter_distance_1km),
+                filterState,
+                onFilterChange
+            )
+            DistanceOption(
+                2000.0,
+                stringResource(Res.string.filter_distance_2km),
+                filterState,
+                onFilterChange
+            )
+            DistanceOption(
+                5000.0,
+                stringResource(Res.string.filter_distance_5km),
+                filterState,
+                onFilterChange
+            )
         }
 
         Spacer(Modifier.height(32.dp))
