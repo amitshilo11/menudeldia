@@ -20,6 +20,12 @@ plugins {
     alias(libs.plugins.googleServices)
 }
 
+composeCompiler {
+    stabilityConfigurationFiles.add(
+        rootProject.layout.projectDirectory.file("compose_stability.conf")
+    )
+}
+
 kotlin {
     androidTarget {
         compilerOptions {

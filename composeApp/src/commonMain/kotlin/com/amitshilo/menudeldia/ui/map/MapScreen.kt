@@ -5,6 +5,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.animateTo
+import androidx.compose.foundation.gestures.snapTo
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -127,7 +128,7 @@ private fun MapContent(
 
     val isCardMode = state.selectedRestaurant != null
     val detailCardHeightDp = remember(detailCardHeightPx) {
-        with(density) { if (detailCardHeightPx > 0) detailCardHeightPx.toDp() else 320.dp }
+        with(density) { detailCardHeightPx.toDp() }
     }
 
     LaunchedEffect(Unit) {
@@ -142,16 +143,26 @@ private fun MapContent(
         val containerHeight = maxHeight
         val sheetState = rememberMapSheetState(constraints.maxHeight.toFloat())
 
-        // Deliberately derived from the *settled* anchor rather than the live drag offset: the
-        // map only needs to know where the sheet came to rest, and reading the offset here would
-        // recompose the whole screen — and re-sync every map annotation — on every drag frame.
-        val sheetTarget = sheetState.targetValue
+        // `settledValue`, not `targetValue`: the map only needs to know where the sheet came to
+        // rest. `targetValue` flips the moment a drag crosses an anchor midpoint, which would
+        // recompose this whole screen — re-deriving every annotation key and rewriting the map's
+        // layout margins — while the finger is still down.
+        val sheetTarget = sheetState.settledValue
         val sheetVisibleHeight = when (sheetTarget) {
             MapSheetValue.Peek -> MapSheetPeekHeight
             MapSheetValue.Half -> containerHeight * 0.5f
             MapSheetValue.Expanded -> containerHeight * 0.9f
         }
         val isSheetExpanded = sheetTarget == MapSheetValue.Expanded
+
+        // The card is only measured a frame after it appears, so holding the sheet's padding until
+        // then keeps the map's margins moving once per mode change. Guessing a placeholder height
+        // first made the map visibly hop twice on the first open.
+        val mapBottomPadding = if (isCardMode && detailCardHeightPx > 0) {
+            detailCardHeightDp
+        } else {
+            sheetVisibleHeight
+        }
 
         // MapKit reports a region change many times over a single pan, so guard against
         // re-targeting — each `animateTo` cancels the last one and the sheet would never settle.
@@ -161,8 +172,10 @@ private fun MapContent(
             }
         }
 
+        // `snapTo`, not `animateTo`: card mode slides this same sheet off-screen at the same
+        // moment, and two animations driving one subtree is what made the transition jump.
         LaunchedEffect(isCardMode) {
-            if (isCardMode) sheetState.animateTo(MapSheetValue.Peek)
+            if (isCardMode) sheetState.snapTo(MapSheetValue.Peek)
         }
 
         // Dismiss whatever's on top before letting system back fall through and exit the app —
@@ -190,7 +203,7 @@ private fun MapContent(
                 onMapGesture = collapseSheet,
                 onMapIdle = { lat, lng, radius -> onEvent(MapEvent.MapIdle(lat, lng, radius)) },
                 modifier = Modifier.fillMaxSize(),
-                bottomPadding = if (isCardMode) detailCardHeightDp else sheetVisibleHeight,
+                bottomPadding = mapBottomPadding,
             )
 
             AnimatedVisibility(
@@ -243,7 +256,7 @@ private fun MapContent(
 
             RecenterFab(
                 visible = hasLocationPermission && !isCardMode && !isSheetExpanded,
-                bottomPadding = if (isCardMode) detailCardHeightDp else sheetVisibleHeight,
+                bottomPadding = mapBottomPadding,
                 onClick = { onEvent(MapEvent.RecenterRequested) },
             )
 

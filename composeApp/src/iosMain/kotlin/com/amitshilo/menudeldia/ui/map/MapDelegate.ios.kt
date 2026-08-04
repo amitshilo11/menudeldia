@@ -18,6 +18,8 @@ import platform.MapKit.MKMapViewDelegateProtocol
 import platform.UIKit.UIColor
 import platform.UIKit.UIGestureRecognizer
 import platform.UIKit.UIGestureRecognizerDelegateProtocol
+import platform.UIKit.UIGestureRecognizerStateBegan
+import platform.UIKit.UIGestureRecognizerStateChanged
 import platform.UIKit.UIGestureRecognizerStateEnded
 import platform.UIKit.UITapGestureRecognizer
 import platform.UIKit.UIView
@@ -37,10 +39,15 @@ internal class MapDelegate(
     private var isRefreshingBubbles = false
 
     /**
-     * Set around our own `setRegion` calls so the region-will-change callback can tell a camera
-     * move we asked for apart from one the user's fingers started.
+     * True while a pan/pinch on the map is mid-gesture, set by [MapGestureTarget].
+     *
+     * MapKit reports a region change for camera moves we make ourselves too — focusing a
+     * restaurant, and MapKit re-centring after a `layoutMargins` write — so inferring "the user
+     * moved the map" from the callback alone made the sheet collapse itself whenever its own
+     * height changed. Asking the recognizers removes that loop, and the race that came with
+     * clearing a single flag from a callback two concurrent camera moves both fire.
      */
-    var isProgrammaticMove = false
+    var isUserInteracting = false
 
     private val collisionPxSq =
         (MapDefaults.collisionRadiusDp * MapDefaults.collisionRadiusDp).toFloat()
@@ -93,12 +100,11 @@ internal class MapDelegate(
 
     @ObjCSignatureOverride
     override fun mapView(mapView: MKMapView, regionWillChangeAnimated: Boolean) {
-        if (!isProgrammaticMove) onMapGesture()
+        if (isUserInteracting) onMapGesture()
     }
 
     @ObjCSignatureOverride
     override fun mapView(mapView: MKMapView, regionDidChangeAnimated: Boolean) {
-        isProgrammaticMove = false
         val region = mapView.region
         val centerLat = region.useContents { center.latitude }
         val centerLng = region.useContents { center.longitude }
@@ -128,12 +134,17 @@ internal class MapDelegate(
 }
 
 /**
- * `MKMapView` only reports taps that deselect an annotation, so a tap on empty map does nothing
- * on its own. This recognizer fills that gap, ignoring taps that land on an annotation so the
- * selection isn't cleared the instant it is made.
+ * Target for the recognizers we ride alongside MapKit's own private ones.
+ *
+ * Two gaps are filled here. `MKMapView` only reports taps that deselect an annotation, so a tap
+ * on empty map does nothing on its own — [handleTap] covers that, ignoring taps that land on an
+ * annotation so the selection isn't cleared the instant it is made. And nothing on the delegate
+ * distinguishes a finger-driven camera move from one we made ourselves, so [handleInteraction]
+ * keeps [MapDelegate.isUserInteracting] current for the region callbacks to read.
  */
-internal class MapTapRecognizerTarget(
+internal class MapGestureTarget(
     private val mapView: MKMapView,
+    private val delegate: MapDelegate,
 ) : NSObject(), UIGestureRecognizerDelegateProtocol {
 
     var onTap: () -> Unit = {}
@@ -144,6 +155,19 @@ internal class MapTapRecognizerTarget(
         val hit = mapView.hitTest(recognizer.locationInView(mapView), withEvent = null)
         if (hit.isWithinAnnotation()) return
         onTap()
+    }
+
+    /**
+     * Deliberately cleared as soon as the fingers lift rather than when the region settles: the
+     * deceleration after a flick raises its own region change, and the sheet has already
+     * responded to the gesture that started it.
+     */
+    @ObjCAction
+    fun handleInteraction(recognizer: UIGestureRecognizer) {
+        delegate.isUserInteracting = when (recognizer.state) {
+            UIGestureRecognizerStateBegan, UIGestureRecognizerStateChanged -> true
+            else -> false
+        }
     }
 
     override fun gestureRecognizer(

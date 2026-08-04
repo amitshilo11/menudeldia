@@ -26,6 +26,8 @@ import platform.MapKit.MKCoordinateRegionMakeWithDistance
 import platform.MapKit.MKMapView
 import platform.UIKit.UIColor
 import platform.UIKit.UIEdgeInsetsMake
+import platform.UIKit.UIPanGestureRecognizer
+import platform.UIKit.UIPinchGestureRecognizer
 import platform.UIKit.UITapGestureRecognizer
 
 private fun Color.toUIColor(): UIColor = UIColor(
@@ -60,8 +62,7 @@ private fun Restaurant.toAnnotationSyncKey() = AnnotationSyncKey(
     priceText = menuPrice,
 )
 
-private fun MKMapView.focusOn(delegate: MapDelegate, lat: Double, lng: Double) {
-    delegate.isProgrammaticMove = true
+private fun MKMapView.focusOn(lat: Double, lng: Double) {
     setRegion(
         MKCoordinateRegionMakeWithDistance(
             CLLocationCoordinate2DMake(lat, lng),
@@ -95,7 +96,6 @@ actual fun MapView(
             showsPointsOfInterest = false
             showsTraffic = false
             showsScale = false
-            delegate.isProgrammaticMove = true
             setRegion(
                 MKCoordinateRegionMakeWithDistance(
                     CLLocationCoordinate2DMake(
@@ -109,15 +109,22 @@ actual fun MapView(
             )
         }
     }
-    val tapTarget = remember {
-        MapTapRecognizerTarget(mapView).also { target ->
-            val recognizer = UITapGestureRecognizer(
-                target = target,
-                action = NSSelectorFromString("handleTap:"),
-            )
-            recognizer.delegate = target
-            recognizer.cancelsTouchesInView = false
-            mapView.addGestureRecognizer(recognizer)
+    val gestureTarget = remember {
+        MapGestureTarget(mapView, delegate).also { target ->
+            // The pan/pinch pair carries no behaviour of its own — MapKit's own recognizers stay
+            // in charge of the camera. They exist only so the delegate can tell a finger-driven
+            // region change from one of ours. `cancelsTouchesInView` and simultaneous recognition
+            // keep them from stealing anything: UIKit allows concurrent recognition as soon as
+            // one side's delegate agrees to it.
+            listOf(
+                UITapGestureRecognizer(target, NSSelectorFromString("handleTap:")),
+                UIPanGestureRecognizer(target, NSSelectorFromString("handleInteraction:")),
+                UIPinchGestureRecognizer(target, NSSelectorFromString("handleInteraction:")),
+            ).forEach { recognizer ->
+                recognizer.delegate = target
+                recognizer.cancelsTouchesInView = false
+                mapView.addGestureRecognizer(recognizer)
+            }
         }
     }
 
@@ -126,7 +133,7 @@ actual fun MapView(
         delegate.onMapTap = onMapTap
         delegate.onMapGesture = onMapGesture
         delegate.onMapIdle = onMapIdle
-        tapTarget.onTap = onMapTap
+        gestureTarget.onTap = onMapTap
     }
 
     var hasMovedToUser by remember { mutableStateOf(false) }
@@ -134,20 +141,20 @@ actual fun MapView(
     LaunchedEffect(userLocation) {
         if (userLocation != null && !hasMovedToUser) {
             hasMovedToUser = true
-            mapView.focusOn(delegate, userLocation.lat, userLocation.lng)
+            mapView.focusOn(userLocation.lat, userLocation.lng)
         }
     }
 
     LaunchedEffect(selectedRestaurantId) {
         val selected =
             delegate.restaurants.find { it.id == selectedRestaurantId } ?: return@LaunchedEffect
-        mapView.focusOn(delegate, selected.lat, selected.lng)
+        mapView.focusOn(selected.lat, selected.lng)
     }
 
     LaunchedEffect(recenterTrigger) {
         if (recenterTrigger <= 0) return@LaunchedEffect
         val loc = userLocation ?: return@LaunchedEffect
-        mapView.focusOn(delegate, loc.lat, loc.lng)
+        mapView.focusOn(loc.lat, loc.lng)
     }
 
     // Annotation syncing walks every restaurant and asks MapKit to project each coordinate, so it

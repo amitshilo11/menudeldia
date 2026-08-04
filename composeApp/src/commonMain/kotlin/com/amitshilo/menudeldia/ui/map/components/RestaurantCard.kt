@@ -36,6 +36,7 @@ import com.amitshilo.menudeldia.ui.designsystem.component.ShimmerAsyncImage
 import com.amitshilo.menudeldia.ui.preview.previewRestaurant
 import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
+import com.amitshilo.menudeldia.util.currentLocalDateTime
 import com.amitshilo.menudeldia.util.format
 import com.amitshilo.menudeldia.util.isCurrentlyOpen
 import com.amitshilo.menudeldia.util.opensAtToday
@@ -58,9 +59,13 @@ fun RestaurantCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isOpen = restaurant.isCurrentlyOpen()
-    val closeTime = todayHours(restaurant.openingHours)?.closeTime
-    val opensAt = if (!isOpen) restaurant.opensAtToday() else null
+    // One clock read per card instead of three: each of these otherwise defaults to
+    // `currentLocalDateTime()`, and its `TimeZone.currentSystemDefault()` is a genuinely slow call
+    // on iOS to be making three times per card on every recomposition of a scrolling list.
+    val now = currentLocalDateTime()
+    val isOpen = restaurant.isCurrentlyOpen(now)
+    val closeTime = todayHours(restaurant.openingHours, now)?.closeTime
+    val opensAt = if (!isOpen) restaurant.opensAtToday(now) else null
     val elevation by animateDpAsState(if (isSelected) 3.dp else 1.dp)
 
     Card(
