@@ -210,13 +210,13 @@ private fun MenuIncludesSection(restaurant: Restaurant) {
 
 @Composable
 internal fun menuItemLabel(item: String): String = when (item.lowercase()) {
-    "starter", "entrante", "primer" -> "✓ " + stringResource(Res.string.menu_item_starter)
-    "main", "principal", "segundo" -> "✓ " + stringResource(Res.string.menu_item_main)
-    "dessert", "postre" -> "☕ " + stringResource(Res.string.menu_item_dessert)
-    "drink", "bebida" -> "🥤 " + stringResource(Res.string.menu_item_drink)
-    "coffee", "café" -> "☕ " + stringResource(Res.string.menu_item_coffee)
-    "bread", "pan" -> "🍞 " + stringResource(Res.string.menu_item_bread)
-    else -> "✓ $item"
+    "starter", "entrante", "primer" -> stringResource(Res.string.menu_item_starter)
+    "main", "principal", "segundo" -> stringResource(Res.string.menu_item_main)
+    "dessert", "postre" -> stringResource(Res.string.menu_item_dessert)
+    "drink", "bebida" -> stringResource(Res.string.menu_item_drink)
+    "coffee", "café" -> stringResource(Res.string.menu_item_coffee)
+    "bread", "pan" -> stringResource(Res.string.menu_item_bread)
+    else -> item
 }
 
 @Composable
