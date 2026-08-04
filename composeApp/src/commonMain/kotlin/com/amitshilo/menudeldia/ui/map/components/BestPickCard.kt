@@ -24,15 +24,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
 import com.amitshilo.menudeldia.domain.model.Restaurant
-import com.amitshilo.menudeldia.ui.designsystem.component.menuShimmer
-import com.amitshilo.menudeldia.ui.designsystem.component.rememberMenuShimmer
+import com.amitshilo.menudeldia.ui.designsystem.component.ShimmerAsyncImage
 import com.amitshilo.menudeldia.ui.theme.MenuPickAccent
 import com.amitshilo.menudeldia.util.format
 import menudeldia.composeapp.generated.resources.Res
@@ -241,20 +238,10 @@ private fun PickBadge(pickType: PickType, modifier: Modifier = Modifier) {
 @Composable
 private fun PickPhoto(restaurant: Restaurant) {
     if (restaurant.thumbnailUrl != null) {
-        val shimmer = rememberMenuShimmer()
-        SubcomposeAsyncImage(
+        ShimmerAsyncImage(
             model = restaurant.thumbnailUrl,
             contentDescription = restaurant.name,
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop,
-            loading = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .menuShimmer(shimmer)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest),
-                )
-            },
         )
     } else {
         Box(

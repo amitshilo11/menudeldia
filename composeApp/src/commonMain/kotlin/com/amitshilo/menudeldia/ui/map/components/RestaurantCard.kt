@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,16 +26,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
 import com.amitshilo.menudeldia.domain.model.Restaurant
-import com.amitshilo.menudeldia.ui.designsystem.component.menuShimmer
-import com.amitshilo.menudeldia.ui.designsystem.component.rememberMenuShimmer
+import com.amitshilo.menudeldia.ui.designsystem.component.ShimmerAsyncImage
 import com.amitshilo.menudeldia.ui.preview.previewRestaurant
 import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
@@ -289,20 +285,10 @@ private fun Thumbnail(
     modifier: Modifier = Modifier,
 ) {
     if (thumbnailUrl != null) {
-        val shimmer = rememberMenuShimmer()
-        SubcomposeAsyncImage(
+        ShimmerAsyncImage(
             model = thumbnailUrl,
             contentDescription = contentDescription,
             modifier = modifier,
-            contentScale = ContentScale.Crop,
-            loading = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .menuShimmer(shimmer)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest),
-                )
-            },
         )
     } else {
         Box(
