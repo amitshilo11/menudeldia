@@ -35,6 +35,31 @@ private fun Color.toUIColor(): UIColor = UIColor(
     alpha = alpha.toDouble(),
 )
 
+/**
+ * What annotation sync actually reads off a [Restaurant] — deliberately excludes
+ * `distanceMeters`, which changes on every location fix and otherwise would restart the sync
+ * `LaunchedEffect` on every GPS tick even though nothing it draws depends on distance.
+ */
+private data class AnnotationSyncKey(
+    val id: String,
+    val lat: Double,
+    val lng: Double,
+    val name: String,
+    val hasMenu: Boolean,
+    val emoji: String?,
+    val priceText: Double?,
+)
+
+private fun Restaurant.toAnnotationSyncKey() = AnnotationSyncKey(
+    id = id,
+    lat = lat,
+    lng = lng,
+    name = name,
+    hasMenu = todayHasMenu,
+    emoji = cuisineEmoji,
+    priceText = menuPrice,
+)
+
 private fun MKMapView.focusOn(delegate: MapDelegate, lat: Double, lng: Double) {
     delegate.isProgrammaticMove = true
     setRegion(
@@ -128,7 +153,12 @@ actual fun MapView(
     // Annotation syncing walks every restaurant and asks MapKit to project each coordinate, so it
     // is kept out of the interop `update` block: that runs on every recomposition, which would
     // otherwise put this whole pass on the critical path of every bottom-sheet drag frame.
-    LaunchedEffect(restaurants, selectedRestaurantId, primaryColor) {
+    //
+    // Keyed on `annotationSyncKeys` rather than `restaurants` directly: the list is re-emitted on
+    // every location fix with fresh `distanceMeters`, which nothing here reads, so keying on the
+    // raw list would re-run this whole pass (and its MapKit annotation churn) once per GPS tick.
+    val annotationSyncKeys = restaurants.map { it.toAnnotationSyncKey() }
+    LaunchedEffect(annotationSyncKeys, selectedRestaurantId, primaryColor) {
         delegate.restaurants = restaurants
         delegate.selectedId = selectedRestaurantId
         delegate.primaryColor = primaryColor

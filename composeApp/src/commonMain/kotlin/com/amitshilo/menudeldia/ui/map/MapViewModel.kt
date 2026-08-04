@@ -35,6 +35,7 @@ private const val MIN_SEARCH_RADIUS_METERS = 50.0
 private const val MAP_IDLE_DEBOUNCE_MS = 500L
 private const val MOVE_THRESHOLD_FRACTION = 0.2
 private const val RADIUS_THRESHOLD_FRACTION = 0.15
+private const val LOCATION_UPDATE_THRESHOLD_METERS = 20.0
 
 /**
  * How many candidates the recommender draws for the picks sheet. Wider than the three
@@ -124,7 +125,17 @@ class MapViewModel : ViewModel() {
     }
 
     private fun updateLocation(location: UserLocation?) {
-        if (location == _userLocation.value) return
+        val previous = _userLocation.value
+        if (location == previous) return
+        // Below-threshold moves still update the stored location (so later comparisons stay
+        // anchored to the newest fix) but skip the distance recompute across every restaurant.
+        if (location != null && previous != null &&
+            haversineMeters(previous.lat, previous.lng, location.lat, location.lng) <
+            LOCATION_UPDATE_THRESHOLD_METERS
+        ) {
+            _userLocation.value = location
+            return
+        }
         _userLocation.value = location
         refreshDistancesForLocation(location)
     }
