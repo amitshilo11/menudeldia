@@ -10,6 +10,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import coil3.compose.setSingletonImageLoaderFactory
+import com.amitshilo.menudeldia.data.image.newImageLoader
 import com.amitshilo.menudeldia.domain.auth.model.AuthState
 import com.amitshilo.menudeldia.navigation.Screen
 import com.amitshilo.menudeldia.ui.account.AccountScreen
@@ -22,6 +24,8 @@ import com.amitshilo.menudeldia.ui.theme.MenuTheme
 
 @Composable
 fun App() {
+    setSingletonImageLoaderFactory { context -> newImageLoader(context) }
+
     MenuTheme {
         val rootVm: RootViewModel = viewModel { RootViewModel() }
         val authState by rootVm.authState.collectAsState()
