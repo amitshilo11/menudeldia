@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalForeignApi::class)
+@file:OptIn(ExperimentalForeignApi::class, ExperimentalComposeUiApi::class)
 
 package com.amitshilo.menudeldia.ui.map
 
@@ -10,27 +10,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.viewinterop.UIKitInteropInteractionMode
+import androidx.compose.ui.viewinterop.UIKitInteropProperties
 import androidx.compose.ui.viewinterop.UIKitView
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.location.UserLocation
-import com.amitshilo.menudeldia.util.haversineMeters
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.ObjCSignatureOverride
-import kotlinx.cinterop.useContents
-import platform.CoreGraphics.CGAffineTransformMakeScale
 import platform.CoreLocation.CLLocationCoordinate2DMake
-import platform.MapKit.MKAnnotationProtocol
-import platform.MapKit.MKAnnotationView
+import platform.Foundation.NSSelectorFromString
 import platform.MapKit.MKCoordinateRegionMakeWithDistance
 import platform.MapKit.MKMapView
-import platform.MapKit.MKMapViewDelegateProtocol
 import platform.UIKit.UIColor
 import platform.UIKit.UIEdgeInsetsMake
-import platform.UIKit.UIView
-import platform.darwin.NSObject
+import platform.UIKit.UITapGestureRecognizer
 
 private fun Color.toUIColor(): UIColor = UIColor(
     red = red.toDouble(),
@@ -39,94 +35,16 @@ private fun Color.toUIColor(): UIColor = UIColor(
     alpha = alpha.toDouble(),
 )
 
-private class MapDelegate(
-    val annotationManager: AnnotationManager,
-    var primaryColor: UIColor,
-) : NSObject(), MKMapViewDelegateProtocol {
-
-    var restaurants: List<Restaurant> = emptyList()
-    var selectedId: String? = null
-    var onRestaurantSelected: (String) -> Unit = {}
-    var onMapTap: () -> Unit = {}
-    var onMapIdle: (Double, Double, Double) -> Unit = { _, _, _ -> }
-    private var isRefreshingBubbles = false
-
-    private val collisionPxSq =
-        (MapDefaults.collisionRadiusDp * MapDefaults.collisionRadiusDp).toFloat()
-
-    override fun mapView(
-        mapView: MKMapView,
-        viewForAnnotation: MKAnnotationProtocol
-    ): MKAnnotationView? {
-        val ann = viewForAnnotation as? RestaurantAnnotation ?: return null
-        return if (ann.isBubble) {
-            val view =
-                mapView.dequeueReusableAnnotationViewWithIdentifier("bubble") as? BubbleAnnotationView
-                    ?: BubbleAnnotationView(ann, "bubble")
-            view.configure(ann, primaryColor)
-            view
-        } else {
-            val view =
-                mapView.dequeueReusableAnnotationViewWithIdentifier("dot") as? DotAnnotationView
-                    ?: DotAnnotationView(ann, "dot")
-            view.configure(primaryColor)
-            view
-        }
-    }
-
-    @ObjCSignatureOverride
-    override fun mapView(mapView: MKMapView, didAddAnnotationViews: List<*>) {
-        didAddAnnotationViews.filterIsInstance<MKAnnotationView>().forEach { view ->
-            view.alpha = 0.0
-            view.transform = CGAffineTransformMakeScale(0.4, 0.4)
-            UIView.animateWithDuration(
-                duration = MapDefaults.pinAppearAnimMs / 1000.0,
-                animations = {
-                    view.alpha = 1.0
-                    view.transform = CGAffineTransformMakeScale(1.0, 1.0)
-                },
-            )
-        }
-    }
-
-    @ObjCSignatureOverride
-    override fun mapView(mapView: MKMapView, didSelectAnnotationView: MKAnnotationView) {
-        val ann = didSelectAnnotationView.annotation as? RestaurantAnnotation ?: return
-        onRestaurantSelected(ann.restaurantId)
-    }
-
-    @ObjCSignatureOverride
-    override fun mapView(mapView: MKMapView, didDeselectAnnotationView: MKAnnotationView) {
-        if (!isRefreshingBubbles) onMapTap()
-    }
-
-    override fun mapView(mapView: MKMapView, regionDidChangeAnimated: Boolean) {
-        val region = mapView.region
-        val centerLat = region.useContents { center.latitude }
-        val centerLng = region.useContents { center.longitude }
-        val latDelta = region.useContents { span.latitudeDelta }
-        val lngDelta = region.useContents { span.longitudeDelta }
-        val radiusMeters = haversineMeters(
-            centerLat,
-            centerLng,
-            centerLat + latDelta / 2,
-            centerLng + lngDelta / 2
-        )
-        onMapIdle(centerLat, centerLng, radiusMeters)
-        refreshBubbleClassification(mapView)
-    }
-
-    fun refreshBubbleClassification(mapView: MKMapView) {
-        val bubbleIds = pickBubbleIds(restaurants, selectedId, { r ->
-            mapView.convertCoordinate(
-                CLLocationCoordinate2DMake(r.lat, r.lng),
-                toPointToView = mapView,
-            ).useContents { Pair(x.toFloat(), y.toFloat()) }
-        }, collisionPxSq)
-        isRefreshingBubbles = true
-        annotationManager.refreshBubbles(mapView, bubbleIds, selectedId, primaryColor)
-        isRefreshingBubbles = false
-    }
+private fun MKMapView.focusOn(delegate: MapDelegate, lat: Double, lng: Double) {
+    delegate.isProgrammaticMove = true
+    setRegion(
+        MKCoordinateRegionMakeWithDistance(
+            CLLocationCoordinate2DMake(lat, lng),
+            MapDefaults.focusDistanceMeters,
+            MapDefaults.focusDistanceMeters,
+        ),
+        animated = true,
+    )
 }
 
 @Composable
@@ -138,6 +56,7 @@ actual fun MapView(
     recenterTrigger: Int,
     onRestaurantSelected: (String) -> Unit,
     onMapTap: () -> Unit,
+    onMapGesture: () -> Unit,
     onMapIdle: (lat: Double, lng: Double, radiusMeters: Double) -> Unit,
     modifier: Modifier,
     bottomPadding: Dp,
@@ -151,6 +70,7 @@ actual fun MapView(
             showsPointsOfInterest = false
             showsTraffic = false
             showsScale = false
+            delegate.isProgrammaticMove = true
             setRegion(
                 MKCoordinateRegionMakeWithDistance(
                     CLLocationCoordinate2DMake(
@@ -164,11 +84,24 @@ actual fun MapView(
             )
         }
     }
+    val tapTarget = remember {
+        MapTapRecognizerTarget(mapView).also { target ->
+            val recognizer = UITapGestureRecognizer(
+                target = target,
+                action = NSSelectorFromString("handleTap:"),
+            )
+            recognizer.delegate = target
+            recognizer.cancelsTouchesInView = false
+            mapView.addGestureRecognizer(recognizer)
+        }
+    }
 
     SideEffect {
         delegate.onRestaurantSelected = onRestaurantSelected
         delegate.onMapTap = onMapTap
+        delegate.onMapGesture = onMapGesture
         delegate.onMapIdle = onMapIdle
+        tapTarget.onTap = onMapTap
     }
 
     var hasMovedToUser by remember { mutableStateOf(false) }
@@ -176,54 +109,50 @@ actual fun MapView(
     LaunchedEffect(userLocation) {
         if (userLocation != null && !hasMovedToUser) {
             hasMovedToUser = true
-            mapView.setRegion(
-                MKCoordinateRegionMakeWithDistance(
-                    CLLocationCoordinate2DMake(userLocation.lat, userLocation.lng),
-                    MapDefaults.focusDistanceMeters,
-                    MapDefaults.focusDistanceMeters,
-                ),
-                animated = true,
-            )
+            mapView.focusOn(delegate, userLocation.lat, userLocation.lng)
         }
     }
 
     LaunchedEffect(selectedRestaurantId) {
         val selected =
             delegate.restaurants.find { it.id == selectedRestaurantId } ?: return@LaunchedEffect
-        mapView.setRegion(
-            MKCoordinateRegionMakeWithDistance(
-                CLLocationCoordinate2DMake(selected.lat, selected.lng),
-                MapDefaults.focusDistanceMeters,
-                MapDefaults.focusDistanceMeters,
-            ),
-            animated = true,
-        )
+        mapView.focusOn(delegate, selected.lat, selected.lng)
     }
 
     LaunchedEffect(recenterTrigger) {
         if (recenterTrigger <= 0) return@LaunchedEffect
         val loc = userLocation ?: return@LaunchedEffect
-        mapView.setRegion(
-            MKCoordinateRegionMakeWithDistance(
-                CLLocationCoordinate2DMake(loc.lat, loc.lng),
-                MapDefaults.focusDistanceMeters,
-                MapDefaults.focusDistanceMeters,
-            ),
-            animated = true,
-        )
+        mapView.focusOn(delegate, loc.lat, loc.lng)
+    }
+
+    // Annotation syncing walks every restaurant and asks MapKit to project each coordinate, so it
+    // is kept out of the interop `update` block: that runs on every recomposition, which would
+    // otherwise put this whole pass on the critical path of every bottom-sheet drag frame.
+    LaunchedEffect(restaurants, selectedRestaurantId, primaryColor) {
+        delegate.restaurants = restaurants
+        delegate.selectedId = selectedRestaurantId
+        delegate.primaryColor = primaryColor
+        annotationManager.sync(mapView, restaurants, selectedRestaurantId, primaryColor)
+        delegate.refreshBubbleClassification(mapView)
+    }
+
+    LaunchedEffect(isLocationEnabled) {
+        mapView.showsUserLocation = isLocationEnabled
+    }
+
+    LaunchedEffect(bottomPadding) {
+        mapView.setLayoutMargins(UIEdgeInsetsMake(0.0, 0.0, bottomPadding.value.toDouble(), 0.0))
     }
 
     UIKitView(
         factory = { mapView },
-        update = { mv ->
-            mv.showsUserLocation = isLocationEnabled
-            delegate.restaurants = restaurants
-            delegate.selectedId = selectedRestaurantId
-            delegate.primaryColor = primaryColor
-            annotationManager.sync(mv, restaurants, selectedRestaurantId, primaryColor)
-            delegate.refreshBubbleClassification(mv)
-            mv.setLayoutMargins(UIEdgeInsetsMake(0.0, 0.0, bottomPadding.value.toDouble(), 0.0))
-        },
         modifier = modifier,
+        // The map is not inside a scrollable Compose container, so there is nothing for Compose to
+        // intercept. Cooperative mode would hold every touch back by 150ms before MapKit sees it,
+        // which is exactly what makes panning feel sluggish.
+        properties = UIKitInteropProperties(
+            interactionMode = UIKitInteropInteractionMode.NonCooperative,
+            isNativeAccessibilityEnabled = false,
+        ),
     )
 }

@@ -1,39 +1,24 @@
 package com.amitshilo.menudeldia.ui.map
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -42,12 +27,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -58,114 +40,19 @@ import com.amitshilo.menudeldia.navigation.Screen
 import com.amitshilo.menudeldia.ui.map.components.BestPicksSheet
 import com.amitshilo.menudeldia.ui.map.components.ErrorState
 import com.amitshilo.menudeldia.ui.map.components.FilterPanel
+import com.amitshilo.menudeldia.ui.map.components.MapBottomSheet
 import com.amitshilo.menudeldia.ui.map.components.MapSearchBar
+import com.amitshilo.menudeldia.ui.map.components.MapSheetPeekHeight
+import com.amitshilo.menudeldia.ui.map.components.MapSheetValue
+import com.amitshilo.menudeldia.ui.map.components.RecenterFab
 import com.amitshilo.menudeldia.ui.map.components.RestaurantDetailCard
 import com.amitshilo.menudeldia.ui.map.components.RestaurantListSheet
+import com.amitshilo.menudeldia.ui.map.components.rememberMapSheetState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.logo_wide
-import menudeldia.composeapp.generated.resources.my_location
-import menudeldia.composeapp.generated.resources.recenter_on_me
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
-import kotlin.math.abs
-import kotlin.math.roundToInt
-
-// Y offset of the sheet's top edge from the container top for each stable position.
-private data class SheetAnchors(val expanded: Float, val half: Float, val collapsed: Float)
-
-@Composable
-private fun SheetDragHandle() {
-    Box(
-        modifier = Modifier
-            .padding(vertical = 10.dp)
-            .size(width = 36.dp, height = 4.dp)
-            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.6f), CircleShape),
-    )
-}
-
-@Composable
-private fun DraggableBottomSheet(
-    sheetOffset: Animatable<Float, *>,
-    anchors: SheetAnchors,
-    sheetHeight: Dp,
-    modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit,
-) {
-    val coroutineScope = rememberCoroutineScope()
-    val velocityThresholdPx = with(LocalDensity.current) { 300.dp.toPx() }
-    val sheetShape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(sheetHeight)
-            .offset {
-                val relativeOffset = (sheetOffset.value - anchors.expanded).coerceAtLeast(0f)
-                IntOffset(0, relativeOffset.roundToInt())
-            }
-            .shadow(8.dp, sheetShape)
-            .background(MaterialTheme.colorScheme.surfaceContainer, sheetShape),
-    ) {
-        Column(Modifier.fillMaxSize()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .draggable(
-                        orientation = Orientation.Vertical,
-                        state = rememberDraggableState { delta ->
-                            coroutineScope.launch {
-                                sheetOffset.snapTo(
-                                    (sheetOffset.value + delta).coerceIn(
-                                        anchors.expanded,
-                                        anchors.collapsed
-                                    ),
-                                )
-                            }
-                        },
-                        onDragStopped = { velocity ->
-                            coroutineScope.launch {
-                                val target = when {
-                                    velocity > velocityThresholdPx -> anchors.collapsed
-                                    velocity < -velocityThresholdPx -> anchors.expanded
-                                    else -> listOf(
-                                        anchors.expanded,
-                                        anchors.half,
-                                        anchors.collapsed
-                                    )
-                                        .minByOrNull { abs(it - sheetOffset.value) }!!
-                                }
-                                sheetOffset.animateTo(
-                                    target,
-                                    spring(stiffness = 400f, dampingRatio = 0.85f)
-                                )
-                            }
-                        },
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
-                SheetDragHandle()
-            }
-            content()
-        }
-    }
-}
-
-@Composable
-private fun RecenterFab(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    FloatingActionButton(
-        onClick = onClick,
-        containerColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.primary,
-        modifier = modifier,
-    ) {
-        Icon(
-            painter = painterResource(Res.drawable.my_location),
-            contentDescription = stringResource(Res.string.recenter_on_me),
-        )
-    }
-}
 
 @Composable
 fun MapScreen(navController: NavController) {
@@ -217,6 +104,7 @@ private fun MapContent(
     onNavigateToDetail: (String) -> Unit,
 ) {
     val density = LocalDensity.current
+    val scope = rememberCoroutineScope()
     var recenterTrigger by remember { mutableIntStateOf(0) }
     var filterPanelVisible by remember { mutableStateOf(false) }
     var detailCardHeightPx by remember { mutableIntStateOf(0) }
@@ -235,31 +123,31 @@ private fun MapContent(
     }
 
     BoxWithConstraints(Modifier.fillMaxSize()) {
-        val containerHeightPx = constraints.maxHeight.toFloat()
-        val peekHeightPx = with(density) { 160.dp.toPx() }
-        val anchors = remember(containerHeightPx, peekHeightPx) {
-            SheetAnchors(
-                expanded = containerHeightPx * 0.1f,
-                half = containerHeightPx * 0.5f,
-                collapsed = containerHeightPx - peekHeightPx,
-            )
-        }
-        val sheetOffset = remember { Animatable(anchors.half) }
+        val containerHeight = maxHeight
+        val sheetState = rememberMapSheetState(constraints.maxHeight.toFloat())
 
-        LaunchedEffect(containerHeightPx) { sheetOffset.snapTo(anchors.half) }
+        // Deliberately derived from the *settled* anchor rather than the live drag offset: the
+        // map only needs to know where the sheet came to rest, and reading the offset here would
+        // recompose the whole screen — and re-sync every map annotation — on every drag frame.
+        val sheetTarget = sheetState.targetValue
+        val sheetVisibleHeight = when (sheetTarget) {
+            MapSheetValue.Peek -> MapSheetPeekHeight
+            MapSheetValue.Half -> containerHeight * 0.5f
+            MapSheetValue.Expanded -> containerHeight * 0.9f
+        }
+        val isSheetExpanded = sheetTarget == MapSheetValue.Expanded
+
+        // MapKit reports a region change many times over a single pan, so guard against
+        // re-targeting — each `animateTo` cancels the last one and the sheet would never settle.
+        val collapseSheet = {
+            if (sheetState.targetValue != MapSheetValue.Peek) {
+                scope.launch { sheetState.animateTo(MapSheetValue.Peek) }
+            }
+        }
+
         LaunchedEffect(isCardMode) {
-            if (!isCardMode) sheetOffset.animateTo(
-                anchors.half,
-                spring(stiffness = 400f, dampingRatio = 0.85f)
-            )
+            if (isCardMode) sheetState.animateTo(MapSheetValue.Peek)
         }
-
-        val sheetVisibleHeightDp = with(density) { (containerHeightPx - sheetOffset.value).toDp() }
-        val mapBottomPadding = if (isCardMode) detailCardHeightDp else sheetVisibleHeightDp
-        val fabBottomPadding =
-            if (isCardMode) detailCardHeightDp + 16.dp else sheetVisibleHeightDp + 16.dp
-        val isSheetExpanded by remember { derivedStateOf { sheetOffset.value < anchors.half - 1f } }
-        val sheetHeight = maxHeight * 0.9f
 
         Box(Modifier.fillMaxSize()) {
             MapView(
@@ -269,10 +157,14 @@ private fun MapContent(
                 isLocationEnabled = hasLocationPermission,
                 recenterTrigger = recenterTrigger,
                 onRestaurantSelected = { onEvent(MapEvent.SelectRestaurant(it)) },
-                onMapTap = { onEvent(MapEvent.ClearSelection) },
+                onMapTap = {
+                    onEvent(MapEvent.ClearSelection)
+                    collapseSheet()
+                },
+                onMapGesture = collapseSheet,
                 onMapIdle = { lat, lng, radius -> onEvent(MapEvent.MapIdle(lat, lng, radius)) },
                 modifier = Modifier.fillMaxSize(),
-                bottomPadding = mapBottomPadding,
+                bottomPadding = if (isCardMode) detailCardHeightDp else sheetVisibleHeight,
             )
 
             AnimatedVisibility(
@@ -281,7 +173,7 @@ private fun MapContent(
                 exit = slideOutVertically { it },
                 modifier = Modifier.align(Alignment.BottomCenter),
             ) {
-                DraggableBottomSheet(sheetOffset, anchors, sheetHeight = sheetHeight) {
+                MapBottomSheet(sheetState, sheetHeight = containerHeight * 0.9f) {
                     RestaurantListSheet(
                         restaurants = state.restaurants,
                         selectedRestaurantId = state.selectedRestaurant?.id,
@@ -323,16 +215,11 @@ private fun MapContent(
                 }
             }
 
-            AnimatedVisibility(
+            RecenterFab(
                 visible = hasLocationPermission && !isCardMode && !isSheetExpanded,
-                enter = slideInVertically { it },
-                exit = slideOutVertically { it },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = 16.dp, bottom = fabBottomPadding),
-            ) {
-                RecenterFab(onClick = { onEvent(MapEvent.RecenterRequested) })
-            }
+                bottomPadding = if (isCardMode) detailCardHeightDp else sheetVisibleHeight,
+                onClick = { onEvent(MapEvent.RecenterRequested) },
+            )
 
             AnimatedVisibility(
                 visible = isCardMode,

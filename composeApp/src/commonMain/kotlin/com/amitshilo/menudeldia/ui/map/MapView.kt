@@ -15,6 +15,8 @@ expect fun MapView(
     recenterTrigger: Int,
     onRestaurantSelected: (String) -> Unit,
     onMapTap: () -> Unit,
+    /** The user started panning or zooming the map — distinct from programmatic camera moves. */
+    onMapGesture: () -> Unit,
     onMapIdle: (lat: Double, lng: Double, radiusMeters: Double) -> Unit,
     modifier: Modifier = Modifier,
     bottomPadding: Dp,

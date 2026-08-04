@@ -23,6 +23,7 @@ actual @Composable fun MapView(
     recenterTrigger: Int,
     onRestaurantSelected: (String) -> Unit,
     onMapTap: () -> Unit,
+    onMapGesture: () -> Unit,
     onMapIdle: (lat: Double, lng: Double, radiusMeters: Double) -> Unit,
     modifier: Modifier,
     bottomPadding: Dp,
