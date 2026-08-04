@@ -26,11 +26,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.amitshilo.menudeldia.domain.model.Restaurant
@@ -67,6 +71,17 @@ fun MapScreen(navController: NavController) {
         viewModel.onEvent(MapEvent.LocationChanged(locationState.location))
     }
 
+    // Skip the very first ON_RESUME — it fires as soon as this effect is registered (the
+    // screen is already resumed on cold start) and the ViewModel already loads on init.
+    var isFirstResume by remember { mutableStateOf(true) }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        if (isFirstResume) {
+            isFirstResume = false
+        } else {
+            viewModel.onEvent(MapEvent.Refresh)
+        }
+    }
+
     when (val state = uiState) {
         MapUiState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
@@ -90,6 +105,7 @@ fun MapScreen(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun MapContent(
     state: MapUiState.Success,
@@ -147,6 +163,16 @@ private fun MapContent(
 
         LaunchedEffect(isCardMode) {
             if (isCardMode) sheetState.animateTo(MapSheetValue.Peek)
+        }
+
+        // Dismiss whatever's on top before letting system back fall through and exit the app —
+        // otherwise a stray back press while a card or panel is open closes the whole app instead.
+        BackHandler(enabled = filterPanelVisible || isCardMode || isSheetExpanded) {
+            when {
+                filterPanelVisible -> filterPanelVisible = false
+                isCardMode -> onEvent(MapEvent.ClearSelection)
+                else -> collapseSheet()
+            }
         }
 
         Box(Modifier.fillMaxSize()) {
