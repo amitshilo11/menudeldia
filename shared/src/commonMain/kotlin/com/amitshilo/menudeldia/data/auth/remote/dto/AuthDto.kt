@@ -22,3 +22,10 @@ data class AuthUserDto(
     @SerialName("displayName") val displayName: String? = null,
     @SerialName("avatarUrl") val avatarUrl: String? = null,
 )
+
+@Serializable
+data class ApiErrorDto(
+    @SerialName("error") val error: String,
+    @SerialName("message") val message: String,
+    @SerialName("status") val status: Int,
+)
