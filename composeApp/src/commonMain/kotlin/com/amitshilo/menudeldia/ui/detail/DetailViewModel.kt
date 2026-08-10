@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.error_failed_to_load_restaurant
+import org.jetbrains.compose.resources.getString
 
 class DetailViewModel(private val restaurantId: String) : ViewModel() {
 
@@ -26,7 +29,9 @@ class DetailViewModel(private val restaurantId: String) : ViewModel() {
                 val menu = useCase.getTodayMenu(restaurantId)
                 DetailUiState.Success(restaurant, menu)
             } catch (e: Exception) {
-                DetailUiState.Error(e.message ?: "Failed to load restaurant")
+                DetailUiState.Error(
+                    e.message ?: getString(Res.string.error_failed_to_load_restaurant)
+                )
             }
         }
     }

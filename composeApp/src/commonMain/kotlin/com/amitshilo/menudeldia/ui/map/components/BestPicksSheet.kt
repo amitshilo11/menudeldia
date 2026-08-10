@@ -32,7 +32,10 @@ import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.ui.preview.previewRestaurants
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
 import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.best_picks_fresh_deals
+import menudeldia.composeapp.generated.resources.best_picks_options_subtitle
 import menudeldia.composeapp.generated.resources.best_picks_title
+import menudeldia.composeapp.generated.resources.best_picks_updated_daily
 import org.jetbrains.compose.resources.stringResource
 
 // ── Sheet ─────────────────────────────────────────────────────────────────────
@@ -80,7 +83,7 @@ private fun BestPicksContent(
         )
         Spacer(Modifier.height(4.dp))
         Text(
-            text = "${picks.size} great options, every day near you.",
+            text = stringResource(Res.string.best_picks_options_subtitle, picks.size),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -124,12 +127,12 @@ private fun UpdatedFooter() {
             Spacer(Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Updated daily at 11:00",
+                    text = stringResource(Res.string.best_picks_updated_daily),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.SemiBold,
                 )
                 Text(
-                    text = "Fresh deals from real restaurants",
+                    text = stringResource(Res.string.best_picks_fresh_deals),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

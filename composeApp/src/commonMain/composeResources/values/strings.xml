@@ -12,6 +12,9 @@
     <string name="login_guest">Continue as guest</string>
     <string name="login_privacy_prefix">By continuing, you agree to our </string>
     <string name="login_privacy_link">Privacy Policy</string>
+    <string name="sign_in_unavailable">Sign-in not available on this platform</string>
+    <string name="sign_in_failed">Sign-in failed</string>
+    <string name="sign_in_cancelled">Sign-in cancelled</string>
 
     <!-- Location permission screen -->
     <string name="location_permission_title">Find lunch near you</string>
@@ -22,6 +25,7 @@
     <!-- Account screen -->
     <string name="account_title">Account</string>
     <string name="account_sign_out">Sign out</string>
+    <string name="account_guest_message">You\'re browsing as a guest.</string>
 
     <!-- Map screen -->
     <string name="search_placeholder">Search restaurants…</string>
@@ -30,15 +34,38 @@
     <string name="filter_open_now">Open now</string>
     <string name="filter_vegan">Vegan</string>
     <string name="filter_gluten_free">Gluten free</string>
+    <string name="filter_clear_all">Clear all</string>
+    <string name="filter_section_availability">Availability</string>
+    <string name="filter_section_diet">Diet</string>
+    <string name="filter_section_price">Price</string>
+    <string name="filter_price_any">Any price</string>
+    <string name="filter_price_under_10">&lt; €10</string>
+    <string name="filter_price_10_15">€10 – €15</string>
+    <string name="filter_price_over_15">&gt; €15</string>
+    <string name="filter_section_cuisine">Cuisine</string>
+    <string name="filter_cuisine_all">All</string>
+    <string name="filter_section_distance">Max distance</string>
+    <string name="filter_distance_any">Any distance</string>
+    <string name="filter_distance_500m">500m</string>
+    <string name="filter_distance_1km">1 km</string>
+    <string name="filter_distance_2km">2 km</string>
+    <string name="filter_distance_5km">5 km</string>
     <string name="recenter">Recenter</string>
     <string name="recenter_on_me">Recenter on me</string>
     <string name="restaurants_nearby">%1$d restaurants nearby</string>
     <string name="restaurants_of_total">%1$d of %2$d restaurants</string>
     <string name="loading_restaurants">Loading restaurants…</string>
+    <string name="web_map_coming_soon">Map — Web coming soon</string>
 
     <!-- Best picks sheet -->
     <string name="best_picks_title">Best lunch. Zero indecision.</string>
     <string name="best_picks_subtitle">Based on rating, distance and today\'s menu</string>
+    <string name="best_picks_options_subtitle">%1$d great options, every day near you.</string>
+    <string name="best_picks_updated_daily">Updated daily at 11:00</string>
+    <string name="best_picks_fresh_deals">Fresh deals from real restaurants</string>
+    <string name="pick_best_rated">BEST RATED</string>
+    <string name="pick_best_price">BEST PRICE</string>
+    <string name="pick_closest">CLOSEST</string>
 
     <!-- Empty / Error -->
     <string name="empty_no_menus">No menús nearby</string>
@@ -48,6 +75,8 @@
     <string name="clear_filters">Clear filters</string>
     <string name="error_title">Can\'t reach the kitchen</string>
     <string name="retry">Retry</string>
+    <string name="error_failed_to_load_restaurant">Failed to load restaurant</string>
+    <string name="error_failed_to_load_restaurants">Failed to load restaurants</string>
 
     <!-- Status badges -->
     <string name="open_now">Open</string>
@@ -82,6 +111,17 @@
     <string name="feature_reservable">Reservable</string>
     <string name="menu_includes_header">Includes</string>
     <string name="menu_del_dia_includes">MENÚ DEL DÍA INCLUDES</string>
+    <string name="price_badge_menu_del_dia">menú del día</string>
     <string name="open_closes">Open · closes %1$s</string>
     <string name="show_all_reviews">Show all reviews</string>
+    <string name="ratings_count">%1$d ratings</string>
+    <string name="chip_vegan_options">Vegan options</string>
+    <string name="chip_outdoor">Outdoor</string>
+    <string name="menu_item_starter">Starter</string>
+    <string name="menu_item_main">Main</string>
+    <string name="menu_item_dessert">Dessert</string>
+    <string name="menu_item_drink">Drink</string>
+    <string name="menu_item_coffee">Coffee</string>
+    <string name="menu_item_bread">Bread</string>
+    <string name="review_anonymous_author">Anonymous</string>
 </resources>

@@ -24,34 +24,35 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
 import com.amitshilo.menudeldia.domain.model.Restaurant
-import com.amitshilo.menudeldia.ui.designsystem.component.menuShimmer
-import com.amitshilo.menudeldia.ui.designsystem.component.rememberMenuShimmer
+import com.amitshilo.menudeldia.ui.designsystem.component.ShimmerAsyncImage
+import com.amitshilo.menudeldia.ui.theme.MenuPickAccent
 import com.amitshilo.menudeldia.util.format
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.ic_distance
 import menudeldia.composeapp.generated.resources.ic_hotel_class
 import menudeldia.composeapp.generated.resources.ic_money_bag
 import menudeldia.composeapp.generated.resources.menu_del_dia_includes
+import menudeldia.composeapp.generated.resources.pick_best_price
+import menudeldia.composeapp.generated.resources.pick_best_rated
+import menudeldia.composeapp.generated.resources.pick_closest
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-// ── Pick-type accent colours ──────────────────────────────────────────────────
-private val AmberPick = Color(0xFFF5A623)
-private val GreenPick = Color(0xFF4CAF50)
-private val PurplePick = Color(0xFF7B61FF)
-
-internal enum class PickType(val color: Color, val label: String, val icon: DrawableResource) {
-    BestRated(AmberPick, "BEST RATED", Res.drawable.ic_hotel_class),
-    BestPrice(GreenPick, "BEST PRICE", Res.drawable.ic_money_bag),
-    Closest(PurplePick, "CLOSEST", Res.drawable.ic_distance),
+internal enum class PickType(
+    val color: Color,
+    val labelRes: StringResource,
+    val icon: DrawableResource
+) {
+    BestRated(MenuPickAccent.amber, Res.string.pick_best_rated, Res.drawable.ic_hotel_class),
+    BestPrice(MenuPickAccent.green, Res.string.pick_best_price, Res.drawable.ic_money_bag),
+    Closest(MenuPickAccent.purple, Res.string.pick_closest, Res.drawable.ic_distance),
 }
 
 internal fun pickTypeAt(index: Int) = when (index) {
@@ -133,7 +134,11 @@ internal fun BestPickCard(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         restaurant.rating?.let { rating ->
-                            Text("★", style = MaterialTheme.typography.bodySmall, color = AmberPick)
+                            Text(
+                                "★",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MenuPickAccent.amber,
+                            )
                             Text(
                                 text = " ${rating.format(1)}",
                                 style = MaterialTheme.typography.bodySmall,
@@ -184,8 +189,12 @@ internal fun MenuIncludesRow(restaurant: Restaurant, modifier: Modifier = Modifi
             fontWeight = FontWeight.SemiBold,
         )
         Spacer(Modifier.height(4.dp))
+        val menuIncludesLabels = mutableListOf<String>()
+        for (item in restaurant.menuIncludes) {
+            menuIncludesLabels.add(menuItemLabel(item))
+        }
         Text(
-            text = restaurant.menuIncludes.joinToString("  ·  ") { menuItemLabel(it) },
+            text = menuIncludesLabels.joinToString("  ·  "),
             style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.SemiBold,
             maxLines = 1,
@@ -215,7 +224,7 @@ private fun PickBadge(pickType: PickType, modifier: Modifier = Modifier) {
                 modifier = Modifier.size(14.dp),
             )
             Text(
-                text = pickType.label,
+                text = stringResource(pickType.labelRes),
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -229,20 +238,10 @@ private fun PickBadge(pickType: PickType, modifier: Modifier = Modifier) {
 @Composable
 private fun PickPhoto(restaurant: Restaurant) {
     if (restaurant.thumbnailUrl != null) {
-        val shimmer = rememberMenuShimmer()
-        SubcomposeAsyncImage(
+        ShimmerAsyncImage(
             model = restaurant.thumbnailUrl,
             contentDescription = restaurant.name,
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop,
-            loading = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .menuShimmer(shimmer)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest),
-                )
-            },
         )
     } else {
         Box(

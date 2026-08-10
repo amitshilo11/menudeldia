@@ -20,6 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.maps.android.compose.CameraMoveStartedReason
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
@@ -37,6 +38,7 @@ actual @Composable fun MapView(
     recenterTrigger: Int,
     onRestaurantSelected: (String) -> Unit,
     onMapTap: () -> Unit,
+    onMapGesture: () -> Unit,
     onMapIdle: (lat: Double, lng: Double, radiusMeters: Double) -> Unit,
     modifier: Modifier,
     bottomPadding: Dp,
@@ -87,6 +89,14 @@ actual @Composable fun MapView(
                 ),
                 durationMs = MapDefaults.recenterAnimMs,
             )
+        }
+    }
+
+    LaunchedEffect(cameraPositionState.isMoving) {
+        if (cameraPositionState.isMoving &&
+            cameraPositionState.cameraMoveStartedReason == CameraMoveStartedReason.GESTURE
+        ) {
+            onMapGesture()
         }
     }
 

@@ -11,6 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.amitshilo.menudeldia.domain.model.Restaurant
 import com.amitshilo.menudeldia.location.UserLocation
+import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.web_map_coming_soon
+import org.jetbrains.compose.resources.stringResource
 
 actual @Composable fun MapView(
     restaurants: List<Restaurant>,
@@ -20,6 +23,7 @@ actual @Composable fun MapView(
     recenterTrigger: Int,
     onRestaurantSelected: (String) -> Unit,
     onMapTap: () -> Unit,
+    onMapGesture: () -> Unit,
     onMapIdle: (lat: Double, lng: Double, radiusMeters: Double) -> Unit,
     modifier: Modifier,
     bottomPadding: Dp,
@@ -30,6 +34,9 @@ actual @Composable fun MapView(
             .background(MaterialTheme.colorScheme.surfaceVariant),
         contentAlignment = Alignment.Center,
     ) {
-        Text("Map — Web coming soon", style = MaterialTheme.typography.bodyLarge)
+        Text(
+            stringResource(Res.string.web_map_coming_soon),
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }

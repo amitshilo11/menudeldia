@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,27 +26,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
 import com.amitshilo.menudeldia.domain.model.Restaurant
-import com.amitshilo.menudeldia.ui.designsystem.component.menuShimmer
-import com.amitshilo.menudeldia.ui.designsystem.component.rememberMenuShimmer
+import com.amitshilo.menudeldia.ui.designsystem.component.ShimmerAsyncImage
 import com.amitshilo.menudeldia.ui.preview.previewRestaurant
 import com.amitshilo.menudeldia.ui.preview.previewRestaurantNoMenu
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
+import com.amitshilo.menudeldia.util.currentLocalDateTime
 import com.amitshilo.menudeldia.util.format
 import com.amitshilo.menudeldia.util.isCurrentlyOpen
 import com.amitshilo.menudeldia.util.opensAtToday
 import com.amitshilo.menudeldia.util.todayHours
 import kotlinx.datetime.LocalTime
 import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.filter_vegan
 import menudeldia.composeapp.generated.resources.ic_directions_walk
 import menudeldia.composeapp.generated.resources.no_menu_today_short
+import menudeldia.composeapp.generated.resources.open_closes_at
 import menudeldia.composeapp.generated.resources.open_now
 import menudeldia.composeapp.generated.resources.opens_at
 import org.jetbrains.compose.resources.painterResource
@@ -60,9 +59,13 @@ fun RestaurantCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isOpen = restaurant.isCurrentlyOpen()
-    val closeTime = todayHours(restaurant.openingHours)?.closeTime
-    val opensAt = if (!isOpen) restaurant.opensAtToday() else null
+    // One clock read per card instead of three: each of these otherwise defaults to
+    // `currentLocalDateTime()`, and its `TimeZone.currentSystemDefault()` is a genuinely slow call
+    // on iOS to be making three times per card on every recomposition of a scrolling list.
+    val now = currentLocalDateTime()
+    val isOpen = restaurant.isCurrentlyOpen(now)
+    val closeTime = todayHours(restaurant.openingHours, now)?.closeTime
+    val opensAt = if (!isOpen) restaurant.opensAtToday(now) else null
     val elevation by animateDpAsState(if (isSelected) 3.dp else 1.dp)
 
     Card(
@@ -178,9 +181,12 @@ private fun NoMenuBadge() {
 private fun StatusBadge(isOpen: Boolean, closeTime: LocalTime?, opensAt: LocalTime?) {
     val statusText = when {
         isOpen && closeTime != null ->
-            "Open · ${closeTime.hour.toString().padStart(2, '0')}:${
-                closeTime.minute.toString().padStart(2, '0')
-            }"
+            stringResource(
+                Res.string.open_closes_at,
+                "${closeTime.hour.toString().padStart(2, '0')}:${
+                    closeTime.minute.toString().padStart(2, '0')
+                }",
+            )
         isOpen -> stringResource(Res.string.open_now)
         opensAt != null -> stringResource(
             Res.string.opens_at,
@@ -254,9 +260,10 @@ private fun DistanceLabel(meters: Double, modifier: Modifier = Modifier) {
 
 @Composable
 private fun CardChipsRow(restaurant: Restaurant, modifier: Modifier = Modifier) {
+    val veganLabel = stringResource(Res.string.filter_vegan)
     val chips = buildList {
         restaurant.cuisineType?.let { add("${restaurant.cuisineEmoji ?: "🍽"} $it") }
-        if (restaurant.servesVegetarianFood) add("🌱 Vegan")
+        if (restaurant.servesVegetarianFood) add("🌱 $veganLabel")
     }
     if (chips.isEmpty()) return
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -283,20 +290,10 @@ private fun Thumbnail(
     modifier: Modifier = Modifier,
 ) {
     if (thumbnailUrl != null) {
-        val shimmer = rememberMenuShimmer()
-        SubcomposeAsyncImage(
+        ShimmerAsyncImage(
             model = thumbnailUrl,
             contentDescription = contentDescription,
             modifier = modifier,
-            contentScale = ContentScale.Crop,
-            loading = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .menuShimmer(shimmer)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest),
-                )
-            },
         )
     } else {
         Box(

@@ -56,6 +56,10 @@ actual fun rememberLocationState(): LocationState {
     LaunchedEffect(Unit) {
         manager.delegate = delegate
         manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        // Without this, CoreLocation delivers a fix on every GPS jitter (~1/sec) even when
+        // stationary, which was driving continuous map/list recomposition and battery drain.
+        manager.distanceFilter = 25.0
+        manager.pausesLocationUpdatesAutomatically = true
         if (hasPermission) manager.startUpdatingLocation()
     }
 

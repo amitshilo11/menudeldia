@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.amitshilo.menudeldia.domain.model.Review
+import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.review_anonymous_author
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ReviewCard(review: Review, modifier: Modifier = Modifier) {
@@ -37,7 +40,7 @@ fun ReviewCard(review: Review, modifier: Modifier = Modifier) {
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = review.authorName ?: "Anonymous",
+                    text = review.authorName ?: stringResource(Res.string.review_anonymous_author),
                     style = MaterialTheme.typography.labelLarge,
                 )
                 review.rating?.let { rating ->

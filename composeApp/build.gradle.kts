@@ -20,6 +20,12 @@ plugins {
     alias(libs.plugins.googleServices)
 }
 
+composeCompiler {
+    stabilityConfigurationFiles.add(
+        rootProject.layout.projectDirectory.file("compose_stability.conf")
+    )
+}
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -66,6 +72,7 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
+            implementation(libs.compose.ui.backhandler)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.preview)

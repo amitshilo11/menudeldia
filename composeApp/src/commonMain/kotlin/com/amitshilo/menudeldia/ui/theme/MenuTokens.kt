@@ -48,3 +48,11 @@ object MenuBrand {
     val gradientAmber   = Color(0xFFC25F17)  // --brand-amber
     val gradientSaffron = Color(0xFFE68A1A)  // --brand-saffron
 }
+
+// ── Pick-type accents — BestPickCard badges only ─────────────────────────────
+// Not part of the Material color scheme; not sourced from colors_and_type.css.
+object MenuPickAccent {
+    val amber = Color(0xFFF5A623)  // Best Rated
+    val green = Color(0xFF4CAF50)  // Best Price
+    val purple = Color(0xFF7B61FF)  // Closest
+}

@@ -55,7 +55,10 @@ interface AppGraph {
                 })
             }
             install(Logging) {
-                level = LogLevel.ALL
+                // Full request/response bodies (photos, reviews, bearer tokens) are only useful
+                // for local debugging — logging them in release builds is a needless per-request
+                // cost and leaks auth traffic into device logs.
+                level = if (useMockData) LogLevel.ALL else LogLevel.NONE
                 logger = ktorLogger
             }
             install(Auth) {

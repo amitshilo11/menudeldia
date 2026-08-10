@@ -8,6 +8,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.sign_in_cancelled
+import menudeldia.composeapp.generated.resources.sign_in_failed
+import menudeldia.composeapp.generated.resources.sign_in_unavailable
+import org.jetbrains.compose.resources.getString
 
 sealed interface LoginUiState {
     data object Idle : LoginUiState
@@ -24,8 +29,11 @@ class LoginViewModel : ViewModel() {
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     fun signInWithGoogle() {
-        val provider = authProvider ?: run {
-            _uiState.value = LoginUiState.Error("Sign-in not available on this platform")
+        val provider = authProvider
+        if (provider == null) {
+            viewModelScope.launch {
+                _uiState.value = LoginUiState.Error(getString(Res.string.sign_in_unavailable))
+            }
             return
         }
         viewModelScope.launch {
@@ -34,19 +42,25 @@ class LoginViewModel : ViewModel() {
                 .onSuccess { result ->
                     authRepository.signInWithGoogle(result.idToken)
                         .onFailure {
-                            _uiState.value = LoginUiState.Error(it.message ?: "Sign-in failed")
+                            _uiState.value = LoginUiState.Error(
+                                it.message ?: getString(Res.string.sign_in_failed)
+                            )
                         }
                         .onSuccess { _uiState.value = LoginUiState.Idle }
                 }
                 .onFailure {
-                    _uiState.value = LoginUiState.Error(it.message ?: "Sign-in cancelled")
+                    _uiState.value =
+                        LoginUiState.Error(it.message ?: getString(Res.string.sign_in_cancelled))
                 }
         }
     }
 
     fun signInWithApple() {
-        val provider = authProvider ?: run {
-            _uiState.value = LoginUiState.Error("Sign-in not available on this platform")
+        val provider = authProvider
+        if (provider == null) {
+            viewModelScope.launch {
+                _uiState.value = LoginUiState.Error(getString(Res.string.sign_in_unavailable))
+            }
             return
         }
         viewModelScope.launch {
@@ -55,12 +69,15 @@ class LoginViewModel : ViewModel() {
                 .onSuccess { result ->
                     authRepository.signInWithApple(result.identityToken, result.rawNonce)
                         .onFailure {
-                            _uiState.value = LoginUiState.Error(it.message ?: "Sign-in failed")
+                            _uiState.value = LoginUiState.Error(
+                                it.message ?: getString(Res.string.sign_in_failed)
+                            )
                         }
                         .onSuccess { _uiState.value = LoginUiState.Idle }
                 }
                 .onFailure {
-                    _uiState.value = LoginUiState.Error(it.message ?: "Sign-in cancelled")
+                    _uiState.value =
+                        LoginUiState.Error(it.message ?: getString(Res.string.sign_in_cancelled))
                 }
         }
     }
