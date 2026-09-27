@@ -26,6 +26,31 @@ composeCompiler {
     )
 }
 
+// version.properties is the single source of truth for the version (Android, iOS xcconfig, and
+// now the in-app footer). Generating the constant keeps the drawer from drifting out of sync.
+val generateAppVersion by tasks.registering {
+    val outputDir = layout.buildDirectory.dir("generated/appVersion")
+    val versionName = versionProps["versionName"].toString()
+    val versionCode = versionProps["versionCode"].toString()
+    inputs.property("versionName", versionName)
+    inputs.property("versionCode", versionCode)
+    outputs.dir(outputDir)
+    doLast {
+        val packageDir = outputDir.get().asFile.resolve("com/amitshilo/menudeldia")
+        packageDir.mkdirs()
+        packageDir.resolve("AppVersion.kt").writeText(
+            """
+            package com.amitshilo.menudeldia
+
+            // Generated from version.properties by the :composeApp:generateAppVersion task.
+            const val APP_VERSION_NAME = "$versionName"
+            const val APP_VERSION_CODE = "$versionCode"
+
+            """.trimIndent()
+        )
+    }
+}
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -66,6 +91,8 @@ kotlin {
         }
         jsMain.get().dependsOn(webMain)
         wasmJsMain.get().dependsOn(webMain)
+
+        commonMain.get().kotlin.srcDir(generateAppVersion)
 
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -171,4 +198,11 @@ val syncIosVersion by tasks.registering {
 
 tasks.matching { it.name.matches(Regex("link.*(Ios|Framework).*")) }.configureEach {
     dependsOn(syncIosVersion)
+}
+
+// The IDE only indexes a generated source root that already exists when it syncs, so the KMP
+// import umbrella has to produce AppVersion.kt first — without this the editor reports
+// APP_VERSION_NAME / APP_VERSION_CODE as unresolved even though Gradle builds fine.
+tasks.matching { it.name == "prepareKotlinIdeaImport" }.configureEach {
+    dependsOn(generateAppVersion)
 }

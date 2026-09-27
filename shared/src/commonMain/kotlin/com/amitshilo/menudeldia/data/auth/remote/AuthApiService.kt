@@ -6,6 +6,7 @@ import com.amitshilo.menudeldia.data.auth.remote.dto.SignInRequestDto
 import com.amitshilo.menudeldia.data.auth.remote.dto.SignInResponseDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -30,6 +31,17 @@ class AuthApiService(private val client: HttpClient) {
 
     suspend fun me(): AuthUserDto =
         client.get("$BASE_PATH/me").body()
+
+    /** Erases the account server-side. Returns 204 with no body. */
+    suspend fun deleteAccount() {
+        val response = client.delete("$BASE_PATH/me")
+        if (!response.status.isSuccess()) {
+            val apiError = runCatching { response.body<ApiErrorDto>() }.getOrNull()
+            throw IllegalStateException(
+                apiError?.message ?: "Account deletion failed (${response.status.value})"
+            )
+        }
+    }
 
     private suspend inline fun <reified T> HttpResponse.bodyOrThrow(): T {
         if (!status.isSuccess()) {

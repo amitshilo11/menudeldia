@@ -124,6 +124,11 @@ class MapViewModel : ViewModel() {
         _showBestPicks.value = false
     }
 
+    /** Re-opens the picks sheet on demand (side menu), outside the daily 11:00 window. */
+    fun showBestPicks() {
+        _showBestPicks.value = true
+    }
+
     private fun updateLocation(location: UserLocation?) {
         val previous = _userLocation.value
         if (location == previous) return

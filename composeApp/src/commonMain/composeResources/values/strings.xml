@@ -124,4 +124,44 @@
     <string name="menu_item_coffee">Coffee</string>
     <string name="menu_item_bread">Bread</string>
     <string name="review_anonymous_author">Anonymous</string>
+
+    <!-- Side menu -->
+    <string name="menu_open">Open menu</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_todays_picks">Today\'s picks</string>
+    <string name="menu_add_restaurant">Add a restaurant</string>
+    <string name="menu_coming_soon">Coming soon</string>
+    <string name="menu_privacy_policy">Privacy Policy</string>
+    <string name="menu_terms">Terms of Service</string>
+    <string name="menu_send_feedback">Send feedback</string>
+    <string name="menu_log_out">Log out</string>
+    <string name="menu_guest_name">Guest</string>
+    <string name="menu_guest_subtitle">Sign in to save your picks</string>
+    <string name="menu_sign_in">Sign in</string>
+    <string name="menu_version">Version %1$s (%2$s)</string>
+
+    <!-- Account deletion -->
+    <string name="account_delete">Delete my account</string>
+    <string name="account_delete_explainer">Permanently removes your account and personal data from our servers. This can\'t be undone.</string>
+    <string name="account_delete_dialog_title">Delete your account?</string>
+    <string name="account_delete_dialog_body">This permanently deletes your account and all personal data we hold — your name, email and profile photo. You can\'t undo this, and you\'ll be signed out immediately.</string>
+    <string name="account_delete_confirm">Delete account</string>
+    <string name="account_delete_cancel">Cancel</string>
+    <string name="account_delete_failed">Couldn\'t delete your account. Please try again.</string>
+
+    <!-- How it works -->
+    <string name="menu_favorites">Favorites</string>
+    <string name="menu_how_it_works">How it works</string>
+    <string name="menu_help_support">Help &amp; Support</string>
+    <string name="how_it_works_title">How it works</string>
+    <string name="how_it_works_intro">The menú del día is Barcelona\'s weekday lunch deal: one fixed price for a full meal, served roughly 12:30–16:00, Monday to Friday.</string>
+    <string name="how_it_works_included_title">What\'s usually included</string>
+    <string name="how_it_works_included_body">A starter, a main, and dessert or coffee — plus bread and a drink. Most places charge €10–€15 for all of it.</string>
+    <string name="how_it_works_map_title">Find one near you</string>
+    <string name="how_it_works_map_body">The map shows restaurants serving a menú del día today, with the price on the pin and how far away it is. Tap one for today\'s dishes and opening hours.</string>
+    <string name="how_it_works_picks_title">Today\'s picks</string>
+    <string name="how_it_works_picks_body">Each day at 11:00 we pick three places near you — best rated, best price, and closest — so you don\'t have to decide. Reopen them any time from this menu.</string>
+    <string name="how_it_works_filters_title">Narrow it down</string>
+    <string name="how_it_works_filters_body">Filter by open now, vegan, gluten free, price, cuisine and walking distance to get to the short list faster.</string>
+    <string name="how_it_works_footer">Menús change daily and are set by each restaurant. If something looks wrong, let us know from Send feedback.</string>
 </resources>

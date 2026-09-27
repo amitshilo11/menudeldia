@@ -17,6 +17,7 @@ import com.amitshilo.menudeldia.navigation.Screen
 import com.amitshilo.menudeldia.ui.account.AccountScreen
 import com.amitshilo.menudeldia.ui.auth.LoginScreen
 import com.amitshilo.menudeldia.ui.detail.RestaurantDetailScreen
+import com.amitshilo.menudeldia.ui.howitworks.HowItWorksScreen
 import com.amitshilo.menudeldia.ui.map.MapScreen
 import com.amitshilo.menudeldia.ui.permission.LocationPermissionScreen
 import com.amitshilo.menudeldia.ui.root.RootViewModel
@@ -75,6 +76,9 @@ fun App() {
             }
             composable(Screen.Account.route) {
                 AccountScreen(navController = navController)
+            }
+            composable(Screen.HowItWorks.route) {
+                HowItWorksScreen(onBack = { navController.popBackStack() })
             }
         }
     }

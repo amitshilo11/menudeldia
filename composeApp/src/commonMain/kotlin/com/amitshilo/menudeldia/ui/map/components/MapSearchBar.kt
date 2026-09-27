@@ -42,7 +42,8 @@ import menudeldia.composeapp.generated.resources.filter_list
 import menudeldia.composeapp.generated.resources.filter_open_now
 import menudeldia.composeapp.generated.resources.filter_vegan
 import menudeldia.composeapp.generated.resources.filters
-import menudeldia.composeapp.generated.resources.search
+import menudeldia.composeapp.generated.resources.menu
+import menudeldia.composeapp.generated.resources.menu_open
 import menudeldia.composeapp.generated.resources.search_placeholder
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -52,6 +53,7 @@ fun MapSearchBar(
     filterState: SearchFilterState,
     onFilterChange: (SearchFilterState) -> Unit,
     onFilterClick: () -> Unit,
+    onMenuClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
@@ -68,12 +70,13 @@ fun MapSearchBar(
                 .padding(horizontal = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                painter = painterResource(Res.drawable.search),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(start = 12.dp, end = 4.dp),
-            )
+            IconButton(onClick = onMenuClick) {
+                Icon(
+                    painter = painterResource(Res.drawable.menu),
+                    contentDescription = stringResource(Res.string.menu_open),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
 
             BasicTextField(
                 value = filterState.query,
@@ -216,6 +219,7 @@ private fun PreviewMapSearchBarEmpty() {
             filterState = SearchFilterState(),
             onFilterChange = {},
             onFilterClick = {},
+            onMenuClick = {},
             modifier = Modifier.padding(16.dp),
         )
     }
@@ -229,6 +233,7 @@ private fun PreviewMapSearchBarQuery() {
             filterState = SearchFilterState(query = "Paella"),
             onFilterChange = {},
             onFilterClick = {},
+            onMenuClick = {},
             modifier = Modifier.padding(16.dp),
         )
     }
@@ -242,6 +247,7 @@ private fun PreviewMapSearchBarFiltered() {
             filterState = SearchFilterState(openNowOnly = true, isVegan = true),
             onFilterChange = {},
             onFilterClick = {},
+            onMenuClick = {},
             modifier = Modifier.padding(16.dp),
         )
     }

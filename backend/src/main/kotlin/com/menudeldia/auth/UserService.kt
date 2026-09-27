@@ -1,6 +1,7 @@
 package com.menudeldia.auth
 
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.util.UUID
 
@@ -33,6 +34,13 @@ class UserService(private val users: UserRepository) {
 
     fun byId(id: UUID): User =
         users.findById(id).orElseThrow { NoSuchElementException("user $id not found") }
+
+    /**
+     * Hard-deletes the account. The row is the only place we hold personal data, so dropping
+     * it leaves nothing behind; a later sign-in with the same provider identity starts fresh.
+     */
+    @Transactional
+    fun deleteAccount(user: User) = users.delete(user)
 }
 
 /** Subset of claims extracted after token verification. */

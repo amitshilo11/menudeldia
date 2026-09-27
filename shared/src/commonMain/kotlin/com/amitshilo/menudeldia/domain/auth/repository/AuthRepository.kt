@@ -13,4 +13,10 @@ interface AuthRepository {
     /** Hits /me to validate + refresh session on cold start. */
     suspend fun refreshFromMe(): Result<AuthSession>
     suspend fun signOut()
+
+    /**
+     * Deletes the account server-side, then clears the local session. Failure leaves the
+     * session intact so the user isn't silently logged out of an account that still exists.
+     */
+    suspend fun deleteAccount(): Result<Unit>
 }

@@ -124,4 +124,44 @@
     <string name="menu_item_coffee">Café</string>
     <string name="menu_item_bread">Pan</string>
     <string name="review_anonymous_author">Anónimo</string>
+
+    <!-- Side menu -->
+    <string name="menu_open">Abrir menú</string>
+    <string name="menu_profile">Perfil</string>
+    <string name="menu_todays_picks">Selección de hoy</string>
+    <string name="menu_add_restaurant">Añadir un restaurante</string>
+    <string name="menu_coming_soon">Próximamente</string>
+    <string name="menu_privacy_policy">Política de privacidad</string>
+    <string name="menu_terms">Términos del servicio</string>
+    <string name="menu_send_feedback">Enviar comentarios</string>
+    <string name="menu_log_out">Cerrar sesión</string>
+    <string name="menu_guest_name">Invitado</string>
+    <string name="menu_guest_subtitle">Inicia sesión para guardar tus favoritos</string>
+    <string name="menu_sign_in">Iniciar sesión</string>
+    <string name="menu_version">Versión %1$s (%2$s)</string>
+
+    <!-- Account deletion -->
+    <string name="account_delete">Eliminar mi cuenta</string>
+    <string name="account_delete_explainer">Elimina de forma permanente tu cuenta y tus datos personales de nuestros servidores. Esta acción no se puede deshacer.</string>
+    <string name="account_delete_dialog_title">¿Eliminar tu cuenta?</string>
+    <string name="account_delete_dialog_body">Esto elimina permanentemente tu cuenta y todos los datos personales que guardamos: tu nombre, correo y foto de perfil. No se puede deshacer y se cerrará tu sesión de inmediato.</string>
+    <string name="account_delete_confirm">Eliminar cuenta</string>
+    <string name="account_delete_cancel">Cancelar</string>
+    <string name="account_delete_failed">No se pudo eliminar tu cuenta. Inténtalo de nuevo.</string>
+
+    <!-- How it works -->
+    <string name="menu_favorites">Favoritos</string>
+    <string name="menu_how_it_works">Cómo funciona</string>
+    <string name="menu_help_support">Ayuda y soporte</string>
+    <string name="how_it_works_title">Cómo funciona</string>
+    <string name="how_it_works_intro">El menú del día es la comida de mediodía entre semana en Barcelona: un precio fijo por una comida completa, servida aproximadamente de 12:30 a 16:00, de lunes a viernes.</string>
+    <string name="how_it_works_included_title">Qué suele incluir</string>
+    <string name="how_it_works_included_body">Un primero, un segundo y postre o café, además de pan y bebida. La mayoría cobra entre 10 y 15 € por todo.</string>
+    <string name="how_it_works_map_title">Encuentra uno cerca</string>
+    <string name="how_it_works_map_body">El mapa muestra los restaurantes que sirven menú del día hoy, con el precio en el marcador y la distancia. Toca uno para ver los platos de hoy y el horario.</string>
+    <string name="how_it_works_picks_title">Selección de hoy</string>
+    <string name="how_it_works_picks_body">Cada día a las 11:00 elegimos tres sitios cerca de ti: mejor valorado, mejor precio y más cercano, para que no tengas que decidir. Ábrelos cuando quieras desde este menú.</string>
+    <string name="how_it_works_filters_title">Afina la búsqueda</string>
+    <string name="how_it_works_filters_body">Filtra por abierto ahora, vegano, sin gluten, precio, cocina y distancia a pie para llegar antes a la lista corta.</string>
+    <string name="how_it_works_footer">Los menús cambian a diario y los fija cada restaurante. Si algo no cuadra, avísanos desde Enviar comentarios.</string>
 </resources>

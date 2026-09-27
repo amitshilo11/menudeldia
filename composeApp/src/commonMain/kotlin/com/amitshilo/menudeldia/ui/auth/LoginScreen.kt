@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.amitshilo.menudeldia.getPlatform
 import com.amitshilo.menudeldia.ui.theme.MenuTheme
+import com.amitshilo.menudeldia.util.AppLinks
 import menudeldia.composeapp.generated.resources.Res
 import menudeldia.composeapp.generated.resources.login_apple
 import menudeldia.composeapp.generated.resources.login_google
@@ -147,7 +148,7 @@ private fun PrivacyDisclaimerText() {
         withStyle(SpanStyle(color = textColor)) { append(prefix) }
         withLink(
             LinkAnnotation.Url(
-                url = "https://menudiz.duckdns.org/privacy.html",
+                url = AppLinks.PRIVACY_POLICY,
                 styles = TextLinkStyles(
                     style = SpanStyle(color = linkColor, textDecoration = TextDecoration.Underline),
                 ),

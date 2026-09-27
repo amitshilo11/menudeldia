@@ -85,4 +85,10 @@ class AuthRepositoryImpl(
         sessionStore.clear()
         _state.value = AuthState.NeedsAuth
     }
+
+    override suspend fun deleteAccount(): Result<Unit> = runCatching {
+        apiService.deleteAccount()
+        sessionStore.clear()
+        _state.value = AuthState.NeedsAuth
+    }
 }
