@@ -3,7 +3,7 @@ TEAM_ID=596YBRW9CN
 PRODUCT_NAME=Menudeldia
 PRODUCT_BUNDLE_IDENTIFIER=com.amitshilo.menudeldia
 
-CURRENT_PROJECT_VERSION=7
+CURRENT_PROJECT_VERSION=8
 MARKETING_VERSION=1.2
 
 // Google Sign-In: set these to your iOS OAuth client ID values from Google Cloud Console
