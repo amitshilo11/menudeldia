@@ -29,6 +29,7 @@ import com.amitshilo.menudeldia.domain.auth.model.AuthState
 import com.amitshilo.menudeldia.ui.theme.MenuRadius
 import com.amitshilo.menudeldia.ui.theme.MenuSpacing
 import menudeldia.composeapp.generated.resources.Res
+import menudeldia.composeapp.generated.resources.ic_person
 import menudeldia.composeapp.generated.resources.menu_guest_name
 import menudeldia.composeapp.generated.resources.menu_guest_subtitle
 import org.jetbrains.compose.resources.DrawableResource
@@ -93,11 +94,20 @@ private fun Avatar(avatarUrl: String?, fallbackLetter: Char?) {
             .background(MaterialTheme.colorScheme.primaryContainer),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            text = (fallbackLetter ?: '·').uppercaseChar().toString(),
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-        )
+        if (fallbackLetter != null) {
+            Text(
+                text = fallbackLetter.uppercaseChar().toString(),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+        } else {
+            Icon(
+                painter = painterResource(Res.drawable.ic_person),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = Modifier.size(24.dp),
+            )
+        }
     }
 }
 
